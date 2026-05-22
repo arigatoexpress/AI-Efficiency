@@ -1,0 +1,16 @@
+.DS_Store
+.env
+.env.*
+!.env.example
+node_modules/
+dist/
+build/
+coverage/
+*.log
+*.tmp
+*.zip
+secrets/
+private/
+customer-data/
+employee-data/
+package-data/
