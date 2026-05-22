@@ -1,7 +1,7 @@
 # AI Efficiency Team
 
 This repository is the working hub for an operations-led AI efficiency team.
-It is designed for non-technical FedEx operations managers who want practical,
+It is designed for FedExers who want practical,
 safe, measurable ways to use AI in daily work.
 
 The goal is simple: turn real operational friction into reusable prompts,
