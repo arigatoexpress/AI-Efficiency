@@ -1,5 +1,45 @@
 # Delivery Markets Lab
 
+## What This Is
+
+Delivery Markets Lab is a synthetic-data, paper-only prototype for discussing
+how a sensitive operations-adjacent product idea should be reviewed before any
+real deployment.
+
+The useful lesson is not "launch this exactly." The useful lesson is how to make
+an ambitious prototype tangible while keeping governance, privacy, and safety
+visible.
+
+## Who It Helps
+
+- Operations managers learning how to present AI/product ideas responsibly.
+- IT and governance reviewers who need a concrete prototype to evaluate.
+- The AI efficiency team as an example of safe demo boundaries.
+
+## When To Use It
+
+Use this starter for:
+
+- CTO-office discussion;
+- governance review examples;
+- prototype storytelling;
+- safety-boundary demonstrations;
+- synthetic-data app review.
+
+## Do Not Use It For
+
+- real FedEx package data;
+- real customer data;
+- live FedEx API access;
+- live trading, wagering, settlement, or order routing;
+- customer communication;
+- production operational decisions.
+
+## Safe Data Rules
+
+Use synthetic fixtures only. Do not add real tracking numbers, names, addresses,
+delivery photos, route data, employee data, or customer records.
+
 ## Status
 
 Prototype reference. Not production. Not approved for live use.
@@ -19,9 +59,6 @@ using that app as the canonical review artifact.
 Delivery Markets Lab is a paper-only, synthetic-data prototype for discussing
 how an operations-adjacent AI/product idea should be reviewed before any real
 deployment.
-
-The useful lesson for this team is not "launch this exactly." The useful lesson
-is how to present a sensitive prototype responsibly:
 
 - synthetic package fixtures only;
 - no real FedEx customer data;

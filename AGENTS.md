@@ -20,9 +20,14 @@ operations-led AI efficiency team.
 
 - Write for non-technical operations managers first.
 - Use plain English, short sections, and copyable examples.
+- Assume the reader is intelligent but busy and may be brand new to AI.
+- Explain acronyms the first time they appear.
+- Start each guide with who it is for, when to use it, and what not to do.
 - Include practical "when to use / when not to use" guidance.
 - Prefer checklists and templates over abstract policy language.
 - Keep citations to official technology docs when describing vendor features.
+- Follow `docs/documentation-standard.md` for READMEs, guides, and starter
+  projects.
 
 ## Safe Defaults
 

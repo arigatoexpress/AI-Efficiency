@@ -24,6 +24,8 @@ Before opening a pull request, confirm:
 - The expected operational benefit is clear.
 - The human review step is clear.
 - Any vendor or model-specific claims link to official documentation.
+- The document follows the plain-English structure in
+  [docs/documentation-standard.md](docs/documentation-standard.md).
 
 ## Project Submission Format
 

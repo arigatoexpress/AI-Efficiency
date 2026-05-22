@@ -16,8 +16,11 @@ with clear value, clear data boundaries, and human review.
 ## What To Show
 
 - This repository as the team knowledge base.
+- The AI workplace user guide as the non-technical onboarding path.
 - The prompt library for non-technical managers.
 - The Gemini and AI Studio guides.
+- The ChatGPT and Copilot workplace guide for the team's current day-to-day
+  driver tools.
 - The project intake and governance checklist.
 - The Delivery Markets Lab starter project as a prototype governance example:
   synthetic data, paper-only flow, no production API access, no live money, no

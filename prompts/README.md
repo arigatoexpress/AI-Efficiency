@@ -12,6 +12,7 @@ This folder contains copyable prompts for operations managers who are new to AI.
 
 ## Prompt Categories
 
+- [Prompt engineering basics](prompt-engineering-basics.md)
 - [Daily operations](daily-operations.md)
 - [Meeting and communication](meeting-and-communication.md)
 - [Process improvement](process-improvement.md)

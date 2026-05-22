@@ -1,5 +1,52 @@
 # FedEx Ops Bid Assistant
 
+## What This Is
+
+FedEx Ops Bid Assistant is an AI Studio starter project for organizing bid,
+opportunity, and review information into a cleaner internal packet.
+
+It is a prototype reference, not an approved production tool.
+
+## Who It Helps
+
+- Operations managers preparing an internal opportunity review.
+- Team leads collecting missing questions before a go/no-go discussion.
+- Non-technical users who need a structured checklist instead of a blank page.
+
+## When To Use It
+
+Use it with synthetic or non-sensitive scenarios to:
+
+- organize an opportunity summary;
+- identify missing information;
+- list operational risks;
+- prepare internal review questions;
+- draft next steps for human owners.
+
+## Do Not Use It For
+
+- submitting bids;
+- setting pricing;
+- promising service levels;
+- drafting final customer commitments;
+- replacing legal, procurement, sales, finance, or governance review;
+- processing confidential customer or contract data in an unapproved tool.
+
+## Safe Data Rules
+
+Use placeholders such as:
+
+```text
+[Customer group]
+[Region]
+[Opportunity type]
+[Volume range]
+[Service constraint]
+```
+
+Do not enter real customer names, pricing, contract terms, proprietary capacity
+data, employee data, package data, or route-sensitive data.
+
 ## Status
 
 AI Studio source awaiting export. Not production. Not approved for live bid,
@@ -55,6 +102,14 @@ Show that the app produces:
 - operational risk checklist;
 - review-owner list;
 - next-step plan.
+
+## How To Start
+
+1. Open the AI Studio app if you have approved access.
+2. Use the synthetic scenario below.
+3. Save screenshots only if they contain no sensitive data.
+4. Export source when ready for review.
+5. Add the export link and update governance notes.
 
 ## Source Export Checklist
 

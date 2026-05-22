@@ -1,7 +1,7 @@
 # AI Efficiency Team
 
 This repository is the working hub for an operations-led AI efficiency team.
-It is designed for FedExers who want practical,
+It is designed for FedExers, especially operations managers, who want practical,
 safe, measurable ways to use AI in daily work.
 
 The goal is simple: turn real operational friction into reusable prompts,
@@ -21,13 +21,17 @@ starter projects, user guides, and governance-ready pilot packets.
 
 | Area | What it is |
 | --- | --- |
-| [Getting started](docs/getting-started.md) | The plain-English first read for team members. |
+| [AI workplace user guide](docs/ai-workplace-user-guide.md) | The foundational, plain-English guide for the least technical teammate. |
+| [Getting started](docs/getting-started.md) | The short first read for team members. |
 | [Prompt library](prompts/README.md) | Copyable prompts for non-technical operations managers. |
+| [Prompting basics](prompts/prompt-engineering-basics.md) | How to write better prompts without technical language. |
 | [Gemini guide](docs/technology/gemini-for-ops-managers.md) | How to use Gemini well and safely in an operations context. |
+| [ChatGPT and Copilot guide](docs/technology/chatgpt-copilot-workplace-guide.md) | How to use our current AI drivers at work. |
 | [Google AI Studio guide](docs/technology/google-ai-studio-guide.md) | How we prototype, export, share, and review AI Studio apps. |
 | [Governance checklist](docs/governance/project-review-checklist.md) | Review steps before sharing, piloting, or production use. |
 | [Starter projects](starter-projects/README.md) | Early project folders the team can build from. |
 | [CTO-office brief](docs/meeting-brief-cto-office.md) | Meeting-ready framing, demo notes, and review questions. |
+| [Documentation standard](docs/documentation-standard.md) | How every README, guide, and starter project should be written. |
 
 ## Team Operating Principles
 
@@ -79,12 +83,15 @@ starter README.
 
 ```text
 docs/
+  ai-workplace-user-guide.md
   getting-started.md
   meeting-brief-cto-office.md
+  documentation-standard.md
   governance/
   technology/
 prompts/
   README.md
+  prompt-engineering-basics.md
   daily-operations.md
   meeting-and-communication.md
   process-improvement.md

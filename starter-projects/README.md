@@ -9,6 +9,9 @@ Each project should include:
 - `demo-script.md`: how to present it safely;
 - `governance-review.md`: data, risk, and approval notes.
 
+Follow [the plain-English documentation standard](../docs/documentation-standard.md)
+for every starter project.
+
 ## Current Starters
 
 | Project | Status | Notes |
