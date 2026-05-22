@@ -101,9 +101,13 @@ Starter reference:
 https://ai.studio/apps/6f606096-3be8-4ed9-a3d8-a0b27fde25af
 ```
 
-Unauthenticated access redirects to Google sign-in. To make this repo useful for
-review, export the AI Studio app code or add screenshots that reveal no
-sensitive data. Then update the starter project folder with:
+The related Cloud Run service for the station-ops prototype has been verified
+from the owner's Google Cloud account and documented in
+[FedEx Logistics Intelligence System](../../starter-projects/fedex-logistics-intelligence-system/README.md).
+
+Unauthenticated AI Studio access redirects to Google sign-in. To make this repo
+useful for review, export the AI Studio app code or add screenshots that reveal
+no sensitive data. Then update the starter project folder with:
 
 - source link;
 - screenshots;

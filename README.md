@@ -54,6 +54,9 @@ The first starter folders are:
 - [AI Idea Intake Agent](starter-projects/ai-idea-intake-agent/README.md):
   a safe Teams/Copilot or Gemini-channel concept for collecting and triaging
   AI ideas.
+- [FedEx Logistics Intelligence System](starter-projects/fedex-logistics-intelligence-system/README.md):
+  the verified AI Studio and Cloud Run prototype for public-data station-ops
+  risk briefings.
 - [Delivery Markets Lab](starter-projects/fedex-delivery-markets/README.md):
   the verified local codebase for the paper-only delivery-market concept.
 
@@ -102,6 +105,7 @@ prompts/
 starter-projects/
   README.md
   ai-idea-intake-agent/
+  fedex-logistics-intelligence-system/
   fedex-ops-bid-assistant/
   fedex-delivery-markets/
 .github/

@@ -9,6 +9,8 @@ coverage/
 *.log
 *.tmp
 *.zip
+.playwright-cli/
+output/playwright/
 secrets/
 private/
 customer-data/
