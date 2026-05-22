@@ -15,7 +15,7 @@ starter projects, user guides, and governance-ready pilot packets.
   operational value.
 - Build a clean project intake path so team members can propose, document,
   review, and improve AI tools without needing to be software engineers.
-- Prepare executive-ready material for IT, AI governance, and CTO-office review.
+- Prepare executive-ready material for IT, AI governance, and leadership review.
 
 ## Start Here
 
@@ -30,7 +30,6 @@ starter projects, user guides, and governance-ready pilot packets.
 | [Google AI Studio guide](docs/technology/google-ai-studio-guide.md) | How we prototype, export, share, and review AI Studio apps. |
 | [Governance checklist](docs/governance/project-review-checklist.md) | Review steps before sharing, piloting, or production use. |
 | [Starter projects](starter-projects/README.md) | Early project folders the team can build from. |
-| [CTO-office brief](docs/meeting-brief-cto-office.md) | Meeting-ready framing, demo notes, and review questions. |
 | [Documentation standard](docs/documentation-standard.md) | How every README, guide, and starter project should be written. |
 
 ## Team Operating Principles
@@ -52,6 +51,9 @@ The first starter folders are:
 
 - [FedEx Ops Bid Assistant](starter-projects/fedex-ops-bid-assistant/README.md):
   the AI Studio project placeholder for the newly published app.
+- [AI Idea Intake Agent](starter-projects/ai-idea-intake-agent/README.md):
+  a safe Teams/Copilot or Gemini-channel concept for collecting and triaging
+  AI ideas.
 - [Delivery Markets Lab](starter-projects/fedex-delivery-markets/README.md):
   the verified local codebase for the paper-only delivery-market concept.
 
@@ -85,7 +87,6 @@ starter README.
 docs/
   ai-workplace-user-guide.md
   getting-started.md
-  meeting-brief-cto-office.md
   documentation-standard.md
   governance/
   technology/
@@ -100,6 +101,7 @@ prompts/
   governance-safe-use.md
 starter-projects/
   README.md
+  ai-idea-intake-agent/
   fedex-ops-bid-assistant/
   fedex-delivery-markets/
 .github/

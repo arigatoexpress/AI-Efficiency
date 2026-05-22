@@ -20,7 +20,7 @@ visible.
 
 Use this starter for:
 
-- CTO-office discussion;
+- executive or governance discussion;
 - governance review examples;
 - prototype storytelling;
 - safety-boundary demonstrations;
@@ -69,7 +69,7 @@ deployment.
 
 ## Why It Belongs In This Repo
 
-The project is a strong starter for CTO-office discussion because it shows the
+The project is a strong starter for executive review because it shows the
 right posture for ambitious AI ideas:
 
 - make the prototype tangible;

@@ -6,13 +6,13 @@ Use these docs as the team handbook.
 
 - [AI workplace user guide](ai-workplace-user-guide.md)
 - [Getting started](getting-started.md)
-- [CTO-office meeting brief](meeting-brief-cto-office.md)
 - [Documentation standard](documentation-standard.md)
 
 ## Governance
 
 - [AI use policy](governance/ai-use-policy.md)
 - [Project review checklist](governance/project-review-checklist.md)
+- [Feedback and screenshot intake rules](governance/feedback-and-screenshot-intake-rules.md)
 
 ## Technology
 

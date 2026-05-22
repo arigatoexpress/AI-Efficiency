@@ -39,7 +39,7 @@ Good project examples:
 
 - AI Efficiency Team weekly meeting notes;
 - FedEx Ops Bid Assistant;
-- CTO-office meeting preparation;
+- executive review preparation;
 - prompt library improvements;
 - governance review packet.
 
