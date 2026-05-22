@@ -12,7 +12,7 @@ A human manager remains responsible for judgment, verification, and action.
 2. Remove sensitive data.
 3. Use a prompt from the prompt library.
 4. Check the output against the source material.
-5. Edit it into your own voice.
+5. Edit it with your own voice and personality
 6. Record what worked so the team can reuse it.
 
 ## Good First Tasks
