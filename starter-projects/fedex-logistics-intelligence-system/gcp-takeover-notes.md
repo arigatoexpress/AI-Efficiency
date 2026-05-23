@@ -42,6 +42,24 @@ Use it to learn the product direction, then either:
 1. export the original AI Studio source to GitHub; or
 2. rebuild clean source from [the AI Studio V2 prompt](ai-studio-v2-prompt.md).
 
+## Live UI Patch On 2026-05-22
+
+A small live patch was applied to the compiled AI Studio artifact to fix map
+control visibility on laptop-sized screens.
+
+What changed:
+
+- map legend, quick preset controls, and zoom controls now render above the map
+  layers;
+- the map card no longer stretches into a large blank area;
+- the browser no longer restores an old scroll position after the app rewrites
+  the URL with map coordinates;
+- a backup of the previous compiled artifact was kept before replacing the live
+  artifact.
+
+This is still a compiled-artifact patch, not clean source ownership. The next
+proper engineering step is still to export or rebuild the source.
+
 ## Do Not Commit
 
 Do not commit:
