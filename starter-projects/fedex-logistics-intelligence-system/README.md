@@ -21,7 +21,7 @@ package, route, employee, customer, security, or facility systems.
 
 ## Current Verified App
 
-Verified on 2026-05-23 through Google Cloud:
+Verified on 2026-05-23 through Google Cloud and a read-only browser smoke:
 
 - AI Studio app:
   `https://ai.studio/apps/6f606096-3be8-4ed9-a3d8-a0b27fde25af`
@@ -31,9 +31,17 @@ Verified on 2026-05-23 through Google Cloud:
   `https://fedex-logistics-intelligence-system-s77j6bxyra-ue.a.run.app`
 - Deployment label:
   managed by Google AI Studio
+- Current live revision:
+  `fedex-logistics-intelligence-system-00005-4vs`
 - Current source status:
   compiled deployment artifact with a live map-control hotfix; source should
   still be exported from AI Studio or rebuilt cleanly from this starter.
+
+The live v5 page renders and the map controls are visible, but it is not yet
+production-safe. A 2026-05-23 browser readback still found command-style copy,
+synthetic operations claims, and a favicon 404. Treat the service as a visual
+prototype until [the live readiness audit](live-readiness-audit-2026-05-23.md)
+is closed.
 
 ## What The Current Demo Does Well
 
@@ -43,7 +51,7 @@ Verified on 2026-05-23 through Google Cloud:
 - It gives managers a visual way to discuss pass closures, detours, and feeder
   disruption.
 - The live map controls and legend are now visible on desktop and phone-sized
-  screens after the 2026-05-23 cache-busted v4 patch.
+  screens in the current v5 compiled artifact.
 
 ## What Must Be Improved
 
@@ -128,7 +136,8 @@ does not use FedEx internal data.
 ## Next Engineering Step
 
 First choice: export the AI Studio source to GitHub and replace the compiled
-artifact with reviewable source code.
+artifact with reviewable source code. The exported source should close the
+2026-05-23 live readiness audit before any broad demo.
 
 Second choice: rebuild the app as a clean React and Cloud Run starter using
 [the AI Studio V2 prompt](ai-studio-v2-prompt.md).
