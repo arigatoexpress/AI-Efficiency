@@ -23,7 +23,53 @@ Current implementation track:
 - [regional-intel-workbench PR #22](https://github.com/arigatoexpress/regional-intel-workbench/pull/22)
   extends the existing `regional-intel intel-foundry-export` command with
   `--include-logistics-fixture`, deterministic logistics NDJSON object files,
-  manifest hashes, and provenance drop reporting.
+  manifest hashes, provenance drop reporting, Kadima status/discovery commands,
+  and a dry-run upload planner.
+
+## Kadima Readback
+
+Last live readback: 2026-05-23.
+
+The current Kadima target is reachable at:
+
+```text
+https://kadima.usw-17.palantirfoundry.com
+```
+
+The connected credential can read Ontology metadata. It sees two ontologies and
+uses this configured default:
+
+```text
+ontology-8928df68-411d-463a-9683-33687b864e51
+```
+
+Relevant visible object types include:
+
+- `ExampleFlight`
+- `ExampleRoute`
+- `ExampleAirport`
+- `ExampleCarrier`
+- `ExampleAircraft`
+- `ExampleRouteAlert`
+- `Alert`
+- `DailyBrief`
+- `ServiceHealth`
+
+The dataset-list endpoint currently returns `404` for this credential/path. The
+regional-intel integration therefore treats Ontology metadata access as a
+connectivity success, but keeps uploads blocked until approved dataset RIDs are
+configured for the regional/logistics object files.
+
+Current dry-run packet:
+
+| Object Type | Rows | Upload State |
+| --- | ---: | --- |
+| `Region` | 3 | missing dataset RID |
+| `IntelItem` | 556 | missing dataset RID |
+| `IntelSourceHealth` | 20 | missing dataset RID |
+| `LogisticsDataSource` | 3 | missing dataset RID |
+| `LogisticsSignal` | 3 | missing dataset RID |
+| `LogisticsForecastModel` | 1 | missing dataset RID |
 
 ## Candidate Ontology
 
@@ -71,10 +117,11 @@ are the best starting references for object and application design.
 This means the safest deployment path is:
 
 1. Build deterministic object files locally.
-2. Upload them as datasets in Foundry when access is approved.
-3. Use Python transforms to normalize and validate fields.
-4. Bind curated datasets to Ontology object types.
-5. Add application views only after object security, retention, and review
+2. Confirm the target Kadima ontology and approved dataset RIDs.
+3. Upload them as datasets in Foundry when access is approved.
+4. Use Python transforms to normalize and validate fields.
+5. Bind curated datasets to Ontology object types.
+6. Add application views only after object security, retention, and review
    rules are known.
 
 ## Demo Boundary

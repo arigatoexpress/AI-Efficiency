@@ -94,7 +94,8 @@ Verification:
 
 ## Phase 3 - Foundry-Ready Export
 
-Status: design plus first code slice opened
+Status: live Kadima discovery verified; upload dry-run blocked pending dataset
+RIDs
 
 Goal: reuse the regional intelligence Foundry export pattern for logistics
 signals so the work can move into Palantir Foundry when access is approved.
@@ -105,6 +106,12 @@ Current engineering track:
   extends the existing `intel-foundry-export` path with a
   `--include-logistics-fixture` option for public/synthetic station-ops
   logistics object files.
+- The regional-intel integration can now check Kadima connectivity, read the
+  configured ontology, list visible object and action types, and produce a
+  dry-run upload plan without exposing credentials.
+- Current blocker: no approved dataset RIDs are configured yet for `Region`,
+  `IntelItem`, `IntelSourceHealth`, `LogisticsDataSource`, `LogisticsSignal`,
+  or `LogisticsForecastModel`.
 
 Candidate object types:
 
@@ -129,6 +136,7 @@ Verification:
 - deterministic exports;
 - provenance guard drops rows without source links;
 - internal or sensitive data classifications are rejected.
+- upload remains dry-run until Foundry dataset mappings are approved.
 
 ## Phase 4 - Predictive Load Approximation
 

@@ -133,3 +133,19 @@ Second choice: rebuild the app as a clean React and Cloud Run starter using
 
 Either path should keep the repo public-safe and should not introduce secrets,
 private links, or internal data.
+
+## Foundry Track
+
+The regional-intel workbench now has a Foundry-ready export and Kadima discovery
+slice for this prototype.
+
+Current state as of 2026-05-23:
+
+- Kadima connectivity verified through the existing Foundry configuration.
+- Ontology metadata is readable.
+- The public/synthetic logistics packet exports cleanly with zero dropped rows.
+- Upload is intentionally dry-run blocked until approved dataset RIDs are mapped
+  for the regional and logistics object files.
+
+See [the Foundry integration roadmap](../../docs/foundry-integration-roadmap.md)
+for the governed deployment path.
