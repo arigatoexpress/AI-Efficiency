@@ -77,7 +77,7 @@ What changed:
 - the unused plaintext AI key environment variable was removed from the Cloud
   Run revision.
 
-Verified after deployment:
+Verified immediately after that deployment:
 
 - live Cloud Run revision advanced to `fedex-logistics-intelligence-system-00004-wld`;
 - live HTML references `ops-map-control-fix-v4.css`;
@@ -87,7 +87,35 @@ Verified after deployment:
 
 This remains a compiled-artifact hotfix. The durable source-code path is still
 to export the original AI Studio source or rebuild the app as a normal reviewed
-source tree.
+source tree. The later v5 readback below supersedes the v4 console-clean claim.
+
+## Live Readback On 2026-05-23
+
+A later read-only Cloud Run and Playwright pass found that the public service
+had advanced to revision `fedex-logistics-intelligence-system-00005-4vs` from
+the AI Studio compiled `version-5` artifact.
+
+Confirmed:
+
+- public route returned `200`;
+- current HTML title is `FedEx RECON Logistics Intelligence System`;
+- map preset controls, zoom controls, and legend are visible in the browser;
+- the page shows a visible `PROTOTYPE ONLY` banner;
+- Cloud Run source is still a compiled AI Studio artifact, not editable source.
+
+Still not production-safe:
+
+- `/favicon.ico` returns `404` and causes browser console noise;
+- page copy still includes command-console language such as reroute commands;
+- page copy still includes fake CCTV/security labels;
+- station metrics still show synthetic package rates and conveyor capacity
+  without making the synthetic boundary obvious enough;
+- old v4 stylesheet-specific language in these notes should not be used as the
+  latest live proof because the current artifact is v5.
+
+Do not broaden the demo until
+[`live-readiness-audit-2026-05-23.md`](live-readiness-audit-2026-05-23.md) is
+closed in source or by an explicitly reversible Cloud Run hotfix.
 
 ## Do Not Commit
 
