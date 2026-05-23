@@ -18,6 +18,12 @@ That pattern exports NDJSON object files, computes hashes, records dropped rows,
 and keeps provenance checks close to the export boundary. The logistics work
 should follow the same shape.
 
+Current implementation track:
+
+- [regional-intel-workbench PR #22](https://github.com/arigatoexpress/regional-intel-workbench/pull/22)
+  adds a public/synthetic logistics Foundry fixture export with deterministic
+  NDJSON, manifest hashes, and provenance drop reporting.
+
 ## Candidate Ontology
 
 | Object Type | Purpose |

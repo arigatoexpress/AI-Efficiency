@@ -94,10 +94,15 @@ Verification:
 
 ## Phase 3 - Foundry-Ready Export
 
-Status: design plus first code slice
+Status: design plus first code slice opened
 
 Goal: reuse the regional intelligence Foundry export pattern for logistics
 signals so the work can move into Palantir Foundry when access is approved.
+
+Current engineering track:
+
+- [regional-intel-workbench PR #22](https://github.com/arigatoexpress/regional-intel-workbench/pull/22)
+  adds a public/synthetic station-ops logistics Foundry fixture export.
 
 Candidate object types:
 
