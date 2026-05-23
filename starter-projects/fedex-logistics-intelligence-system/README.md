@@ -21,7 +21,7 @@ package, route, employee, customer, security, or facility systems.
 
 ## Current Verified App
 
-Verified on 2026-05-22 through Google Cloud:
+Verified on 2026-05-23 through Google Cloud:
 
 - AI Studio app:
   `https://ai.studio/apps/6f606096-3be8-4ed9-a3d8-a0b27fde25af`
@@ -32,8 +32,8 @@ Verified on 2026-05-22 through Google Cloud:
 - Deployment label:
   managed by Google AI Studio
 - Current source status:
-  compiled deployment artifact only; source should still be exported from AI
-  Studio or rebuilt cleanly from this starter.
+  compiled deployment artifact with a live map-control hotfix; source should
+  still be exported from AI Studio or rebuilt cleanly from this starter.
 
 ## What The Current Demo Does Well
 
@@ -42,6 +42,8 @@ Verified on 2026-05-22 through Google Cloud:
 - It uses public weather and seismic feeds for a more realistic story.
 - It gives managers a visual way to discuss pass closures, detours, and feeder
   disruption.
+- The live map controls and legend are now visible on desktop and phone-sized
+  screens after the 2026-05-23 cache-busted v4 patch.
 
 ## What Must Be Improved
 

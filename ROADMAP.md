@@ -39,7 +39,7 @@ Verification:
 
 ## Phase 1 - Logistics Intelligence App Hardening
 
-Status: next
+Status: active; map-control hotfix deployed
 
 Goal: make the AI Studio and Cloud Run prototype useful for station managers as
 a decision-support console.
@@ -49,7 +49,8 @@ Deliverables:
 - visible prototype-only positioning;
 - source labels for every public signal;
 - labels for synthetic or approximated values;
-- fixed map controls and legend visibility;
+- fixed map controls and legend visibility; deployed live on 2026-05-23 with a
+  cache-busted v4 stylesheet;
 - manager-friendly shift brief, route watch, station impact, and source trail
   panels;
 - no live dispatch, reroute, customer, package, employee, or facility-security
@@ -58,7 +59,7 @@ Deliverables:
 Verification:
 
 - browser checks at desktop and mobile sizes;
-- no broken map controls;
+- no broken map controls; verified at `1366x768` and `390x844`;
 - no language implying official production authority;
 - no API keys or secrets in public files.
 

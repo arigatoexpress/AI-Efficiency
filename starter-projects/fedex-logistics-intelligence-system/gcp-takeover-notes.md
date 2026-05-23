@@ -60,6 +60,35 @@ What changed:
 This is still a compiled-artifact patch, not clean source ownership. The next
 proper engineering step is still to export or rebuild the source.
 
+## Live UI Patch On 2026-05-23
+
+A cache-busted `ops-map-control-fix-v4.css` patch was deployed to the Cloud Run
+app.
+
+What changed:
+
+- the app now links to a new v4 stylesheet path, so browsers do not keep using
+  the older cached map-control CSS;
+- quick presets stay in the top-left of the map;
+- zoom controls stay in the top-right of the map;
+- the legend moves to the lower-right on desktop and becomes a readable
+  full-width bottom panel on phone-sized screens;
+- a small inline favicon prevents the previous favicon 404 console noise;
+- the unused plaintext AI key environment variable was removed from the Cloud
+  Run revision.
+
+Verified after deployment:
+
+- live Cloud Run revision advanced to `fedex-logistics-intelligence-system-00004-wld`;
+- live HTML references `ops-map-control-fix-v4.css`;
+- fresh browser console showed zero errors;
+- Playwright geometry checks confirmed the map, presets, zoom controls, and
+  legend are all visible at `1366x768` and `390x844`.
+
+This remains a compiled-artifact hotfix. The durable source-code path is still
+to export the original AI Studio source or rebuild the app as a normal reviewed
+source tree.
+
 ## Do Not Commit
 
 Do not commit:
