@@ -102,7 +102,9 @@ signals so the work can move into Palantir Foundry when access is approved.
 Current engineering track:
 
 - [regional-intel-workbench PR #22](https://github.com/arigatoexpress/regional-intel-workbench/pull/22)
-  adds a public/synthetic station-ops logistics Foundry fixture export.
+  extends the existing `intel-foundry-export` path with a
+  `--include-logistics-fixture` option for public/synthetic station-ops
+  logistics object files.
 
 Candidate object types:
 

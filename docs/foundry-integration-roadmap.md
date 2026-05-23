@@ -21,8 +21,9 @@ should follow the same shape.
 Current implementation track:
 
 - [regional-intel-workbench PR #22](https://github.com/arigatoexpress/regional-intel-workbench/pull/22)
-  adds a public/synthetic logistics Foundry fixture export with deterministic
-  NDJSON, manifest hashes, and provenance drop reporting.
+  extends the existing `regional-intel intel-foundry-export` command with
+  `--include-logistics-fixture`, deterministic logistics NDJSON object files,
+  manifest hashes, and provenance drop reporting.
 
 ## Candidate Ontology
 
