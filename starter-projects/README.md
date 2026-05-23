@@ -17,7 +17,6 @@ for every starter project.
 | Project | Status | Notes |
 | --- | --- | --- |
 | [AI Idea Intake Agent](ai-idea-intake-agent/README.md) | Concept and governance starter | Safe Teams/Copilot or Gemini-channel flow for AI ideas, feedback, and use-case triage. |
-| [FedEx Ops Bid Assistant](fedex-ops-bid-assistant/README.md) | AI Studio source awaiting export | Starter folder for the published AI Studio app link. |
 | [FedEx Logistics Intelligence System](fedex-logistics-intelligence-system/README.md) | AI Studio and Cloud Run prototype | Public-data station-ops console concept for weather, road, and regional risk briefings. |
 | [Delivery Markets Lab](fedex-delivery-markets/README.md) | Prototype reference | Synthetic-data, paper-only app already exists locally. AI Studio link requires sign-in. |
 

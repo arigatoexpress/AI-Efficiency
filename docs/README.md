@@ -7,6 +7,11 @@ Use these docs as the team handbook.
 - [AI workplace user guide](ai-workplace-user-guide.md)
 - [Getting started](getting-started.md)
 - [Documentation standard](documentation-standard.md)
+- [Program roadmap](../ROADMAP.md)
+- [Public data source catalog](data-source-catalog.md)
+- [Foundry integration roadmap](foundry-integration-roadmap.md)
+- [Teams and Telegram agent roadmap](teams-telegram-agent-roadmap.md)
+- [FHE and Zama research note](fhe-zama-research.md)
 
 ## Governance
 

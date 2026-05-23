@@ -29,6 +29,8 @@ starter projects, user guides, and governance-ready pilot packets.
 | [ChatGPT and Copilot guide](docs/technology/chatgpt-copilot-workplace-guide.md) | How to use our current AI drivers at work. |
 | [Google AI Studio guide](docs/technology/google-ai-studio-guide.md) | How we prototype, export, share, and review AI Studio apps. |
 | [Governance checklist](docs/governance/project-review-checklist.md) | Review steps before sharing, piloting, or production use. |
+| [Roadmap](ROADMAP.md) | The phased plan for the AI Studio app, Foundry exports, public data, and future chat agents. |
+| [Public data source catalog](docs/data-source-catalog.md) | Rights-aware source list for weather, roads, aviation, freight, forecasting, and models. |
 | [Starter projects](starter-projects/README.md) | Early project folders the team can build from. |
 | [Documentation standard](docs/documentation-standard.md) | How every README, guide, and starter project should be written. |
 
@@ -49,14 +51,12 @@ starter projects, user guides, and governance-ready pilot packets.
 
 The first starter folders are:
 
-- [FedEx Ops Bid Assistant](starter-projects/fedex-ops-bid-assistant/README.md):
-  the AI Studio project placeholder for the newly published app.
-- [AI Idea Intake Agent](starter-projects/ai-idea-intake-agent/README.md):
-  a safe Teams/Copilot or Gemini-channel concept for collecting and triaging
-  AI ideas.
 - [FedEx Logistics Intelligence System](starter-projects/fedex-logistics-intelligence-system/README.md):
   the verified AI Studio and Cloud Run prototype for public-data station-ops
   risk briefings.
+- [AI Idea Intake Agent](starter-projects/ai-idea-intake-agent/README.md):
+  a safe Teams/Copilot or Gemini-channel concept for collecting and triaging
+  AI ideas.
 - [Delivery Markets Lab](starter-projects/fedex-delivery-markets/README.md):
   the verified local codebase for the paper-only delivery-market concept.
 
@@ -73,16 +73,17 @@ useful as a governance conversation starter because it clearly separates:
 - paper/testnet simulation from real money or live orders;
 - prototype learning from approved production deployment.
 
-The Google AI Studio project link currently requires Google sign-in before the
-app contents are visible:
+The current Google AI Studio and Cloud Run app is the logistics intelligence
+prototype:
 
 ```text
 https://ai.studio/apps/6f606096-3be8-4ed9-a3d8-a0b27fde25af
+https://fedex-logistics-intelligence-system-s77j6bxyra-ue.a.run.app
 ```
 
-When the app source is exported from AI Studio, add it under
-`starter-projects/fedex-ops-bid-assistant/` or link the GitHub export in that
-starter README.
+Use [the FedEx Logistics Intelligence System starter](starter-projects/fedex-logistics-intelligence-system/README.md)
+as the canonical project page. If the AI Studio source is exported later, link
+it there or replace the compiled artifact with a reviewable source tree.
 
 ## Repository Structure
 
@@ -106,7 +107,6 @@ starter-projects/
   README.md
   ai-idea-intake-agent/
   fedex-logistics-intelligence-system/
-  fedex-ops-bid-assistant/
   fedex-delivery-markets/
 .github/
   ISSUE_TEMPLATE/
@@ -144,7 +144,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for the full process.
 
 ## Status
 
-This is an initialization pass. The repo is ready for team documentation,
-prompt collection, and starter project intake. It is not a production system
+This repo is ready for team documentation, prompt collection, public-data
+starter projects, and governance review. It is not a production FedEx system
 and should not be used with confidential or regulated data until the proper
 FedEx approvals are in place.

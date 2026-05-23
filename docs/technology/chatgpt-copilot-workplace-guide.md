@@ -38,7 +38,7 @@ Use a Project when the work will continue over time.
 Good project examples:
 
 - AI Efficiency Team weekly meeting notes;
-- FedEx Ops Bid Assistant;
+- FedEx Logistics Intelligence System review notes;
 - executive review preparation;
 - prompt library improvements;
 - governance review packet.
