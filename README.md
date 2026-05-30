@@ -55,7 +55,8 @@ Our most mature starter project is a live, public-data decision-support dashboar
 
 **Tech details:** React 18 + Vite frontend, Express + TypeScript backend, optional Gemini AI drafts.
 
-**Try it:** See the [starter project page](starter-projects/fedex-logistics-intelligence-system/README.md) for screenshots, architecture, and a quick-start guide.
+**Live demo:** [https://fedex-logistics-intelligence-system-267358751314.us-east1.run.app](https://fedex-logistics-intelligence-system-267358751314.us-east1.run.app)  
+**Try it locally:** See the [starter project page](starter-projects/fedex-logistics-intelligence-system/README.md) for screenshots, architecture, and a quick-start guide.
 
 ---
 
@@ -77,6 +78,10 @@ Over **40 copy-paste prompts** organized by what FedEx managers actually do:
 All prompts include the **Safe Prompt Rule**: remove sensitive data first, review output before sharing, and keep a human in charge of every decision.
 
 ---
+
+## Presentation Deck
+
+A browser-based slide deck for the regional standup is available at [`assets/presentation-deck.html`](assets/presentation-deck.html). Open it in any browser, navigate with arrow keys, and print to PDF if needed.
 
 ## Starter Projects
 
