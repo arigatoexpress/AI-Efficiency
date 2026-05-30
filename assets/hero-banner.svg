@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 400" width="1200" height="400">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1e1b4b"/>
+      <stop offset="100%" stop-color="#312e81"/>
+    </linearGradient>
+    <linearGradient id="mountain" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#4338ca" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#1e1b4b" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="400" fill="url(#bg)"/>
+  <!-- Subtle mountain silhouette -->
+  <path d="M0,400 L0,280 L150,120 L300,260 L450,80 L600,240 L750,100 L900,260 L1050,140 L1200,280 L1200,400 Z" fill="url(#mountain)"/>
+  <!-- Content -->
+  <text x="600" y="160" text-anchor="middle" fill="#ffffff" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif" font-size="48" font-weight="700">Station Ops Intelligence</text>
+  <text x="600" y="210" text-anchor="middle" fill="#a5b4fc" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif" font-size="22" font-weight="400">FedEx Mountain Division Logistics Intelligence System</text>
+  <rect x="420" y="250" width="360" height="36" rx="18" fill="none" stroke="#6366f1" stroke-width="2"/>
+  <text x="600" y="275" text-anchor="middle" fill="#c7d2fe" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif" font-size="14" font-weight="600">PUBLIC-DATA DECISION-SUPPORT PROTOTYPE</text>
+  <text x="600" y="340" text-anchor="middle" fill="#818cf8" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif" font-size="14">React 18 • Express • Gemini • Built for Operations Managers</text>
+</svg>

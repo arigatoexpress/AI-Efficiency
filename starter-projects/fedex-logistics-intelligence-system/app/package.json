@@ -1,0 +1,32 @@
+{
+  "name": "fedex-logistics-intelligence-system",
+  "version": "2.0.0",
+  "description": "Public-data decision-support prototype for station operations managers. Mountain-region logistics intelligence dashboard.",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx server.ts",
+    "build": "vite build && esbuild server.ts --bundle --platform=node --target=node22 --outfile=dist/server.cjs --format=cjs --external:express",
+    "start": "node dist/server.cjs",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@google/genai": "^1.0.0",
+    "express": "^4.21.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.13.1",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@vitejs/plugin-react": "^4.3.4",
+    "esbuild": "^0.25.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3",
+    "vite": "^6.1.0"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  }
+}
