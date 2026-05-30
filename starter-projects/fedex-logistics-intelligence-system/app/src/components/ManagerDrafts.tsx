@@ -1,8 +1,13 @@
 import { useState } from 'react'
+import type { StationConfig } from '../data/stations'
 
 type DraftTopic = 'pre-shift' | 'handoff' | 'after-action'
 
-export default function ManagerDrafts() {
+interface Props {
+  station: StationConfig
+}
+
+export default function ManagerDrafts({ station }: Props) {
   const [topic, setTopic] = useState<DraftTopic>('pre-shift')
   const [loading, setLoading] = useState(false)
   const [draft, setDraft] = useState<string>('')
@@ -17,10 +22,14 @@ export default function ManagerDrafts() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          station: 'Gunnison, CO',
+          station: station.name,
           topic,
-          weather: { tempF: 18, snowDepthIn: 8, windMph: 22, alert: 'Winter Weather Advisory' },
-          roadConditions: { i70Status: 'Chain laws possible', us50Status: 'Open', cotripUrl: 'https://www.cotrip.org/' },
+          weather: station.weather,
+          roadConditions: {
+            i70Status: station.roadConditions.primaryStatus,
+            us50Status: station.roadConditions.secondaryStatus,
+            cotripUrl: station.roadConditions.cotripUrl,
+          },
           seismic: { magnitude: 0, location: 'N/A', time: 'N/A' },
         }),
       })
@@ -43,7 +52,7 @@ export default function ManagerDrafts() {
   return (
     <div className="panel col-6">
       <h2><span className="icon" aria-hidden="true">✍️</span> Manager Drafts</h2>
-      <p>Generate a draft brief using public data. Always review and verify before sharing.</p>
+      <p>Generate a draft brief for {station.name} using public data. Always review and verify before sharing.</p>
 
       <div className="btn-group">
         {(['pre-shift', 'handoff', 'after-action'] as DraftTopic[]).map((t) => (

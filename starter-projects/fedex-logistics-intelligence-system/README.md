@@ -65,13 +65,26 @@ npm run dev
 
 See [`app/README.md`](app/README.md) for full build, deploy, and environment details.
 
+### Multi-Station Scenarios
+
+The prototype includes realistic scenarios for four different FedEx operational contexts:
+
+| Station | Type | Scenario |
+| --- | --- | --- |
+| **Gunnison, CO** | Mountain station | Winter weather, chain laws, mountain P&D routes |
+| **Memphis, TN** | World Hub area | Thunderstorms, construction, air cargo connections |
+| **Indianapolis, IN** | Secondary hub | Highway accidents, wind advisories, yard safety |
+| **Phoenix, AZ** | Desert urban station | Excessive heat, dust storms, hydration protocols |
+
+Select any station from the dropdown to see context-specific risks, impacts, routes, and AI-generated briefs.
+
 ### Five Manager-Friendly Panels
 
 | Panel | What It Shows |
 | --- | --- |
-| **Shift Readiness** | Top three public risks for the next shift, with clear status labels: Normal, Watch, Verify, or Escalate. |
-| **Station Impact** | Plain-English explanation of possible dock, yard, staffing, or handoff effects. Always marked "possible impact, not confirmed." |
-| **Route Watch** | Public road/weather context for I-70, US-50, and alternate routes. Source links to cotrip.org on every card. |
+| **Shift Readiness** | Top public risks for the next shift, with clear status labels: Normal, Watch, Verify, or Escalate. |
+| **Station Impact** | Plain-English explanation of possible linehaul, P&D, sort hub, or cross-dock effects. Always marked "possible impact, not confirmed." |
+| **Route Watch** | Public road/weather context for primary and alternate routes. Source links to official DOT feeds on every card. |
 | **Manager Drafts** | One-click generation of pre-shift huddle notes, shift handoffs, and after-action summaries. Uses Gemini when available; falls back to local templates. |
 | **Source Trail** | A table of every signal, its origin, its type (public fact, model forecast, synthetic demo, manager note), and whether it needs internal verification. |
 
@@ -100,6 +113,8 @@ Use this sentence when presenting:
 4. Shift handoff draft.
 5. After-action summary after a disruption.
 6. AI idea intake from managers who want a new workflow.
+
+The scenarios use authentic FedEx terminology — linehaul, feeder, P&D, sort hub, cross-dock, ISP, twilight sort — while keeping all data synthetic and clearly labeled.
 
 See [manager workflows](manager-workflows.md) for examples.
 

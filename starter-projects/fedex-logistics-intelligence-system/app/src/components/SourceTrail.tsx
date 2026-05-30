@@ -1,26 +1,11 @@
-import { useState } from 'react'
+import type { StationConfig } from '../data/stations'
 
-interface SourceRow {
-  signal: string
-  origin: string
-  type: 'Public fact' | 'Model forecast' | 'Synthetic demo' | 'Manager note'
-  lastChecked: string
-  needsVerification: boolean
+interface Props {
+  station: StationConfig
 }
 
-const DEFAULT_SOURCES: SourceRow[] = [
-  { signal: 'Temperature / wind forecast', origin: 'Open-Meteo API', type: 'Model forecast', lastChecked: 'Demo load', needsVerification: true },
-  { signal: 'Weather alerts', origin: 'National Weather Service', type: 'Public fact', lastChecked: 'Demo load', needsVerification: true },
-  { signal: 'Road status (I-70, US-50)', origin: 'cotrip.org', type: 'Public fact', lastChecked: 'Demo load', needsVerification: true },
-  { signal: 'Sort throughput estimate', origin: 'Local synthetic demo', type: 'Synthetic demo', lastChecked: 'Demo load', needsVerification: true },
-  { signal: 'Staffing impact assessment', origin: 'Manager interpretation', type: 'Manager note', lastChecked: 'Demo load', needsVerification: true },
-  { signal: 'Seismic events', origin: 'USGS earthquake API', type: 'Public fact', lastChecked: 'Demo load', needsVerification: false },
-]
-
-export default function SourceTrail() {
-  const [sources] = useState<SourceRow[]>(DEFAULT_SOURCES)
-
-  const typeBadge = (type: SourceRow['type']) => {
+export default function SourceTrail({ station }: Props) {
+  const typeBadge = (type: 'Public fact' | 'Model forecast' | 'Synthetic demo' | 'Manager note') => {
     const cls: Record<string, string> = {
       'Public fact': 'badge-normal',
       'Model forecast': 'badge-verify',
@@ -45,7 +30,7 @@ export default function SourceTrail() {
             </tr>
           </thead>
           <tbody>
-            {sources.map((s, idx) => (
+            {station.sources.map((s, idx) => (
               <tr key={idx}>
                 <td>{s.signal}</td>
                 <td>{s.origin}</td>

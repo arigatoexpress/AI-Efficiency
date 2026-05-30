@@ -1,6 +1,6 @@
 # AI Efficiency Team — Agent Notes
 
-This repository is a public-safe documentation and starter-project hub for an operations-led AI efficiency team. It contains plain-English guides, copyable prompts, and governance-ready prototype scaffolds.
+This repository is a public-safe documentation and starter-project hub for an operations-led AI efficiency team at FedEx. It contains plain-English guides, copyable prompts, governance-ready prototype scaffolds, and a live full-stack decision-support demo.
 
 ## What this repo does
 
@@ -10,16 +10,21 @@ The repo turns operational friction into reusable AI assets: prompts for manager
 
 | Path | Purpose |
 |------|---------|
-| `docs/` | Human-first guides, governance checklists, and technology how-tos |
+| `docs/` | Human-first guides, governance checklists, technology how-tos, and templates |
 | `docs/ai-workplace-user-guide.md` | Onboarding doc for the least technical teammate |
+| `docs/fedex-ai-literacy-guide.md` | How the repo aligns with FedEx's enterprise AI Education program |
+| `docs/fedex-terminology.md` | Quick reference for FedEx operations terms |
+| `docs/pilot-program-template.md` | Template for proposing small, measurable AI pilots |
+| `docs/demo-script.md` | Script for presenting the repo and prototype to leadership |
 | `docs/documentation-standard.md` | Style guide for all repo docs and starter projects |
 | `prompts/` | Copy-paste prompt library organized by operational area |
+| `prompts/README.md` | Index of 40+ prompts across 10 categories |
 | `starter-projects/` | Runnable prototypes (React/Vite, AI Studio, Cloud Run) |
-| `starter-projects/fedex-logistics-intelligence-system/` | Most mature prototype — public-data ops dashboard |
+| `starter-projects/fedex-logistics-intelligence-system/` | Most mature prototype — public-data ops dashboard with multi-station scenarios |
 | `assets/` | Banners, screenshots, and architecture diagrams |
 | `.github/ISSUE_TEMPLATE/` | Issue templates for governance review |
 | `CONTRIBUTING.md` | Full contribution process |
-| `ROADMAP.md` | Phased plan for AI Studio, Foundry, and chat-agent work |
+| `ROADMAP.md` | Phased plan for prompts, data layer, Foundry, and chat-agent work |
 
 ## How to run / develop
 
@@ -44,7 +49,16 @@ This repo is primarily documentation; there is no unified dev server.
 - Explain acronyms the first time they appear.
 - Start each guide with who it is for, when to use it, and what not to do.
 - Prefer checklists and templates over abstract policy language.
+- Use authentic FedEx terminology (see `docs/fedex-terminology.md`) but never expose internal procedures or systems.
 
 ## Current status
 
-Active. Ready for team documentation, prompt collection, public-data starter projects, and governance review. The Logistics Intelligence System starter project has a live Cloud Run prototype and a source-owned rebuild in progress.
+Active. Presentation-ready for the regional AI Efficiency group standup.
+
+- ✅ Root README with compelling narrative and quick-start paths
+- ✅ 40+ FedEx-specific prompts across 10 categories
+- ✅ FedEx AI literacy guide aligned with enterprise AI Education program
+- ✅ Pilot program template and demo script
+- ✅ Logistics Intelligence System with 4 multi-station scenarios
+- ✅ Source-owned rebuild builds clean with zero warnings
+- ✅ All synthetic data clearly labeled; no production claims

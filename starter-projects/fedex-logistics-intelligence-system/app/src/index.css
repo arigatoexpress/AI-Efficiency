@@ -52,16 +52,39 @@ html, body {
 
 .header {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
   margin-bottom: 16px;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 12px;
 }
 
 .header h1 { margin: 0; font-size: 22px; font-weight: 700; }
 
-.header-meta { color: var(--muted); font-size: 13px; }
+.header-meta { color: var(--muted); font-size: 13px; margin-top: 4px; }
+
+.station-selector select {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 13px;
+  color: var(--text);
+  cursor: pointer;
+  min-width: 220px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
 
 .panels {
   display: grid;

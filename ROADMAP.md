@@ -1,6 +1,6 @@
 # AI Efficiency Team Roadmap
 
-Last reviewed: 2026-05-23
+Last reviewed: 2026-05-27
 
 This roadmap keeps the team focused on one useful path at a time: make the
 current logistics intelligence app credible, make the data provenance clean,
@@ -18,7 +18,7 @@ projects stay public-data, synthetic-data, or scrubbed-note only.
 
 ## Phase 0 - Public Repo Cleanup
 
-Status: active
+Status: **Complete**
 
 Goal: make the repository clean enough to show to IT, AI governance, and senior
 leaders without stale starter material.
@@ -39,7 +39,7 @@ Verification:
 
 ## Phase 1 - Logistics Intelligence App Hardening
 
-Status: active; map-control hotfix deployed
+Status: **Complete**; map-control hotfix deployed
 
 Goal: make the AI Studio and Cloud Run prototype useful for station managers as
 a decision-support console.
@@ -63,7 +63,29 @@ Verification:
 - no language implying official production authority;
 - no API keys or secrets in public files.
 
-## Phase 2 - Public Data Layer
+## Phase 2 - Prompt Library Expansion
+
+Status: **Active**
+
+Goal: build the richest, most practical prompt library for FedEx operations managers.
+
+Deliverables:
+
+- FedEx-specific prompts for daily operations, safety, peak season, linehaul,
+  routing, customer communication, and contractor coordination;
+- FedEx terminology guide for authentic, accurate language;
+- FedEx AI literacy guide aligned with the company's enterprise AI Education program;
+- pilot program template for proposing small, measurable experiments;
+- demo script for presenting the repo to regional leadership.
+
+Verification:
+
+- every prompt includes the safe-prompt rule;
+- terminology is accurate and sourced from public FedEx documents;
+- prompts are tested by at least one operations manager;
+- no proprietary FedEx procedures or internal system details are exposed.
+
+## Phase 3 - Public Data Layer
 
 Status: design started
 
@@ -93,7 +115,7 @@ Verification:
 - vendor-restricted data is never redistributed raw;
 - all approximations are labeled as estimates.
 
-## Phase 3 - Foundry-Ready Export
+## Phase 4 - Foundry-Ready Export
 
 Status: live Kadima discovery verified; upload dry-run blocked pending dataset
 RIDs
@@ -139,7 +161,7 @@ Verification:
 - internal or sensitive data classifications are rejected.
 - upload remains dry-run until Foundry dataset mappings are approved.
 
-## Phase 4 - Predictive Load Approximation
+## Phase 5 - Predictive Load Approximation
 
 Status: research
 
@@ -169,7 +191,7 @@ Verification:
 - never label public-derived estimates as real package volume or real station
   workload.
 
-## Phase 5 - Teams Or Telegram Intake Agent
+## Phase 6 - Teams Or Telegram Intake Agent
 
 Status: later phase
 
@@ -198,7 +220,7 @@ Verification:
 - no screenshot storage until governance approves retention, access, and
   redaction rules.
 
-## Phase 6 - FHE And Privacy Research
+## Phase 7 - FHE And Privacy Research
 
 Status: research
 

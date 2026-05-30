@@ -1,41 +1,11 @@
-import { useState } from 'react'
+import type { StationConfig } from '../data/stations'
 
-interface RouteItem {
-  route: string
-  status: 'open' | 'restricted' | 'closed' | 'unknown'
-  note: string
-  sourceUrl: string
-  sourceLabel: string
+interface Props {
+  station: StationConfig
 }
 
-const DEFAULT_ROUTES: RouteItem[] = [
-  {
-    route: 'I-70 Vail Pass',
-    status: 'restricted',
-    note: 'Chain laws possible. Monitor for traction restrictions.',
-    sourceUrl: 'https://www.cotrip.org/',
-    sourceLabel: 'COtrip public feed',
-  },
-  {
-    route: 'US-50 Monarch Summit',
-    status: 'open',
-    note: 'Open with possible icy conditions. No closures reported.',
-    sourceUrl: 'https://www.cotrip.org/',
-    sourceLabel: 'COtrip public feed',
-  },
-  {
-    route: 'CO-131 (Alternate)',
-    status: 'open',
-    note: 'Potential alternate if I-70 restrictions worsen. Verify suitability for vehicle type.',
-    sourceUrl: 'https://www.cotrip.org/',
-    sourceLabel: 'COtrip public feed',
-  },
-]
-
-export default function RouteWatch() {
-  const [routes] = useState<RouteItem[]>(DEFAULT_ROUTES)
-
-  const statusDot = (status: RouteItem['status']) => {
+export default function RouteWatch({ station }: Props) {
+  const statusDot = (status: 'open' | 'restricted' | 'closed' | 'unknown') => {
     const map: Record<string, string> = {
       open: 'dot-normal',
       restricted: 'dot-watch',
@@ -45,7 +15,7 @@ export default function RouteWatch() {
     return <span className={`status-dot ${map[status]}`} aria-hidden="true" />
   }
 
-  const statusLabel = (status: RouteItem['status']) => {
+  const statusLabel = (status: 'open' | 'restricted' | 'closed' | 'unknown') => {
     const map: Record<string, string> = { open: 'Open', restricted: 'Restricted', closed: 'Closed', unknown: 'Unknown' }
     return map[status]
   }
@@ -53,9 +23,9 @@ export default function RouteWatch() {
   return (
     <div className="panel col-6">
       <h2><span className="icon" aria-hidden="true">🛣️</span> Route Watch</h2>
-      <p>Public road conditions near Gunnison. Always verify with cotrip.org before routing decisions.</p>
+      <p>Public road conditions near {station.name}. Always verify with official sources before routing decisions.</p>
       <div className="card-list">
-        {routes.map((r, idx) => (
+        {station.routes.map((r, idx) => (
           <div className="card" key={idx}>
             <div className="card-body">
               <div className="card-title">

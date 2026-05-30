@@ -1,31 +1,39 @@
-# Documentation Index
+# Docs
 
-Use these docs as the team handbook.
+This folder contains guides, standards, and templates for the AI Efficiency Team.
 
-## Core Guides
+## Start Here
 
-- [AI workplace user guide](ai-workplace-user-guide.md)
-- [Getting started](getting-started.md)
-- [Documentation standard](documentation-standard.md)
-- [Program roadmap](../ROADMAP.md)
-- [Public data source catalog](data-source-catalog.md)
-- [Foundry integration roadmap](foundry-integration-roadmap.md)
-- [Teams and Telegram agent roadmap](teams-telegram-agent-roadmap.md)
-- [FHE and Zama research note](fhe-zama-research.md)
+| Document | Purpose | Audience |
+|----------|---------|----------|
+| [AI workplace user guide](ai-workplace-user-guide.md) | The beginner guide. Read this first if you are new to AI. | Everyone |
+| [Getting started](getting-started.md) | Short first read for new team members. | New team members |
+| [FedEx AI literacy guide](fedex-ai-literacy-guide.md) | How this repo aligns with FedEx's enterprise AI Education program. | Everyone |
+| [FedEx terminology](fedex-terminology.md) | Quick reference for FedEx operations terms. | Anyone writing prompts or docs |
 
-## Governance
+## Governance and Standards
 
-- [AI use policy](governance/ai-use-policy.md)
-- [Project review checklist](governance/project-review-checklist.md)
-- [Feedback and screenshot intake rules](governance/feedback-and-screenshot-intake-rules.md)
+| Document | Purpose | Audience |
+|----------|---------|----------|
+| [Project review checklist](governance/project-review-checklist.md) | Review steps before presenting, sharing, or piloting. | Team leads, reviewers |
+| [AI use policy](governance/ai-use-policy.md) | Boundaries for safe AI use. | Everyone |
+| [Feedback and screenshot intake rules](governance/feedback-and-screenshot-intake-rules.md) | How to safely collect feedback. | Governance leads |
+| [Pilot program template](pilot-program-template.md) | Template for proposing a small, measurable AI pilot. | Managers proposing pilots |
+| [Demo script](demo-script.md) | Script for presenting the repo and prototype to leadership. | Anyone giving a demo |
 
-## Technology
+## Technology Guides
 
-- [Gemini for operations managers](technology/gemini-for-ops-managers.md)
-- [ChatGPT and Copilot workplace guide](technology/chatgpt-copilot-workplace-guide.md)
-- [Google AI Studio guide](technology/google-ai-studio-guide.md)
+| Document | Purpose | Audience |
+|----------|---------|----------|
+| [Gemini for ops managers](technology/gemini-for-ops-managers.md) | Using Gemini safely in operations. | Gemini users |
+| [Google AI Studio guide](technology/google-ai-studio-guide.md) | Prototyping apps from prompts. | Technical builders |
+| [ChatGPT/Copilot workplace guide](technology/chatgpt-copilot-workplace-guide.md) | Using ChatGPT and Copilot at work. | Approved tool users |
 
-## Practical Rule
+## Planning and Architecture
 
-If a document would be hard to explain to a frontline manager in two minutes,
-make it simpler before calling it finished.
+| Document | Purpose | Audience |
+|----------|---------|----------|
+| [Data source catalog](data-source-catalog.md) | Public data sources, rights, and provenance. | Technical builders |
+| [Documentation standard](documentation-standard.md) | How to write docs for this repo. | Contributors |
+| [Foundry integration roadmap](foundry-integration-roadmap.md) | Path to Palantir Foundry export. | Technical architects |
+| [FHE/Zama research](fhe-zama-research.md) | Privacy-preserving encryption research. | Security researchers |
