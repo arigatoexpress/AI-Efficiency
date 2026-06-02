@@ -1,6 +1,6 @@
 # AI Efficiency Team Roadmap
 
-Last reviewed: 2026-05-27
+Last reviewed: 2026-06-02
 
 This roadmap keeps the team focused on one useful path at a time: make the
 current logistics intelligence app credible, make the data provenance clean,
@@ -73,6 +73,8 @@ Deliverables:
 
 - FedEx-specific prompts for daily operations, safety, peak season, linehaul,
   routing, customer communication, and contractor coordination;
+- a printable daily operations playbook that sequences those prompts into a
+  full-shift routine (pre-shift, mid-shift, peak, handoff, after-action, weekly);
 - FedEx terminology guide for authentic, accurate language;
 - FedEx AI literacy guide aligned with the company's enterprise AI Education program;
 - pilot program template for proposing small, measurable experiments;

@@ -32,8 +32,10 @@ FedEx moves millions of packages daily across Express, Ground, and Freight netwo
 | [FedEx AI literacy guide](docs/fedex-ai-literacy-guide.md) | How this repo aligns with FedEx's enterprise AI Education program. | Everyone |
 | [Getting started](docs/getting-started.md) | The short first read for team members. | New team members |
 | [Prompt library](prompts/README.md) | Copyable prompts for daily operations, safety, peak season, linehaul, and customer communication. | Managers who want quick wins |
+| [Daily operations playbook](docs/daily-ops-playbook.md) | A printable, run-it-every-day playbook: phase-by-phase checklists plus ready-to-paste prompts for a full shift. | Operations managers running a daily shift |
 | [Prompting basics](prompts/prompt-engineering-basics.md) | How to write better prompts without technical language. | Anyone using ChatGPT or Gemini |
 | [Gemini guide](docs/technology/gemini-for-ops-managers.md) | How to use Gemini well and safely in an operations context. | Gemini users |
+| [Google Cloud + ADK integration](docs/technology/google-cloud-adk-integration.md) | The forward path from AI Studio + Gemini to Vertex AI, the Agent Development Kit, and Cloud Run — internal data kept governance-gated. | Engineers and technically-curious managers |
 | [Governance checklist](docs/governance/project-review-checklist.md) | Review steps before sharing, piloting, or production use. | Team leads and reviewers |
 | [Pilot template](docs/pilot-program-template.md) | Propose a small, measurable AI pilot with clear success criteria. | Managers ready to experiment |
 
@@ -77,6 +79,18 @@ Over **40 copy-paste prompts** organized by what FedEx managers actually do:
 
 All prompts include the **Safe Prompt Rule**: remove sensitive data first, review output before sharing, and keep a human in charge of every decision.
 
+New: the [Daily Operations Playbook](docs/daily-ops-playbook.md) stitches these prompts into a printable, phase-by-phase routine — pre-shift, mid-shift, peak/surge, handoff, after-action, and a weekly cadence — with a tape-it-up one-pager at the end.
+
+---
+
+## Forward Path: Google Cloud + Gemini + ADK
+
+Today the Logistics Intelligence app runs on **Cloud Run** with **Google AI Studio**-prototyped, direct **Gemini** drafts. The [Google Cloud + ADK integration guide](docs/technology/google-cloud-adk-integration.md) lays out the credible next steps — Gemini via **Vertex AI**, agents built with the **Agent Development Kit (ADK)**, hosted on **Vertex AI Agent Engine** — while internal data and any action-taking stay gated behind FedEx governance until approved.
+
+<p align="center">
+  <img src="assets/architecture-diagram-adk.svg" alt="Forward-path architecture: public data → Cloud Run app → Gemini via Vertex AI / ADK agent → human review → governance-gated Foundry" width="90%">
+</p>
+
 ---
 
 ## Presentation Deck
@@ -115,10 +129,13 @@ docs/
   fedex-terminology.md             ← Quick reference for operations terms
   getting-started.md
   documentation-standard.md
+  daily-ops-playbook.md            ← Printable run-it-every-day playbook
   pilot-program-template.md        ← Propose a pilot
   demo-script.md                   ← Present this repo to leadership
   governance/                      ← Checklists and policies
   technology/                      ← How-to guides for approved tools
+    gemini-for-ops-managers.md
+    google-cloud-adk-integration.md ← Vertex AI + ADK forward path
 prompts/
   README.md                        ← Copy-paste prompts for daily work
   daily-operations.md
@@ -141,6 +158,8 @@ assets/
   dashboard-screenshot.png
   dashboard-preview.svg
   architecture-diagram.svg
+  architecture-diagram-adk.svg     ← Gemini/Vertex AI/ADK forward path
+  presentation-deck.html           ← Regional standup deck
 .github/
   ISSUE_TEMPLATE/
 ```
