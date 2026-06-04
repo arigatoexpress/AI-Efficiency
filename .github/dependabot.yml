@@ -1,0 +1,13 @@
+version: 2
+updates:
+  # Keep GitHub Actions pinned versions up to date (applies once workflows are added)
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+
+  # npm dependencies for the FedEx logistics intelligence system starter app
+  - package-ecosystem: "npm"
+    directory: "/starter-projects/fedex-logistics-intelligence-system/app"
+    schedule:
+      interval: "weekly"
