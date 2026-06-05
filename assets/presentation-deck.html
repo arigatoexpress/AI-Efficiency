@@ -31,19 +31,26 @@
     position: relative;
   }
   .slide.active { display: flex; }
-  .slide h1 { font-size: 42px; font-weight: 800; color: var(--fedex-purple); margin-bottom: 16px; line-height: 1.2; }
-  .slide h2 { font-size: 32px; font-weight: 700; color: var(--fedex-purple); margin-bottom: 20px; }
-  .slide h3 { font-size: 20px; font-weight: 600; margin-bottom: 10px; color: var(--text); }
+  .slide h1 { font-size: 42px; font-weight: 800; color: var(--fedex-purple); margin-bottom: 16px; line-height: 1.2; letter-spacing: -0.01em; }
+  .slide h2 { font-size: 32px; font-weight: 700; color: var(--fedex-purple); margin-bottom: 20px; line-height: 1.25; letter-spacing: -0.01em; }
+  .slide h3 { font-size: 20px; font-weight: 600; margin-bottom: 12px; color: var(--text); }
   .slide p, .slide li { font-size: 18px; line-height: 1.6; color: var(--text); margin-bottom: 12px; }
-  .slide ul { margin-left: 24px; }
+  .slide ul { margin-left: 24px; margin-bottom: 8px; }
   .slide li { margin-bottom: 8px; }
+  .slide li:last-child { margin-bottom: 0; }
+  .slide .lead { font-size: 19px; color: var(--text); max-width: 820px; }
   .badge { display: inline-block; background: var(--fedex-orange); color: #fff; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
   .meta { color: var(--muted); font-size: 14px; margin-top: 8px; }
   .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 20px; }
   .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 20px; }
   .card { border: 1px solid var(--border); border-radius: 10px; padding: 18px; background: #fafafa; }
   .card h4 { font-size: 15px; font-weight: 700; margin-bottom: 6px; color: var(--fedex-purple); }
-  .card p { font-size: 14px; color: var(--muted); margin: 0; }
+  .card p { font-size: 14px; line-height: 1.5; color: var(--muted); margin: 0; }
+  .flow { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 20px; }
+  .flow .step { background: #f0f0f4; border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; font-size: 13px; font-weight: 600; color: var(--fedex-purple); }
+  .flow .step.gated { background: #fff4ec; border-color: var(--fedex-orange); color: var(--fedex-orange); }
+  .flow .arrow { color: var(--muted); font-weight: 700; }
+  .diagram { width: 100%; max-height: 300px; object-fit: contain; border-radius: 10px; border: 1px solid var(--border); background: #fff; margin-top: 16px; padding: 8px; }
   .stat { text-align: center; padding: 20px; }
   .stat-value { font-size: 36px; font-weight: 800; color: var(--fedex-purple); }
   .stat-label { font-size: 13px; color: var(--muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.04em; }
@@ -72,7 +79,7 @@
 </head>
 <body>
 <div class="progress" id="progress"></div>
-<div class="slide-num" id="slideNum">1 / 10</div>
+<div class="slide-num" id="slideNum">1 / 13</div>
 
 <div id="deck">
 
@@ -81,8 +88,8 @@
     <div class="accent-bar"></div>
     <div class="badge">Regional AI Efficiency Group</div>
     <h1>AI Efficiency Team</h1>
-    <p style="font-size: 22px; max-width: 700px;">Operations-led AI hub that turns real operational friction into reusable prompts, starter projects, and governance-ready pilot packets.</p>
-    <p class="meta">Built by FedEx operations people, for FedEx operations people.<br>Public-safe. Human-reviewed. Safety Above All.</p>
+    <p style="font-size: 22px; line-height: 1.5; max-width: 760px;">An operations-led AI hub that turns real operational friction into reusable prompts, starter projects, and governance-ready pilot packets.</p>
+    <p class="meta" style="margin-top: 16px;">Built by FedEx operations people, for FedEx operations people.<br>Public-safe &middot; Human-reviewed &middot; Safety Above All.</p>
   </div>
 
   <!-- Slide 2: Why This Matters -->
@@ -103,15 +110,37 @@
         <div class="stat-label">Copy-paste prompts ready now</div>
       </div>
     </div>
-    <div class="quote">"The future of business is being shaped by data and AI more than ever before. As FedEx continues its evolution into an AI-powered enterprise, our people remain at the heart of everything we do."<br>— Raj Subramaniam, President & CEO, FedEx Corporation</div>
-    <p><strong>This repo is our regional contribution to that mission.</strong></p>
+    <div class="quote">"The future of business is being shaped by data and AI more than ever before. As FedEx continues its evolution into an AI-powered enterprise, our people remain at the heart of everything we do."<br>— Raj Subramaniam, President &amp; CEO, FedEx Corporation</div>
+    <p style="margin-bottom:0;"><strong>This repo is our regional contribution to that mission.</strong></p>
   </div>
 
-  <!-- Slide 3: The Repo -->
+  <!-- Slide 3: The Daily Reality -->
+  <div class="slide">
+    <div class="accent-bar"></div>
+    <h2>The Daily Reality It Helps</h2>
+    <p class="lead">AI is not abstract here. It removes friction from the work managers already do every shift.</p>
+    <div class="grid-3">
+      <div class="card">
+        <h4>Before the shift</h4>
+        <p>Pull public weather and road signals, then draft a pre-shift huddle and safety note in minutes instead of scrolling five tabs.</p>
+      </div>
+      <div class="card">
+        <h4>During the shift</h4>
+        <p>Turn a messy escalation into a clear handoff, summarize a metric spike, or rough out a customer service alert.</p>
+      </div>
+      <div class="card">
+        <h4>After the shift</h4>
+        <p>Draft an after-action review, a near-miss report, or an executive update the manager edits and owns.</p>
+      </div>
+    </div>
+    <p class="meta" style="margin-top:16px;">The goal is to save managers time and sharpen their judgment &mdash; never to replace it.</p>
+  </div>
+
+  <!-- Slide 4: The Repo -->
   <div class="slide">
     <div class="accent-bar"></div>
     <h2>The Repository</h2>
-    <p>One clean hub with three entry points based on who you are:</p>
+    <p class="lead">One clean hub with three entry points, based on who you are:</p>
     <div class="grid-3">
       <div class="card">
         <h4>📋 Managers</h4>
@@ -129,11 +158,11 @@
     <p class="meta" style="margin-top:16px;">Everything uses public or synthetic data until formal FedEx approval is in place.</p>
   </div>
 
-  <!-- Slide 4: Prompt Library -->
+  <!-- Slide 5: Prompt Library -->
   <div class="slide">
     <div class="accent-bar"></div>
-    <h2>Prompt Library — 40+ FedEx-Specific Prompts</h2>
-    <p>Organized by what managers actually do, not by AI theory:</p>
+    <h2>Prompt Library &mdash; 40+ FedEx-Specific Prompts</h2>
+    <p class="lead">Organized by what managers actually do, not by AI theory:</p>
     <div class="grid-2">
       <div>
         <ul>
@@ -155,11 +184,30 @@
     <p class="meta">Every prompt includes the Safe Prompt Rule: remove sensitive data first, review output before sharing, keep a human in charge.</p>
   </div>
 
-  <!-- Slide 5: Featured Project -->
+  <!-- Slide 6: Daily Ops Playbook (NEW this week) -->
+  <div class="slide">
+    <div class="accent-bar"></div>
+    <span class="badge">New This Week</span>
+    <h2 style="margin-top:12px;">The Daily Ops Playbook</h2>
+    <p class="lead">A single printable page that turns the prompt library into a daily habit &mdash; copy, paste, edit, done.</p>
+    <div class="grid-2" style="margin-top:18px;">
+      <div class="card">
+        <h4>What it is</h4>
+        <p>A copy-paste daily checklist with the go-to prompts for a manager's morning, mid-shift, and end-of-shift routine. Print it, pin it by the desk, work down the list.</p>
+      </div>
+      <div class="card">
+        <h4>Why it matters</h4>
+        <p>Lowers the barrier for the least technical teammate. No tool to learn &mdash; just a page that says what to do and which prompt to use, with the Safe Prompt Rule on every step.</p>
+      </div>
+    </div>
+    <div class="url-box">docs/daily-ops-playbook.md</div>
+  </div>
+
+  <!-- Slide 7: Featured Project -->
   <div class="slide">
     <div class="accent-bar"></div>
     <h2>Featured Project: Logistics Intelligence System</h2>
-    <p>A live, public-data decision-support dashboard for station operations managers.</p>
+    <p class="lead">A live, public-data decision-support dashboard for station operations managers.</p>
     <img src="dashboard-screenshot.png" alt="Dashboard screenshot" class="screenshot" style="max-height: 320px; object-fit: cover; object-position: top;">
     <div class="grid-2" style="margin-top: 12px;">
       <div class="card">
@@ -173,11 +221,11 @@
     </div>
   </div>
 
-  <!-- Slide 6: Live Demo -->
+  <!-- Slide 8: Live Demo -->
   <div class="slide">
     <div class="accent-bar"></div>
     <h2>Live Demo</h2>
-    <p>Select a station scenario and see context-specific risk signals and AI-generated briefs:</p>
+    <p class="lead">Select a station scenario and see context-specific risk signals and AI-generated briefs:</p>
     <div class="grid-2">
       <div class="card">
         <h4>🏔️ Gunnison, CO</h4>
@@ -199,10 +247,33 @@
     <div class="url-box">https://fedex-logistics-intelligence-system-267358751314.us-east1.run.app</div>
   </div>
 
-  <!-- Slide 7: Safety Framing -->
+  <!-- Slide 9: Forward Path — Google Cloud + ADK (NEW this week) -->
   <div class="slide">
     <div class="accent-bar"></div>
-    <h2>Safety & Governance Built In</h2>
+    <span class="badge">Forward Path</span>
+    <h2 style="margin-top:12px;">Google Cloud + Gemini + ADK</h2>
+    <p class="lead">A credible, governed path from prototype to agent &mdash; built entirely on tools we already use.</p>
+    <div class="flow">
+      <span class="step">Google AI Studio</span>
+      <span class="arrow">&rarr;</span>
+      <span class="step">Gemini / Vertex AI</span>
+      <span class="arrow">&rarr;</span>
+      <span class="step">Agent Development Kit (ADK)</span>
+      <span class="arrow">&rarr;</span>
+      <span class="step">Vertex AI Agent Engine</span>
+      <span class="arrow">&rarr;</span>
+      <span class="step">Cloud Run</span>
+      <span class="arrow">&rarr;</span>
+      <span class="step gated">Foundry &mdash; governance-gated</span>
+    </div>
+    <img src="architecture-diagram-adk.svg" alt="Google Cloud and ADK forward-path architecture: AI Studio to Gemini/Vertex AI to ADK to Agent Engine to Cloud Run, with Foundry gated behind governance" class="diagram">
+    <p class="meta" style="margin-top:12px;">Internal-data access through Foundry stays behind governance review &mdash; we earn it with evidence from small pilots, not assumptions.</p>
+  </div>
+
+  <!-- Slide 10: Safety Framing -->
+  <div class="slide">
+    <div class="accent-bar"></div>
+    <h2>Safety &amp; Governance Built In</h2>
     <div class="grid-2">
       <div>
         <h3>🔒 Data Boundaries</h3>
@@ -226,11 +297,11 @@
     <div class="quote">This is a public-data decision-support prototype. It helps managers notice and explain regional risk faster, but it does not make operational decisions and it does not use FedEx internal data.</div>
   </div>
 
-  <!-- Slide 8: Pilot Template -->
+  <!-- Slide 11: Pilot Template -->
   <div class="slide">
     <div class="accent-bar"></div>
     <h2>From Prototype to Pilot</h2>
-    <p>We are not asking for production approval today. We are asking to run small, measurable pilots.</p>
+    <p class="lead">We are not asking for production approval today. We are asking to run small, measurable pilots.</p>
     <div class="grid-3">
       <div class="card">
         <h4>1. Propose</h4>
@@ -248,7 +319,7 @@
     <p class="meta" style="margin-top:16px;">The template includes demo readiness checklists, failure criteria, and governance review steps.</p>
   </div>
 
-  <!-- Slide 9: Call to Action -->
+  <!-- Slide 12: Call to Action -->
   <div class="slide">
     <div class="accent-bar"></div>
     <h2>How to Engage</h2>
@@ -256,7 +327,7 @@
       <div>
         <h3>If you are a manager</h3>
         <ul>
-          <li>Start with the <strong>prompt library</strong></li>
+          <li>Print the new <strong>Daily Ops Playbook</strong></li>
           <li>Try the daily operations and safety prompts</li>
           <li>Share feedback and improvements</li>
         </ul>
@@ -288,7 +359,7 @@
     </div>
   </div>
 
-  <!-- Slide 10: Q&A -->
+  <!-- Slide 13: Q&A -->
   <div class="slide">
     <div class="accent-bar"></div>
     <h1>Questions?</h1>
@@ -301,7 +372,7 @@
 
 <div class="nav">
   <button id="prevBtn" onclick="prevSlide()">◀ Previous</button>
-  <span id="navNum" style="font-size:13px;color:var(--muted);font-weight:600;">1 / 10</span>
+  <span id="navNum" style="font-size:13px;color:var(--muted);font-weight:600;">1 / 13</span>
   <button id="nextBtn" onclick="nextSlide()">Next ▶</button>
 </div>
 
