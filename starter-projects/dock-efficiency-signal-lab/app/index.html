@@ -799,7 +799,12 @@ function renderRankings(goal,perPoint){
   const netWk=(avg-goal)*perPoint/52;
   const cards=document.getElementById('rankCards'); cards.innerHTML='';
   const scopeName=SCOPE==='ALL'?'Network':SCOPE;
-  card(cards, avg>=goal?'good':'bad',scopeName+' efficiency', round(avg,1), 'avg vs goal '+round(goal,1)+' ('+(avg-goal>=0?'+':'')+round(avg-goal,1)+' pts), '+rows.length+' fac.');
+  // median is robust to tiny-station outliers (a small facility far over its low goal can skew the mean)
+  const sv=rows.map(r=>r.v).slice().sort((a,b)=>a-b);
+  const med=sv.length?(sv.length%2?sv[(sv.length-1)/2]:(sv[sv.length/2-1]+sv[sv.length/2])/2):0;
+  const skew=Math.abs(avg-med)>5;
+  card(cards, avg>=goal?'good':'bad',scopeName+' efficiency', round(avg,1),
+    'mean · median '+round(med,1)+(skew?' ⚠ (mean skewed by small stations)':'')+' vs goal '+round(goal,1)+', '+rows.length+' fac.');
   card(cards, netWk>=0?'good':'bad','Weekly $ vs plan', fmtMoney(netWk), 'avg gap × $/pt ÷ 52');
   card(cards, netWk>=0?'good':'bad','Annualized', fmtMoney(netWk*52), 'if sustained 52 wks');
   card(cards, below>rows.length/2?'bad':'warn','Below goal', below+' / '+rows.length, 'facilities under '+round(goal,1));
