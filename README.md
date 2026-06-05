@@ -90,6 +90,7 @@ Early examples the team can learn from, improve, and submit for review.
 | Project | Status | What it does |
 | --- | --- | --- |
 | [FedEx Logistics Intelligence System](starter-projects/fedex-logistics-intelligence-system/README.md) | **Live prototype + source-owned rebuild** | Public-data station-ops console for weather, road, and regional risk briefings. |
+| [Dock Efficiency Signal Lab](starter-projects/dock-efficiency-signal-lab/README.md) | **Offline single-file app** | Process-control (SPC) + technical-analysis indicators + forecasting on weekly dock-efficiency KPIs; ranks top/bottom performers with $ impact and Scorecard focus. Fully offline — no data leaves the machine. |
 | [AI Idea Intake Agent](starter-projects/ai-idea-intake-agent/README.md) | Concept and governance starter | Safe Teams/Copilot or Gemini-channel flow for AI ideas, feedback, and use-case triage. |
 | [Delivery Markets Lab](starter-projects/fedex-delivery-markets/README.md) | Prototype reference | Synthetic-data, paper-only delivery-market concept demo. |
 
@@ -134,6 +135,7 @@ prompts/
 starter-projects/
   README.md
   fedex-logistics-intelligence-system/  ← Full-stack app + docs
+  dock-efficiency-signal-lab/           ← Offline SPC + forecasting app + docs
   ai-idea-intake-agent/
   fedex-delivery-markets/
 assets/

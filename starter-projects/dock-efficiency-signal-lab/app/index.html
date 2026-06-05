@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Dock Efficiency Signal Lab</title>
+<!--
+  Dock Efficiency Signal Lab
+  ==========================
+  A single-file, fully OFFLINE, dependency-free dashboard that applies
+  trading-style technical-analysis (TA) indicators AND rigorous Statistical
+  Process Control (SPC) + lightweight forecasting to weekly operations KPIs
+  (e.g. dock-efficiency / TLH % of goal).
+
+  GOVERNANCE: This file makes NO network calls. Nothing you load leaves your
+  machine. Ships with synthetic demo data; load your own CSV locally to analyze
+  real numbers. Do not commit real facility data into a shared repository.
+
+  Methodology condensed from two research passes (see "Method & Caveats" tab).
+  Headline principle: at ~25 weekly points, SPC is the defensible alerting
+  engine; TA indicators are visual/communication aids, not triggers; forecasts
+  are simple, damped, ensembled, and shown with honest widening bands.
+-->
+<style>
+  :root{
+    --purple:#4D148C; --orange:#FF6600; --ink:#1d1d22; --muted:#6b6b78;
+    --line:#e3e3ea; --bg:#f6f6f9; --card:#ffffff; --good:#1a8f4c;
+    --warn:#d98300; --bad:#c62828; --grid:#ececf2; --accent:#4D148C;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+       color:var(--ink);background:var(--bg);font-size:14px;line-height:1.45}
+  header{background:linear-gradient(100deg,var(--purple),#6a2bb0);color:#fff;
+         padding:14px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  header h1{font-size:18px;margin:0;font-weight:650;letter-spacing:.2px}
+  header .tag{background:var(--orange);color:#fff;font-size:11px;font-weight:700;
+              padding:3px 8px;border-radius:20px;text-transform:uppercase;letter-spacing:.5px}
+  header .gov{margin-left:auto;font-size:11.5px;opacity:.92;display:flex;align-items:center;gap:6px}
+  .dot{width:8px;height:8px;border-radius:50%;background:#46e08a;display:inline-block;box-shadow:0 0 0 3px rgba(70,224,138,.25)}
+  .wrap{max-width:1180px;margin:0 auto;padding:18px}
+  .controls{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end;background:var(--card);
+            border:1px solid #e7e7ee;border-radius:12px;padding:14px 16px;margin-bottom:14px}
+  .ctl{display:flex;flex-direction:column;gap:4px}
+  .ctl label{font-size:11px;font-weight:650;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+  select,input,button{font:inherit;padding:7px 10px;border:1px solid #d4d4de;border-radius:8px;background:#fff;color:var(--ink)}
+  button{cursor:pointer;background:var(--purple);color:#fff;border:none;font-weight:600}
+  button.ghost{background:#fff;color:var(--purple);border:1px solid var(--purple)}
+  button:hover{filter:brightness(1.06)}
+  .tabs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:14px}
+  .tab{padding:9px 15px;border-radius:9px 9px 0 0;background:#ececf2;cursor:pointer;font-weight:600;color:var(--muted);border:1px solid transparent;border-bottom:none}
+  .tab.active{background:var(--card);color:var(--purple);border-color:#e7e7ee}
+  .panel{display:none;background:var(--card);border:1px solid #e7e7ee;border-radius:0 12px 12px 12px;padding:18px}
+  .panel.active{display:block}
+  h2{font-size:15px;margin:0 0 4px}
+  .sub{color:var(--muted);font-size:12.5px;margin:0 0 14px}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin:8px 0 18px}
+  .signal{border:1px solid #e7e7ee;border-left-width:4px;border-radius:9px;padding:11px 13px;background:#fcfcfe}
+  .signal .k{font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);font-weight:650}
+  .signal .v{font-size:20px;font-weight:700;margin:2px 0}
+  .signal .d{font-size:12px;color:var(--muted)}
+  .signal.good{border-left-color:var(--good)} .signal.good .v{color:var(--good)}
+  .signal.warn{border-left-color:var(--warn)} .signal.warn .v{color:var(--warn)}
+  .signal.bad{border-left-color:var(--bad)} .signal.bad .v{color:var(--bad)}
+  .signal.neutral{border-left-color:var(--purple)}
+  .chartbox{border:1px solid #eee;border-radius:10px;padding:6px 6px 2px;margin-bottom:16px;background:#fff}
+  .chartbox h3{font-size:13px;margin:8px 4px 2px;color:var(--ink)}
+  .chartbox .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11.5px;color:var(--muted);margin:2px 6px 6px}
+  .legend i{display:inline-block;width:18px;height:3px;border-radius:2px;vertical-align:middle;margin-right:4px}
+  svg{display:block;width:100%;height:auto;font-size:10px}
+  table{border-collapse:collapse;width:100%;font-size:12.5px;margin-top:8px}
+  th,td{border:1px solid #ececf2;padding:6px 9px;text-align:right}
+  th:first-child,td:first-child{text-align:left}
+  th{background:#f4f2f9;color:var(--purple);font-weight:650}
+  tr.best td{background:#eafaf0;font-weight:600}
+  .flag{display:inline-block;font-size:10.5px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:5px}
+  .flag.bad{background:#fde8e8;color:var(--bad)} .flag.warn{background:#fdf3e0;color:var(--warn)}
+  .note{background:#f6f2fb;border:1px solid #e6dcf5;border-radius:9px;padding:12px 14px;font-size:12.5px;color:#403a52;margin:10px 0}
+  .note b{color:var(--purple)}
+  .method h3{font-size:13.5px;color:var(--purple);margin:16px 0 4px}
+  .method p,.method li{font-size:13px;color:#333}
+  .method code{background:#f1eef8;padding:1px 5px;border-radius:4px;font-size:12px}
+  details{margin:6px 0}
+  summary{cursor:pointer;font-weight:600;color:var(--purple)}
+  .pillrow{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+  .pill{font-size:11.5px;padding:3px 9px;border-radius:20px;background:#f0edf7;color:var(--purple);font-weight:600}
+  footer{max-width:1180px;margin:8px auto 30px;padding:0 18px;color:var(--muted);font-size:11.5px}
+  .hide{display:none}
+  /* --- onboarding & plain-language UX --- */
+  .helpbtn{background:rgba(255,255,255,.18);color:#fff;border:1px solid rgba(255,255,255,.4);
+           width:26px;height:26px;border-radius:50%;font-weight:700;cursor:pointer;font-size:14px;line-height:1;padding:0}
+  .helpbtn:hover{background:rgba(255,255,255,.3)}
+  .overlay{position:fixed;inset:0;background:rgba(29,29,34,.55);display:flex;align-items:center;justify-content:center;z-index:50;padding:20px}
+  .overlay.hide,.quickstart.hide{display:none}
+  .modal{background:#fff;border-radius:16px;max-width:620px;width:100%;padding:26px 28px;box-shadow:0 20px 60px rgba(0,0,0,.3);max-height:88vh;overflow:auto}
+  .modal h2{font-size:20px;color:var(--purple);margin:0 0 4px}
+  .modal .lead{color:var(--muted);font-size:13.5px;margin:0 0 16px}
+  .stepgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin:10px 0 6px}
+  .step{border:1px solid #ece8f5;border-radius:10px;padding:12px 14px;background:#fbfaff}
+  .step .n{display:inline-flex;width:22px;height:22px;border-radius:50%;background:var(--purple);color:#fff;
+           align-items:center;justify-content:center;font-size:12px;font-weight:700;margin-bottom:6px}
+  .step b{display:block;font-size:13px;margin-bottom:2px}
+  .step span{font-size:12px;color:var(--muted)}
+  .colorkey{display:flex;gap:16px;flex-wrap:wrap;margin:14px 0 4px;font-size:12.5px}
+  .colorkey b{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:5px;vertical-align:middle}
+  .modal .actions{display:flex;justify-content:flex-end;gap:10px;margin-top:18px}
+  .modal .actions .ck{margin-right:auto;font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px}
+  /* quick-start strip */
+  .quickstart{display:flex;align-items:center;gap:14px;flex-wrap:wrap;background:#f3f0fb;border:1px solid #e4dcf6;
+              border-radius:10px;padding:9px 14px;margin-bottom:14px;font-size:12.5px;color:#473b63}
+  .quickstart .qs{display:flex;align-items:center;gap:6px}
+  .quickstart .qs b{display:inline-flex;width:18px;height:18px;border-radius:50%;background:var(--purple);color:#fff;
+                    align-items:center;justify-content:center;font-size:11px;font-weight:700}
+  .quickstart .x{margin-left:auto;cursor:pointer;color:var(--muted);font-weight:700;border:none;background:none;font-size:15px}
+  /* "how to read this" callout */
+  .readbox{background:#f0f7f3;border:1px solid #cfe8db;border-left:4px solid var(--good);border-radius:9px;
+           padding:11px 14px;margin:0 0 16px;font-size:12.5px;color:#234}
+  .readbox b{color:#147a43}
+  .readbox .row{margin:3px 0}
+  .readbox .eye{color:#147a43;font-weight:700}
+  /* glossary term tooltip */
+  .term{border-bottom:1px dotted var(--purple);cursor:help;position:relative}
+  .term:hover::after{content:attr(data-tip);position:absolute;left:0;top:135%;z-index:30;width:250px;
+    background:#1d1d22;color:#fff;padding:8px 10px;border-radius:8px;font-size:11.5px;font-weight:400;line-height:1.4;
+    box-shadow:0 6px 20px rgba(0,0,0,.25);white-space:normal}
+  .term:hover::before{content:'';position:absolute;left:14px;top:122%;border:6px solid transparent;border-bottom-color:#1d1d22;z-index:31}
+  .glossary{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:8px}
+  .glossary div{border:1px solid #ece8f5;border-radius:8px;padding:9px 11px;background:#fbfaff;font-size:12.5px}
+  .glossary b{color:var(--purple)}
+</style>
+</head>
+<body>
+<header>
+  <h1>Dock Efficiency Signal Lab</h1>
+  <span class="tag">Offline</span>
+  <span class="gov"><span class="dot"></span> No network calls &middot; data stays on this machine</span>
+  <button class="helpbtn" id="helpBtn" title="What is this? / Help">?</button>
+</header>
+
+<!-- First-run welcome -->
+<div class="overlay hide" id="welcome">
+  <div class="modal">
+    <h2>Welcome 👋 — here's what this does</h2>
+    <p class="lead">This is a plain-English read on your weekly dock-efficiency numbers. You don't need any stats or coding background. It does three jobs:</p>
+    <div class="stepgrid">
+      <div class="step"><span class="n">1</span><b>Spots what changed</b><span>It separates a <i>real</i> problem from normal week-to-week wiggle, so you only chase what matters.</span></div>
+      <div class="step"><span class="n">2</span><b>Ranks performers + dollars</b><span>Top and bottom facilities, and what each gap to goal is worth per week — the same way the recap does it.</span></div>
+      <div class="step"><span class="n">3</span><b>Looks a few weeks ahead</b><span>A simple forecast with an honest "could be anywhere in this range" band.</span></div>
+    </div>
+    <div class="colorkey">
+      <span><b style="background:#1a8f4c"></b>Green = good / on or above goal</span>
+      <span><b style="background:#d98300"></b>Amber = watch it</span>
+      <span><b style="background:#c62828"></b>Red = investigate now</span>
+    </div>
+    <p style="font-size:12.5px;color:#473b63;margin:12px 0 0"><b>Golden rule:</b> every flag is a <i>nudge to go look</i>, not a verdict. You and your team still make the call. Nothing you load ever leaves this computer.</p>
+    <div class="actions">
+      <label class="ck"><input type="checkbox" id="dontShow" /> Don't show this again</label>
+      <button id="startBtn">Start exploring →</button>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="quickstart" id="quickstart">
+    <div class="qs"><b>1</b> Pick a facility</div>
+    <div class="qs"><b>2</b> Read the colored cards</div>
+    <div class="qs"><b>3</b> Investigate anything amber/red</div>
+    <div class="qs"><b>4</b> Open <b style="background:#FF6600">$</b> Rankings for the dollar picture</div>
+    <button class="x" id="qsX" title="Hide">×</button>
+  </div>
+  <div class="controls">
+    <div class="ctl">
+      <label>Facility / Series</label>
+      <select id="seriesSel"></select>
+    </div>
+    <div class="ctl">
+      <label>Goal line (engineered goal)</label>
+      <input id="goalInp" type="number" value="68.8" step="0.1" style="width:90px" />
+    </div>
+    <div class="ctl">
+      <label>$ / point / year</label>
+      <input id="ppInp" type="number" value="50000000" step="1000000" style="width:120px" />
+    </div>
+    <div class="ctl">
+      <label>Forecast horizon (weeks)</label>
+      <input id="horizonInp" type="number" value="6" min="1" max="12" style="width:90px" />
+    </div>
+    <div class="ctl">
+      <label>Data source</label>
+      <div style="display:flex;gap:6px">
+        <button id="demoBtn" class="ghost" type="button">Demo data</button>
+        <button id="loadBtn" type="button">Load CSV&hellip;</button>
+        <input id="fileInp" type="file" accept=".csv,.txt" class="hide" />
+      </div>
+    </div>
+    <div class="ctl" style="flex:1;min-width:200px">
+      <label>Status</label>
+      <div id="status" style="font-size:12px;color:var(--muted);padding-top:6px">Loading demo data&hellip;</div>
+    </div>
+  </div>
+
+  <div class="tabs" id="tabs">
+    <div class="tab active" data-t="trend">Trend &amp; Signals</div>
+    <div class="tab" data-t="spc">Process Control (SPC)</div>
+    <div class="tab" data-t="mom">Momentum (TA)</div>
+    <div class="tab" data-t="fcst">Forecast</div>
+    <div class="tab" data-t="rank">Rankings &amp; $ Impact</div>
+    <div class="tab" data-t="method">Method &amp; Caveats</div>
+  </div>
+
+  <!-- TREND -->
+  <div class="panel active" id="p-trend">
+    <h2>Trend &amp; Signals</h2>
+    <p class="sub">De-noised view of the series with a moving-average baseline and a variation envelope, plus plain-language callouts. Lagging by design &mdash; these confirm direction, they do not predict it.</p>
+    <div class="readbox">
+      <div class="row"><span class="eye">👀 What you're looking at:</span> the purple line is the actual weekly number. The orange line is the <b>smoothed</b> recent average (ignores one-week blips). The grey band is the "normal range."</div>
+      <div class="row"><span class="eye">✅ What to do:</span> if the orange line is sloping up, the facility is trending better; sloping down, worse. A purple point poking outside the grey band is an unusual week. The cards below say it in words.</div>
+    </div>
+    <div class="cards" id="trendCards"></div>
+    <div class="chartbox">
+      <h3>Productivity vs. moving-average baseline &amp; Bollinger envelope</h3>
+      <div class="legend">
+        <span><i style="background:#4D148C"></i>Actual</span>
+        <span><i style="background:#FF6600"></i>SMA(4) month</span>
+        <span><i style="background:#9b59b6"></i>SMA(13) quarter</span>
+        <span><i style="background:#bdbdd0"></i>Bollinger(8, 2&sigma;)</span>
+        <span><i style="background:#1a8f4c"></i>Goal</span>
+      </div>
+      <div id="trendChart"></div>
+    </div>
+    <div class="note" id="crossNote"></div>
+  </div>
+
+  <!-- SPC -->
+  <div class="panel" id="p-spc">
+    <h2>Statistical Process Control <span class="term" data-tip="SPC: a decades-old factory quality method. It learns each facility's normal amount of week-to-week bounce, then flags weeks or patterns that fall outside it.">(what's this?)</span></h2>
+    <p class="sub">The statistically defensible layer. Control limits come from the data's own week-to-week variation (<span class="term" data-tip="σ̂ (sigma-hat) is an estimate of the normal week-to-week spread. The dashed red lines are 3× that spread above and below the average — the edges of 'normal'.">&sigma;&#770; = MR&#772;/1.128</span>). Points or patterns breaking the rules are flagged as <span class="term" data-tip="Special cause = something unusual happened that week (outage, weather, staffing event) — not the normal random wiggle. Worth a look.">special-cause</span> &mdash; worth investigating, not just noise.</p>
+    <div class="readbox">
+      <div class="row"><span class="eye">👀 What you're looking at:</span> the green middle line is the facility's average. The dashed red lines are the edges of "normal." An <b style="color:#FF6600">orange dot</b> is a week (or run of weeks) the math says is genuinely unusual.</div>
+      <div class="row"><span class="eye">✅ What to do:</span> if the top cards say <b>"In control,"</b> the facility is behaving — don't chase noise. If <b>"Special cause"</b> or <b>"Trending,"</b> read the flagged weeks below and go find the cause.</div>
+    </div>
+    <div class="cards" id="spcCards"></div>
+    <div class="chartbox">
+      <h3>Individuals (I) chart &mdash; 3&sigma; limits with Nelson-rule flags</h3>
+      <div class="legend">
+        <span><i style="background:#4D148C"></i>Weekly value</span>
+        <span><i style="background:#c62828"></i>UCL / LCL (3&sigma;)</span>
+        <span><i style="background:#9aa0b5"></i>&plusmn;1&sigma;, &plusmn;2&sigma; zones</span>
+        <span><i style="background:#1a8f4c"></i>Center (mean)</span>
+        <span><i style="background:#FF6600;border-radius:50%;width:8px;height:8px"></i>Rule violation</span>
+      </div>
+      <div id="imrChart"></div>
+    </div>
+    <div id="nelsonList"></div>
+    <div class="chartbox">
+      <h3>EWMA chart (&lambda;=0.2) &mdash; detects small sustained drift off goal</h3>
+      <div id="ewmaChart"></div>
+    </div>
+    <div class="chartbox">
+      <h3>CUSUM (tabular) &mdash; earliest alarm that the process has shifted and stayed</h3>
+      <div class="legend"><span><i style="background:#1a8f4c"></i>Upward C+</span><span><i style="background:#c62828"></i>Downward C&minus;</span><span><i style="background:#9aa0b5"></i>Decision limit h</span></div>
+      <div id="cusumChart"></div>
+    </div>
+  </div>
+
+  <!-- MOMENTUM -->
+  <div class="panel" id="p-mom">
+    <h2>Momentum &amp; Oscillators (TA)</h2>
+    <p class="sub" id="momCaveat"></p>
+    <div class="readbox" style="border-left-color:#d98300;background:#fdf8f0;border-color:#f0e0c5">
+      <div class="row"><span class="eye" style="color:#b06a00">👀 What you're looking at:</span> the "stock-chart" style indicators. <b>Rate of Change</b> is the most useful: simply "how much higher/lower than a month (or quarter) ago."</div>
+      <div class="row"><span class="eye" style="color:#b06a00">⚠️ Heads up:</span> <b>MACD</b> and <b>RSI</b> are labeled <i>indicative only</i> — they're nice visuals but, on weekly ops data, don't trigger decisions off them. The SPC tab is the one to act on.</div>
+    </div>
+    <div class="cards" id="momCards"></div>
+    <div class="chartbox">
+      <h3>Rate of Change &mdash; month-over-month (4wk) &amp; quarter-over-quarter (13wk)</h3>
+      <div class="legend"><span><i style="background:#4D148C"></i>ROC(4) %</span><span><i style="background:#FF6600"></i>ROC(13) %</span></div>
+      <div id="rocChart"></div>
+    </div>
+    <div class="chartbox">
+      <h3>MACD (4/8/3) &mdash; indicative only, not an alert</h3>
+      <div class="legend"><span><i style="background:#4D148C"></i>MACD</span><span><i style="background:#FF6600"></i>Signal</span><span><i style="background:#bdbdd0"></i>Histogram</span></div>
+      <div id="macdChart"></div>
+    </div>
+    <div class="chartbox">
+      <h3>RSI(7) &mdash; indicative only, bands widened to 80/20 for noisy ops data</h3>
+      <div id="rsiChart"></div>
+    </div>
+  </div>
+
+  <!-- FORECAST -->
+  <div class="panel" id="p-fcst">
+    <h2>Forecast</h2>
+    <p class="sub">An ensemble of simple, robust models (SES + damped-Holt + linear trend), auto-weighted by <span class="term" data-tip="Walk-forward test: we pretend it's an earlier week, forecast forward, then check against what actually happened — repeated across the history. It's an honest 'how accurate has this been?' score.">walk-forward accuracy</span>. The widening band is the message &mdash; near-term is useful, far-term is directional.</p>
+    <div class="readbox" style="border-left-color:#FF6600;background:#fff7f1;border-color:#f3ddc9">
+      <div class="row"><span class="eye" style="color:#c05400">👀 What you're looking at:</span> the dashed orange line is the best-guess next few weeks. The shaded band is "we're fairly sure it lands in here." It gets wider further out because further out is less certain.</div>
+      <div class="row"><span class="eye" style="color:#c05400">✅ What to do:</span> trust next week or two for planning; treat 6+ weeks as a direction, not a promise. <b>Read the band, not just the line.</b></div>
+    </div>
+    <div class="cards" id="fcstCards"></div>
+    <div class="chartbox">
+      <h3>Ensemble forecast with 80% prediction band</h3>
+      <div class="legend">
+        <span><i style="background:#4D148C"></i>Actual</span>
+        <span><i style="background:#FF6600"></i>Forecast</span>
+        <span><i style="background:#ffd9bd"></i>80% band</span>
+        <span><i style="background:#1a8f4c"></i>Goal</span>
+      </div>
+      <div id="fcstChart"></div>
+    </div>
+    <h3 style="font-size:13px;margin:14px 0 2px">Backtest &mdash; walk-forward accuracy (lower MASE is better; &lt;1 beats naïve)</h3>
+    <div id="backtestTable"></div>
+    <div class="note"><b>How to read MASE:</b> it compares each model to a naïve "next week = this week" guess. MASE &lt; 1 means the model beats that baseline. We auto-select the lowest-MASE model but prefer the simpler one when the difference is under 5% &mdash; on ~25 points, chasing tiny accuracy gains usually means fitting noise.</div>
+  </div>
+
+  <!-- RANKINGS -->
+  <div class="panel" id="p-rank">
+    <h2>Regional Rankings &amp; $ Impact</h2>
+    <p class="sub">Top and bottom performers across <b>all loaded series</b>, each with its trend regime, process state, and the dollar value of its gap to goal &mdash; the same translation the weekly recap uses (<code>$/point &divide; 52 weeks</code>). This is the view built for "regional top and bottom performers."</p>
+    <div class="readbox" style="border-left-color:var(--purple);background:#f6f2fb;border-color:#e2d7f3">
+      <div class="row"><span class="eye" style="color:var(--purple)">👀 What you're looking at:</span> every loaded facility ranked best-to-worst. The <b>Weekly&nbsp;$</b> column turns each gap-to-goal into dollars. The <b>Likely focus</b> column points to which Scorecard area (Planning / Scheduling / Execution) to check first.</div>
+      <div class="row"><span class="eye" style="color:var(--purple)">✅ What to do:</span> work the <b style="color:#c62828">bottom list</b> top-down. Load your Scorecard status (button below) to make the focus column reflect your real RED cells, then hit <b>"Draft recap"</b> to turn it into shareable text.</div>
+    </div>
+    <div class="cards" id="rankCards"></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:4px 0 6px">
+      <button class="ghost" id="scBtn" type="button">Load Scorecard status&hellip;</button>
+      <input id="scFile" type="file" accept=".csv,.txt" class="hide" />
+      <button id="recapBtn" type="button">📝 Draft recap</button>
+      <span id="scStatus" style="font-size:12px;color:var(--muted)"></span>
+    </div>
+    <div id="recapBox" class="hide" style="margin:8px 0 14px">
+      <textarea id="recapText" style="width:100%;min-height:200px;font:13px/1.5 ui-monospace,Consolas,monospace;border:1px solid #d4d4de;border-radius:9px;padding:12px;color:var(--ink)"></textarea>
+      <div style="display:flex;gap:8px;margin-top:6px"><button id="copyRecap" type="button">Copy to clipboard</button><span id="copyMsg" style="font-size:12px;color:var(--good);align-self:center"></span></div>
+    </div>
+    <h3 style="font-size:13.5px;color:#c62828;margin:16px 0 2px">▼ Bottom performers &mdash; priority for intervention</h3>
+    <div id="bottomTable"></div>
+    <div class="note"><b>$ impact is illustrative</b> &mdash; calibrate the <b>Goal line</b> and <b>$/point/year</b> controls to your data's units. To reproduce the recap's network figure, set Goal to the engineered goal (e.g. <code>68.8</code>) and $/point to <code>$50,000,000</code>: a 5.5-point gap then reads ≈ &minus;$5.2M/week. The <b>Likely focus</b> column is a heuristic mapping each weak series to a Scorecard section (Planning / Scheduling / Execution) &mdash; confirm against the actual RED cells before acting.</div>
+    <h3 style="font-size:13.5px;color:#1a8f4c;margin:16px 0 2px">▲ Top performers &mdash; model behaviors to replicate</h3>
+    <div id="topTable"></div>
+  </div>
+
+  <!-- METHOD -->
+  <div class="panel method" id="p-method">
+    <h2>Method &amp; Caveats</h2>
+    <p class="sub">Why this is defensible to leadership &mdash; and where it is not.</p>
+
+    <div class="note">
+      <b>One-line thesis:</b> Traders and quality engineers independently invented the same toolkit (moving averages, bands, momentum, crossovers). On ~25 weekly operations points, the <b>SPC</b> version of each tool carries a quantified false-alarm rate and is the one to <i>alert</i> on. The <b>TA</b> version is the same shape with friendlier labels &mdash; excellent for communicating to managers, but it should not drive automated decisions.
+    </div>
+
+    <h3>What each tab is doing</h3>
+    <ul>
+      <li><b>Trend &amp; Signals</b> &mdash; SMA(4) month baseline + SMA(13) quarter baseline, a Bollinger(8, 2&sigma;) envelope, and 4/13 crossover detection (the "golden/death cross" analog). Lagging confirmation of regime, not prediction.</li>
+      <li><b>Process Control</b> &mdash; the rigorous engine. I-MR individuals chart with 3&sigma; limits from &sigma;&#770;=MR&#772;/1.128; Nelson rules 1/3/5/6 (outlier, trend, emerging shift); EWMA(&lambda;=0.2) for slow drift; tabular CUSUM (k=0.5&sigma;, h=5&sigma;) for earliest sustained-shift alarm.</li>
+      <li><b>Momentum (TA)</b> &mdash; ROC (legible MoM/QoQ change), and MACD/RSI labeled <i>indicative only</i> because at this sample size their overbought/oversold "reversal" calls have no mechanism in ops data.</li>
+      <li><b>Forecast</b> &mdash; SES, damped-Holt (&phi;=0.9), and OLS linear trend, simple-averaged, with a trend gate from EMA-crossover + ROC. 80% bands from residuals, widening with horizon. Walk-forward (rolling-origin) MASE selection with a simplicity prior.</li>
+    </ul>
+
+    <h3>The honest caveats</h3>
+    <ul>
+      <li><b>Small sample (~25 weeks).</b> Control limits are provisional until ~25+ points and should be re-baselined as data accrues. RSI(14)/MACD(26)/50-200 crosses are impossible here &mdash; all periods are deliberately shortened.</li>
+      <li><b>Autocorrelation.</b> This week resembles last week (same crew, lanes, mix). That inflates false "trend" signals and narrows bands optimistically. Lag-1 autocorrelation is shown on the SPC tab; treat single-indicator blips skeptically.</li>
+      <li><b>The goal is engineered &amp; re-baselined.</b> A change in the goal denominator or a peak-season shift looks like a process shift. Segment by goal regime before trusting a long-run signal.</li>
+      <li><b>Ops KPIs are not tradeable prices.</b> There is no momentum trade and no mean-reversion mechanism. A facility at "RSI 75" is not "due for a pullback."</li>
+      <li><b>Multiple comparisons.</b> Running many rules &times; many facilities &times; weekly guarantees spurious signals. Require corroboration across &ge;2 indicators before escalating.</li>
+    </ul>
+
+    <h3>Recommended use</h3>
+    <p>Alert on <b>SPC</b> (I-MR + Nelson 1/3/5/6, then EWMA/CUSUM for drift). Use <b>TA overlays</b> to <i>explain</i> the picture to managers. Use the <b>forecast</b> for near-term planning (1&ndash;3 weeks confidently), reading the band, not the line. Always pair a flagged facility with the relevant operational playbook (lanefull / rehandle best practices) before acting.</p>
+
+    <h3>Plain-language glossary</h3>
+    <div class="glossary">
+      <div><b>Signal</b> — a nudge to go investigate, not a verdict. The tool surfaces them; people decide.</div>
+      <div><b>In control / Special cause</b> — "in control" = normal random wiggle. "Special cause" = something specific happened that week (outage, weather, staffing) worth finding.</div>
+      <div><b>Trending</b> — the average itself is climbing or sliding week over week, not just bouncing. The control limits intentionally step aside here.</div>
+      <div><b>σ̂ (sigma-hat) / control limits</b> — the normal week-to-week spread, and the dashed lines at 3× that spread marking the edge of "normal."</div>
+      <div><b>SPC</b> — Statistical Process Control: the factory quality-control method behind the control charts and rules.</div>
+      <div><b>SMA / smoothing</b> — a rolling average that ignores one-week blips so the real direction shows.</div>
+      <div><b>Rate of Change (ROC)</b> — how much higher or lower than a month (or quarter) ago, in percent.</div>
+      <div><b>MACD / RSI</b> — "stock-chart" momentum indicators. Useful as visuals; <i>indicative only</i> on weekly ops data — don't act off them alone.</div>
+      <div><b>Forecast band</b> — the shaded "we're fairly sure it lands in here" range. Wider = less certain. Read the band, not just the line.</div>
+      <div><b>MASE</b> — a forecast accuracy score. Below 1 means it beats a naïve "next week = this week" guess.</div>
+      <div><b>$/point</b> — the recap's conversion: each efficiency point ≈ $50M/year network-wide, so weekly $ = gap × $50M ÷ 52.</div>
+      <div><b>Lanefull / secondary LF / rehandle</b> — execution problems on the dock; "secondary LF is 100% controllable" per the playbook.</div>
+    </div>
+
+    <h3>Sources (condensed)</h3>
+    <div class="pillrow">
+      <span class="pill">NIST/SEMATECH e-Handbook 6.3 (I-MR, EWMA, CUSUM)</span>
+      <span class="pill">Montgomery, Intro to SPC (control-chart constants)</span>
+      <span class="pill">Nelson 1984 / Western Electric rules</span>
+      <span class="pill">Hyndman &amp; Athanasopoulos, Forecasting: Principles &amp; Practice (3e)</span>
+      <span class="pill">StockCharts ChartSchool (RSI, MACD, Bollinger)</span>
+    </div>
+    <p style="margin-top:10px;font-size:12px;color:var(--muted)">Constants verified: &sigma;&#770;=MR&#772;/1.128 (d&#8322;=1.128, n=2); E&#8322;=3/1.128=2.66; MR chart D&#8324;=3.267, D&#8323;=0. EWMA uses the exact variance term (1&minus;(1&minus;&lambda;)<sup>2t</sup>) for short series.</p>
+  </div>
+</div>
+
+<footer>
+  Dock Efficiency Signal Lab &middot; built for the FedEx AI-Efficiency program &middot;
+  AI should save managers time, not replace their judgment. Every flagged signal is a prompt to investigate, not a conclusion.
+  &middot; This page is fully offline &mdash; verify with your browser's network tab.
+</footer>
+
+<script>
+"use strict";
+/* ============================================================================
+   0. MATH PRIMITIVES
+   ========================================================================== */
+const sum  = a => a.reduce((s,x)=>s+x,0);
+const mean = a => a.length ? sum(a)/a.length : 0;
+const stdPop = a => { const m=mean(a); return Math.sqrt(mean(a.map(x=>(x-m)**2))); };
+const round = (x,d=1) => { const p=10**d; return Math.round(x*p)/p; };
+const last = a => a[a.length-1];
+
+/* ============================================================================
+   1. TECHNICAL-ANALYSIS INDICATORS  (weekly-tuned defaults)
+   ========================================================================== */
+function sma(y,N){ const out=Array(y.length).fill(null);
+  for(let t=N-1;t<y.length;t++) out[t]=mean(y.slice(t-N+1,t+1)); return out; }
+
+function ema(y,N){ const a=2/(N+1),out=Array(y.length).fill(null); let e=y[0]; out[0]=e;
+  for(let t=1;t<y.length;t++){ e=a*y[t]+(1-a)*e; out[t]=e; } return out; }
+
+function bollinger(y,N=8,k=2){ const mid=sma(y,N),up=[],lo=[];
+  for(let t=0;t<y.length;t++){ if(mid[t]==null){up.push(null);lo.push(null);continue;}
+    const sd=stdPop(y.slice(t-N+1,t+1)); up.push(mid[t]+k*sd); lo.push(mid[t]-k*sd); }
+  return {mid,up,lo}; }
+
+function rsi(y,N=7){ const out=Array(y.length).fill(null);
+  let ag=0,al=0; for(let t=1;t<=N;t++){ const c=y[t]-y[t-1]; ag+=Math.max(c,0); al+=Math.max(-c,0);}
+  ag/=N; al/=N; out[N]= al===0?100:100-100/(1+ag/al);
+  for(let t=N+1;t<y.length;t++){ const c=y[t]-y[t-1];
+    ag=(ag*(N-1)+Math.max(c,0))/N; al=(al*(N-1)+Math.max(-c,0))/N;
+    out[t]= al===0?100:100-100/(1+ag/al); } return out; }
+
+function macd(y,f=4,s=8,sig=3){ const ef=ema(y,f),es=ema(y,s);
+  const line=y.map((_,t)=>ef[t]-es[t]); const signal=ema(line,sig);
+  const hist=line.map((v,t)=>v-signal[t]); return {line,signal,hist}; }
+
+function roc(y,N){ const out=Array(y.length).fill(null);
+  for(let t=N;t<y.length;t++) out[t]=100*(y[t]-y[t-N])/y[t-N]; return out; }
+
+function crossovers(fast,slow){ const ev=[];
+  for(let t=1;t<fast.length;t++){ if(fast[t]==null||slow[t]==null||fast[t-1]==null||slow[t-1]==null) continue;
+    if(fast[t-1]<=slow[t-1] && fast[t]>slow[t]) ev.push({t,type:'golden'});
+    if(fast[t-1]>=slow[t-1] && fast[t]<slow[t]) ev.push({t,type:'death'}); }
+  return ev; }
+
+/* ============================================================================
+   2. STATISTICAL PROCESS CONTROL
+   ========================================================================== */
+function imr(y){
+  const MR=[]; for(let i=1;i<y.length;i++) MR.push(Math.abs(y[i]-y[i-1]));
+  const MRbar=mean(MR), ybar=mean(y), sigma=MRbar/1.128;   // d2=1.128 for n=2
+  return { ybar, sigma, MRbar, MR,
+    UCL:ybar+3*sigma, LCL:ybar-3*sigma,
+    z2u:ybar+2*sigma, z1u:ybar+1*sigma, z1l:ybar-1*sigma, z2l:ybar-2*sigma,
+    mrUCL:3.267*MRbar, mrLCL:0 };                            // D4=3.267, D3=0
+}
+// Nelson rules 1,3,5,6 (the ones meaningful at n~25). Returns per-rule hit indices.
+function nelson(y,c){
+  const s=c.sigma, m=c.ybar; const zone=v=>(v-m)/s;  // signed sigma distance
+  const hits={1:[],3:[],5:[],6:[]};
+  for(let t=0;t<y.length;t++){ if(Math.abs(zone(y[t]))>3) hits[1].push(t); }    // R1: beyond 3s
+  for(let t=2;t<y.length;t++){ // R3: 6 in a row all rising or all falling
+    if(t>=5){ let up=true,dn=true; for(let i=t-5;i<t;i++){ if(!(y[i+1]>y[i]))up=false; if(!(y[i+1]<y[i]))dn=false; }
+      if(up||dn) hits[3].push(t); } }
+  for(let t=2;t<y.length;t++){ // R5: 2 of 3 consecutive beyond 2s, same side
+    const w=[t-2,t-1,t]; const pos=w.filter(i=>zone(y[i])>2).length, neg=w.filter(i=>zone(y[i])<-2).length;
+    if(pos>=2||neg>=2) hits[5].push(t); }
+  for(let t=4;t<y.length;t++){ // R6: 4 of 5 consecutive beyond 1s, same side
+    const w=[t-4,t-3,t-2,t-1,t]; const pos=w.filter(i=>zone(y[i])>1).length, neg=w.filter(i=>zone(y[i])<-1).length;
+    if(pos>=4||neg>=4) hits[6].push(t); }
+  return hits;
+}
+function ewma(y,lambda=0.2,L=2.7){
+  const c=imr(y), m=c.ybar, s=c.sigma; let z=m; const out=[],ucl=[],lcl=[];
+  for(let t=0;t<y.length;t++){ z=lambda*y[t]+(1-lambda)*z; out.push(z);
+    const varT=(lambda/(2-lambda))*(1-Math.pow(1-lambda,2*(t+1)));   // exact term
+    const w=L*s*Math.sqrt(varT); ucl.push(m+w); lcl.push(m-w); }
+  return {z:out,ucl,lcl,center:m};
+}
+function cusum(y,kMul=0.5,hMul=5){
+  const c=imr(y), mu=c.ybar, s=c.sigma, k=kMul*s, h=hMul*s;
+  let sh=0,sl=0; const Sh=[],Sl=[],sig=[];
+  for(let t=0;t<y.length;t++){ sh=Math.max(0,sh+(y[t]-mu)-k); sl=Math.max(0,sl+(mu-y[t])-k);
+    Sh.push(sh); Sl.push(sl); sig.push(sh>h||sl>h); }
+  return {Sh,Sl,h,signals:sig};
+}
+function lag1autocorr(y){ const m=mean(y); let num=0,den=0;
+  for(let t=1;t<y.length;t++) num+=(y[t]-m)*(y[t-1]-m);
+  for(let t=0;t<y.length;t++) den+=(y[t]-m)**2; return den? num/den:0; }
+
+/* ============================================================================
+   3. FORECASTING
+   ========================================================================== */
+function ses(y,alpha){ let l=y[0]; const fit=[l];
+  for(let t=1;t<y.length;t++){ fit.push(l); l=alpha*y[t]+(1-alpha)*l; }
+  return {level:l, forecast:_=>l, fitted:fit}; }
+
+function holt(y,alpha,beta,phi=0.9){ let l=y[0], b=y[1]-y[0]; const fit=[l];
+  for(let t=1;t<y.length;t++){ const f=l+phi*b; fit.push(f); const lp=l;
+    l=alpha*y[t]+(1-alpha)*(lp+phi*b); b=beta*(l-lp)+(1-beta)*phi*b; }
+  return {level:l,trend:b, fitted:fit,
+    forecast:h=>{ let s=0,p=1; for(let i=1;i<=h;i++){p*=phi;s+=p;} return l+s*b; } }; }
+
+function olsTrend(y){ const n=y.length,xb=(n-1)/2,yb=mean(y); let sxy=0,sxx=0;
+  for(let i=0;i<n;i++){ sxy+=(i-xb)*(y[i]-yb); sxx+=(i-xb)**2; }
+  const b1=sxy/sxx, b0=yb-b1*xb;
+  return {b0,b1, fitted:y.map((_,i)=>b0+b1*i), forecast:h=>b0+b1*(n-1+h)}; }
+
+function fitSES(y){ let best={sse:Infinity,alpha:0.2};
+  for(let a=0.05;a<=0.5;a+=0.05){ const {fitted}=ses(y,a); let sse=0;
+    for(let t=1;t<y.length;t++) sse+=(y[t]-fitted[t])**2; if(sse<best.sse)best={sse,alpha:a}; }
+  return best.alpha; }
+function fitHolt(y){ let best={sse:Infinity,a:0.2,b:0.05};
+  for(let a=0.1;a<=0.5;a+=0.1) for(let b=0.01;b<=0.1;b+=0.03){ const {fitted}=holt(y,a,b);
+    let sse=0; for(let t=1;t<y.length;t++) sse+=(y[t]-fitted[t])**2; if(sse<best.sse)best={sse,a,b}; }
+  return best; }
+
+// build the three fitted models for a series
+function buildModels(y){
+  const aS=fitSES(y); const {a,b}=fitHolt(y);
+  return [
+    {name:'SES', model:ses(y,aS), fit:t=>ses(t,fitSES(t))},
+    {name:'Damped Holt', model:holt(y,a,b), fit:t=>{const p=fitHolt(t);return holt(t,p.a,p.b);}},
+    {name:'Linear trend', model:olsTrend(y), fit:t=>olsTrend(t)},
+  ];
+}
+// ensemble with trend gate (EMA crossover + ROC agreement)
+function ensembleForecast(y,h){
+  const models=buildModels(y);
+  const ef=ema(y,3), es=ema(y,8); const r=roc(y,4);
+  const agree = last(ef)!=null && last(es)!=null && last(r)!=null &&
+                Math.sign(last(ef)-last(es))===Math.sign(last(r)) && last(r)!==0;
+  const tw=agree?1.0:0.4;                       // dampen trend models if momentum disagrees
+  const w=[1, tw, tw]; const ws=sum(w);
+  const pts=[]; for(let step=1;step<=h;step++){
+    pts.push(sum(models.map((m,i)=>w[i]*m.model.forecast(step)))/ws); }
+  // residual sigma from in-sample one-step combined fitted
+  const fitted=y.map((_,t)=> (models[0].model.fitted[t]+models[1].model.fitted[t]+ (olsTrend(y).fitted[t]))/3);
+  const res=[]; for(let t=1;t<y.length;t++) res.push(y[t]-fitted[t]);
+  const sigma=Math.sqrt(sum(res.map(e=>e*e))/Math.max(res.length-2,1))*1.2; // +20% small-sample honesty
+  const band=pts.map((p,i)=>{ const sH=sigma*Math.sqrt(i+1); return {lo:p-1.28*sH, hi:p+1.28*sH}; });
+  return {pts,band,models,agree};
+}
+// walk-forward MASE / RMSE
+function backtest(y,hMax=3,minTrain=12){
+  const cands=[
+    {name:'SES', fit:t=>ses(t,fitSES(t))},
+    {name:'Damped Holt', fit:t=>{const p=fitHolt(t);return holt(t,p.a,p.b);}},
+    {name:'Linear trend', fit:t=>olsTrend(t)},
+    {name:'Naïve', fit:t=>({forecast:_=>last(t)})},
+  ];
+  // naive scale (denominator of MASE)
+  let d=0,cnt=0; for(let t=1;t<y.length;t++){ d+=Math.abs(y[t]-y[t-1]); cnt++; } const scale=d/cnt;
+  return cands.map(c=>{ const errs=[];
+    for(let o=minTrain;o<y.length;o++){ const tr=y.slice(0,o); let mdl; try{mdl=c.fit(tr);}catch(e){continue;}
+      for(let hh=1;hh<=hMax && o-1+hh<y.length;hh++){ errs.push(y[o-1+hh]-mdl.forecast(hh)); } }
+    const rmse=Math.sqrt(mean(errs.map(e=>e*e))); const mase=mean(errs.map(e=>Math.abs(e)))/scale;
+    return {name:c.name, rmse, mase, n:errs.length}; })
+    .sort((p,q)=>p.mase-q.mase);
+}
+
+/* ============================================================================
+   4. SYNTHETIC DEMO DATA  (seeded -> reproducible). Governance-safe, fake.
+   ========================================================================== */
+function mulberry32(seed){ return function(){ let t=seed+=0x6D2B79F5;
+  t=Math.imul(t^t>>>15,t|1); t^=t+Math.imul(t^t>>>7,t|61); return ((t^t>>>14)>>>0)/4294967296; }; }
+function makeDemo(){
+  const names=['0083-NWRS','0183-BRRS','0275-NCRS','0318-SARS','0322-PTRS','0378-LERS',
+               '0438-ETRS','0493-VBRS','0622-RORS','0765-SDRS','0793-ALRS','0869-GDRS'];
+  const weeks=[]; // 26 labels ending 05/23/26
+  const base=new Date(2025,10,30); // Nov 30 2025 (label only; not used for math)
+  for(let i=0;i<26;i++){ const d=new Date(base.getTime()+i*7*864e5);
+    weeks.push((d.getMonth()+1)+'/'+d.getDate()); }
+  const rng=mulberry32(20260523);
+  // Raw dock-efficiency units (engineered goal ~68.8), matching the weekly recap metric.
+  const series=names.map((nm,idx)=>{
+    const start=58+rng()*14;                 // 58-72 starting efficiency
+    const drift=(rng()-0.45)*0.35;           // slow trend per week
+    const seasonAmp=1+rng()*2; const noise=1+rng()*1.3;
+    const y=[]; let lvl=start;
+    for(let t=0;t<26;t++){ lvl+=drift;
+      const season=seasonAmp*Math.sin((t/4.3)*2*Math.PI + idx);
+      let v=lvl+season+(rng()-0.5)*2*noise;
+      if(idx===2 && t===18) v-=8;            // injected outage shock -> outlier
+      if(idx===8) v-=t*0.3;                   // steady decline -> trend flag
+      y.push(round(Math.max(35,v),1)); }
+    return {name:nm, weeks, y};
+  });
+  return series;
+}
+
+/* ============================================================================
+   5. CSV LOADING  (auto-detect long or wide format)
+   ========================================================================== */
+function parseCSV(text){
+  const rows=text.trim().split(/\r?\n/).map(r=>r.split(',').map(c=>c.trim()));
+  const header=rows[0].map(h=>h.toLowerCase());
+  const fi=header.findIndex(h=>/facility|series|location|name|code|lp/.test(h));
+  const wi=header.findIndex(h=>/week|date|ending|we\b/.test(h));
+  const vi=header.findIndex(h=>/value|prod|tlh|%|goal|actual/.test(h));
+  // LONG format: facility,week,value
+  if(fi>=0 && wi>=0 && vi>=0){
+    const map={};
+    for(let r=1;r<rows.length;r++){ const f=rows[r][fi]; const w=rows[r][wi]; const v=parseFloat(rows[r][vi]);
+      if(!f||isNaN(v))continue; (map[f]=map[f]||{weeks:[],y:[]}); map[f].weeks.push(w); map[f].y.push(v); }
+    return Object.entries(map).map(([name,o])=>({name,...o}));
+  }
+  // WIDE format: first col = facility, remaining cols = week labels
+  const weekCols=rows[0].slice(1);
+  return rows.slice(1).map(r=>{ const y=[],weeks=[];
+    r.slice(1).forEach((c,i)=>{ const v=parseFloat(c); if(!isNaN(v)){y.push(v);weeks.push(weekCols[i]);} });
+    return {name:r[0], weeks, y}; }).filter(s=>s.y.length>3);
+}
+
+/* ============================================================================
+   6. SVG CHART HELPERS  (hand-rolled, no dependency)
+   ========================================================================== */
+const NS='http://www.w3.org/2000/svg';
+function el(tag,attrs){ const e=document.createElementNS(NS,tag);
+  for(const k in attrs) e.setAttribute(k,attrs[k]); return e; }
+function chart(host,opt){
+  host.innerHTML='';
+  const W=opt.W||880,H=opt.H||(opt.h||240),P={l:46,r:14,t:12,b:26};
+  const svg=el('svg',{viewBox:`0 0 ${W} ${H}`}); host.appendChild(svg);
+  const xs=opt.xLabels||[]; const n=opt.n||xs.length;
+  let ymin=opt.ymin, ymax=opt.ymax;
+  if(ymin==null||ymax==null){ const all=opt.autorange.flat().filter(v=>v!=null&&isFinite(v));
+    ymin=Math.min(...all); ymax=Math.max(...all); const pad=(ymax-ymin)*0.08||1; ymin-=pad; ymax+=pad; }
+  const xT=i=> P.l + (W-P.l-P.r)*(n<=1?0.5:i/(n-1));
+  const yT=v=> H-P.b - (H-P.b-P.t)*((v-ymin)/((ymax-ymin)||1));
+  // grid + y axis
+  for(let g=0;g<=4;g++){ const v=ymin+(ymax-ymin)*g/4; const y=yT(v);
+    svg.appendChild(el('line',{x1:P.l,y1:y,x2:W-P.r,y2:y,stroke:'#ececf2'}));
+    const tx=el('text',{x:P.l-6,y:y+3,'text-anchor':'end',fill:'#9aa0b5'}); tx.textContent=round(v,0); svg.appendChild(tx); }
+  // x labels (thin them)
+  const step=Math.ceil(n/9);
+  for(let i=0;i<n;i+=step){ const tx=el('text',{x:xT(i),y:H-8,'text-anchor':'middle',fill:'#9aa0b5'}); tx.textContent=xs[i]||i; svg.appendChild(tx); }
+  return {svg,xT,yT,W,H,P,n};
+}
+function addLine(ctx,data,color,wdt=2,dash){ let d='',pen=false;
+  data.forEach((v,i)=>{ if(v==null||!isFinite(v)){pen=false;return;} const X=ctx.xT(i),Y=ctx.yT(v);
+    d+=(pen?'L':'M')+X+' '+Y+' '; pen=true; });
+  const p=el('path',{d,fill:'none',stroke:color,'stroke-width':wdt,'stroke-linejoin':'round'});
+  if(dash)p.setAttribute('stroke-dasharray',dash); ctx.svg.appendChild(p); }
+function addBand(ctx,lo,hi,color){ let d='',started=false; const pts=[];
+  for(let i=0;i<hi.length;i++){ if(hi[i]==null||lo[i]==null)continue; pts.push(i); }
+  if(!pts.length)return; let dd='M';
+  pts.forEach((i,k)=>{ dd+=(k?'L':'')+ctx.xT(i)+' '+ctx.yT(hi[i])+' '; });
+  for(let k=pts.length-1;k>=0;k--){ const i=pts[k]; dd+='L'+ctx.xT(i)+' '+ctx.yT(lo[i])+' '; }
+  dd+='Z'; ctx.svg.appendChild(el('path',{d:dd,fill:color,opacity:0.55,stroke:'none'})); }
+function addDots(ctx,data,idxs,color,r=3.5){ idxs.forEach(i=>{ if(data[i]==null)return;
+  ctx.svg.appendChild(el('circle',{cx:ctx.xT(i),cy:ctx.yT(data[i]),r,fill:color,stroke:'#fff','stroke-width':1})); }); }
+function addBars(ctx,data,color){ const bw=Math.max(2,(ctx.W-60)/data.length*0.6);
+  data.forEach((v,i)=>{ if(v==null||!isFinite(v))return; const y0=ctx.yT(0),y1=ctx.yT(v);
+    ctx.svg.appendChild(el('rect',{x:ctx.xT(i)-bw/2,y:Math.min(y0,y1),width:bw,height:Math.abs(y1-y0),
+      fill:color,opacity:0.6})); }); }
+function hline(ctx,v,color,dash='4 3',label){ const y=ctx.yT(v);
+  ctx.svg.appendChild(el('line',{x1:ctx.P.l,y1:y,x2:ctx.W-ctx.P.r,y2:y,stroke:color,'stroke-width':1.3,'stroke-dasharray':dash}));
+  if(label){ const t=el('text',{x:ctx.W-ctx.P.r,y:y-3,'text-anchor':'end',fill:color,'font-size':9}); t.textContent=label; ctx.svg.appendChild(t);} }
+
+function card(host,kind,k,v,d){ const e=document.createElement('div'); e.className='signal '+kind;
+  e.innerHTML=`<div class="k">${k}</div><div class="v">${v}</div><div class="d">${d}</div>`; host.appendChild(e); }
+
+/* ============================================================================
+   7. RENDER PIPELINE
+   ========================================================================== */
+let SERIES=[], CUR=0;
+function currentSeries(){ return SERIES[CUR]; }
+
+function renderAll(){
+  const s=currentSeries(); if(!s){return;} const y=s.y; const goal=parseFloat(goalInp.value)||100;
+  const perPoint=parseFloat(document.getElementById('ppInp').value)||0;
+  renderTrend(s,y,goal); renderSPC(s,y,goal); renderMom(s,y); renderForecast(s,y,goal);
+  renderRankings(goal,perPoint);
+}
+
+/* ---- Rankings & $ Impact (across ALL loaded series) ---- */
+function fmtMoney(x){ const a=Math.abs(x), sgn=x<0?'−':'+';
+  if(a>=1e6) return sgn+'$'+(a/1e6).toFixed(2)+'M';
+  if(a>=1e3) return sgn+'$'+Math.round(a/1e3)+'K';
+  return sgn+'$'+Math.round(a); }
+function spcState(y){ const c=imr(y); const out=y.filter(v=>v>c.UCL||v<c.LCL).length/y.length;
+  if(out>0.25) return {k:'warn',t:'Trending'};
+  const h=nelson(y,c); const hits=[].concat(h[1],h[3],h[5],h[6]);
+  return hits.length?{k:'bad',t:'Special cause'}:{k:'good',t:'In control'}; }
+function trendRegime(y){ const cr=crossovers(sma(y,4),sma(y,13));
+  if(cr.length){ const lc=last(cr); return lc.type==='golden'?{k:'good',t:'Improving'}:{k:'bad',t:'Declining'}; }
+  const sl=olsTrend(y).b1; return sl>0.05?{k:'good',t:'Rising'}:sl<-0.05?{k:'bad',t:'Falling'}:{k:'neutral',t:'Flat'}; }
+function focusArea(y){ const c=imr(y); const cv=c.sigma/Math.abs(c.ybar||1); const reg=trendRegime(y);
+  if(reg.t==='Declining'||reg.t==='Falling') return '<i>(heuristic)</i> Planning — volume & roster vs. a declining trend';
+  if(cv>0.045) return '<i>(heuristic)</i> Execution — balanced staffing (3:1) & secondary-LF rehandle';
+  return '<i>(heuristic)</i> Scheduling / Certification — structural gap to goal'; }
+const sc=k=>k==='good'?'#1a8f4c':k==='bad'?'#c62828':k==='warn'?'#d98300':'#6b6b78';
+
+/* --- Scorecard status (optional CSV) drives the real "Likely focus" by section --- */
+let SCORECARD=[]; // [{key, planning, scheduling, execution}]
+const SCLEVER={ Planning:'Planning — TLH plan, volume vs plan, roster & absenteeism in the plan',
+  Scheduling:'Scheduling — MySchedule compliance, call-offs / no-shows',
+  Execution:'Execution — solid PRIME, 3:1 staffing, secondary-LF rehandle, certification' };
+const normKey=s=>String(s||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
+const isRed=v=>/^r(ed)?$/i.test(String(v||'').trim());
+function scFor(name){ const n=normKey(name); if(!n) return null;
+  return SCORECARD.find(e=>{ const k=normKey(e.key); return k&&(n.includes(k)||k.includes(n)); })||null; }
+function focusFor(s){ const e=scFor(s.name);
+  if(e){ const red=['Planning','Scheduling','Execution'].filter(sec=>isRed(e[sec.toLowerCase()]));
+    if(red.length) return '<b style="color:#c62828">RED:</b> '+red.map(r=>SCLEVER[r]).join(' &middot; ');
+    return '<span style="color:#1a8f4c">No RED sections on Scorecard</span>'; }
+  return focusArea(s.y); }
+function parseScorecardCSV(text){
+  const rows=text.trim().split(/\r?\n/).map(r=>r.split(',').map(c=>c.trim()));
+  const h=rows[0].map(x=>x.toLowerCase());
+  const fi=h.findIndex(x=>/facil|locat|name|code|abbr|numb/.test(x));
+  const pi=h.findIndex(x=>/plan/.test(x)), si=h.findIndex(x=>/sched/.test(x)), ei=h.findIndex(x=>/exec/.test(x));
+  if(fi<0||pi<0||si<0||ei<0) throw new Error('need columns: facility, planning, scheduling, execution');
+  return rows.slice(1).filter(r=>r[fi]).map(r=>({key:r[fi],planning:r[pi],scheduling:r[si],execution:r[ei]})); }
+
+function rankRows(goal,perPoint){
+  return SERIES.map(s=>{ const v=last(s.y),gap=v-goal,wk=gap*perPoint/52;
+    return {name:s.name,v,gap,wk,trend:trendRegime(s.y),spc:spcState(s.y),focus:focusFor(s)}; })
+    .sort((a,b)=>b.v-a.v); }
+
+/* --- Local, governance-safe recap-text generator (no LLM, no network) --- */
+function generateNarrative(){
+  if(!SERIES.length) return 'Load data first.';
+  const goal=parseFloat(goalInp.value)||0, perPoint=parseFloat(document.getElementById('ppInp').value)||0;
+  const rows=rankRows(goal,perPoint); const avg=mean(rows.map(r=>r.v)); const netWk=(avg-goal)*perPoint/52;
+  const below=rows.filter(r=>r.gap<0).length; const N=Math.max(1,Math.min(5,Math.floor(rows.length/2)));
+  const bottom=rows.slice(-N).reverse(), top=rows.slice(0,N);
+  const wk=SERIES[0]&&SERIES[0].weeks?last(SERIES[0].weeks):'';
+  const strip=h=>String(h).replace(/<[^>]*>/g,'').replace(/&middot;/g,'·').replace(/&amp;/g,'&').replace(/&[a-z]+;/g,' ').trim();
+  let t='';
+  t+=`DOCK EFFICIENCY — TOP/BOTTOM PERFORMER RECAP (auto-draft, review before sending)\n`;
+  t+=`Week ending ${wk} · ${rows.length} facilities\n`;
+  t+=`${'='.repeat(64)}\n\n`;
+  t+=`NETWORK: efficiency ${round(avg,1)} vs goal ${round(goal,1)} (${avg-goal>=0?'+':''}${round(avg-goal,1)} pts). `;
+  t+=`${netWk>=0?'Favorable':'Unfavorable'} to plan ≈ ${fmtMoney(netWk)}/week (${fmtMoney(netWk*52)} annualized if sustained). `;
+  t+=`${below} of ${rows.length} facilities below goal.\n\n`;
+  t+=`BOTTOM PERFORMERS — priority for intervention:\n`;
+  bottom.forEach((r,i)=>{ t+=`  ${i+1}. ${r.name} — ${round(r.v,1)} (gap ${r.gap>=0?'+':''}${round(r.gap,1)}, ≈${fmtMoney(r.wk)}/wk). `;
+    t+=`Trend ${r.trend.t.toLowerCase()}, process ${r.spc.t.toLowerCase()}. Focus: ${strip(r.focus)}.\n`; });
+  t+=`\nTOP PERFORMERS — model behaviors to replicate:\n`;
+  top.forEach((r,i)=>{ t+=`  ${i+1}. ${r.name} — ${round(r.v,1)} (${r.gap>=0?'+':''}${round(r.gap,1)}), trend ${r.trend.t.toLowerCase()}.\n`; });
+  t+=`\nNotes: $ impact uses $${(perPoint/1e6).toFixed(0)}M/point ÷ 52 wks. `;
+  t+=`Signals are investigation prompts; pair each bottom facility with its Scorecard RED cells and the lanefull/rehandle playbook before acting. Generated locally — nothing left this machine.\n`;
+  return t;
+}
+
+function renderRankings(goal,perPoint){
+  if(!SERIES.length) return;
+  const rows=rankRows(goal,perPoint);
+  const N=Math.max(1,Math.min(5,Math.floor(rows.length/2)));
+  const top=rows.slice(0,N), bottom=rows.slice(-N).reverse();
+  const below=rows.filter(r=>r.gap<0).length, avg=mean(rows.map(r=>r.v));
+  // Network $ from the AVERAGE gap (recap method: one network number vs goal), NOT the sum of facilities.
+  const netWk=(avg-goal)*perPoint/52;
+  const cards=document.getElementById('rankCards'); cards.innerHTML='';
+  card(cards, avg>=goal?'good':'bad','Network efficiency', round(avg,1), 'avg vs goal '+round(goal,1)+' ('+(avg-goal>=0?'+':'')+round(avg-goal,1)+' pts)');
+  card(cards, netWk>=0?'good':'bad','Weekly $ vs plan', fmtMoney(netWk), 'avg gap × $/pt ÷ 52');
+  card(cards, netWk>=0?'good':'bad','Annualized', fmtMoney(netWk*52), 'if sustained 52 wks');
+  card(cards, below>rows.length/2?'bad':'warn','Below goal', below+' / '+rows.length, 'facilities under '+round(goal,1));
+  const vmax=Math.max(...rows.map(r=>r.v))||1;
+  function tbl(list,withFocus){
+    let h='<table><tr><th>#</th><th>Facility</th><th>% of goal</th><th>Gap</th><th>Weekly&nbsp;$</th><th>Trend</th><th>Process</th>'+(withFocus?'<th style="text-align:left">Likely focus (Scorecard)</th>':'')+'</tr>';
+    list.forEach((r,i)=>{ const bw=Math.round(56*r.v/vmax);
+      h+=`<tr><td>${i+1}</td><td>${r.name}</td>`+
+         `<td><span style="display:inline-block;height:8px;width:${bw}px;background:${r.gap>=0?'#1a8f4c':'#c62828'};border-radius:2px;margin-right:6px;vertical-align:middle"></span>${round(r.v,1)}</td>`+
+         `<td style="color:${r.gap>=0?'#1a8f4c':'#c62828'}">${r.gap>=0?'+':''}${round(r.gap,1)}</td>`+
+         `<td style="color:${r.wk>=0?'#1a8f4c':'#c62828'}">${fmtMoney(r.wk)}</td>`+
+         `<td style="color:${sc(r.trend.k)}">${r.trend.t}</td>`+
+         `<td style="color:${sc(r.spc.k)}">${r.spc.t}</td>`+
+         (withFocus?`<td style="text-align:left;font-size:11.5px">${r.focus}</td>`:'')+`</tr>`; });
+    return h+'</table>'; }
+  document.getElementById('bottomTable').innerHTML=tbl(bottom,true);
+  document.getElementById('topTable').innerHTML=tbl(top,false);
+}
+
+function renderTrend(s,y,goal){
+  const host=document.getElementById('trendChart');
+  const sma4=sma(y,4), sma13=sma(y,13), bb=bollinger(y,8,2);
+  const ctx=chart(host,{xLabels:s.weeks,n:y.length,autorange:[y,bb.up,bb.lo,[goal]]});
+  addBand(ctx,bb.lo,bb.up,'#dfe0ea');
+  hline(ctx,goal,'#1a8f4c','5 4','Goal '+goal);
+  addLine(ctx,y,'#4D148C',2.4); addLine(ctx,sma4,'#FF6600',2); addLine(ctx,sma13,'#9b59b6',2,'5 3');
+  // crossover markers
+  const cr=crossovers(sma4,sma13);
+  cr.forEach(e=> addDots(ctx, sma4, [e.t], e.type==='golden'?'#1a8f4c':'#c62828',4));
+  // cards
+  const cards=document.getElementById('trendCards'); cards.innerHTML='';
+  const cur=last(y), base=last(sma13.filter(v=>v!=null))||cur;
+  const vsGoal=cur-goal; const r4=last(roc(y,4));
+  card(cards, cur>=goal?'good':(cur>=goal-5?'warn':'bad'),'Latest week', round(cur,1), 'vs goal '+(vsGoal>=0?'+':'')+round(vsGoal,1)+' pts');
+  card(cards,'neutral','Quarter baseline', round(base,1)+'%', 'SMA(13) de-noised level');
+  card(cards, r4>=0?'good':'bad','4-wk change', (r4>=0?'+':'')+round(r4,1)+'%', 'rate of change vs a month ago');
+  const lastCross=cr.length?last(cr):null;
+  card(cards, lastCross? (lastCross.type==='golden'?'good':'bad'):'neutral',
+    'Trend regime', lastCross? (lastCross.type==='golden'?'Improving':'Declining'):'Flat',
+    lastCross? ('4/13 '+lastCross.type+' cross @ wk '+(lastCross.t+1)) : 'no recent crossover');
+  // crossover note
+  const note=document.getElementById('crossNote');
+  if(lastCross){ note.innerHTML=`<b>Crossover read:</b> the 4-week baseline most recently crossed
+    ${lastCross.type==='golden'?'<span style="color:var(--good)">above</span>':'<span style="color:var(--bad)">below</span>'}
+    the 13-week baseline at week ${lastCross.t+1} (${s.weeks[lastCross.t]}), signalling a
+    ${lastCross.type==='golden'?'sustained improvement':'sustained deterioration'} regime. This is lagging
+    confirmation &mdash; corroborate with the SPC tab before acting.`; }
+  else note.innerHTML=`<b>Crossover read:</b> no 4/13 crossover in this window &mdash; the series has not made a durable regime change recently.`;
+}
+
+function renderSPC(s,y,goal){
+  const c=imr(y); const hits=nelson(y,c); const host=document.getElementById('imrChart');
+  const ctx=chart(host,{xLabels:s.weeks,n:y.length,autorange:[y,[c.UCL],[c.LCL]]});
+  // zone shading lines
+  [['#cfd3e0',c.z1u],['#cfd3e0',c.z1l],['#b9bed0',c.z2u],['#b9bed0',c.z2l]].forEach(([col,v])=>hline(ctx,v,col,'2 3'));
+  hline(ctx,c.UCL,'#c62828','5 3','UCL '+round(c.UCL,1)); hline(ctx,c.LCL,'#c62828','5 3','LCL '+round(c.LCL,1));
+  hline(ctx,c.ybar,'#1a8f4c','5 4','x̄ '+round(c.ybar,1));
+  addLine(ctx,y,'#4D148C',2.2);
+  const allHits=[...new Set([].concat(hits[1],hits[3],hits[5],hits[6]))];
+  addDots(ctx,y,allHits,'#FF6600',4.2);
+  // non-stationarity guard: a trending series violates the stable-mean assumption,
+  // so Shewhart limits over-flag. Detect it and explain rather than crying "outlier".
+  const outFrac = y.filter(v=>v>c.UCL||v<c.LCL).length / y.length;
+  const trending = outFrac>0.25;
+  // cards
+  const cards=document.getElementById('spcCards'); cards.innerHTML='';
+  const ac=lag1autocorr(y); const inControl=allHits.length===0;
+  if(trending){ card(cards,'warn','Process state','Trending', Math.round(outFrac*100)+'% of weeks outside 3σ — not stationary'); }
+  else card(cards, inControl?'good':'bad','Process state', inControl?'In control':'Special cause',
+    inControl?'no rule violations':allHits.length+' week(s) flagged');
+  card(cards,'neutral','Center / σ̂', round(c.ybar,1)+' / '+round(c.sigma,2), 'σ̂ = MR̄/1.128');
+  card(cards,'neutral','Control band', round(c.LCL,1)+' – '+round(c.UCL,1), '3σ limits');
+  card(cards, Math.abs(ac)>0.5?'warn':'neutral','Lag-1 autocorr', round(ac,2),
+    Math.abs(ac)>0.5?'high — widen limits, read trends with care':'moderate');
+  // nelson list
+  const nl=document.getElementById('nelsonList'); const labels={1:'Rule 1 · point beyond 3σ (outlier week)',
+    3:'Rule 3 · 6 in a row trending (drift)',5:'Rule 5 · 2 of 3 beyond 2σ (emerging shift)',6:'Rule 6 · 4 of 5 beyond 1σ'};
+  let html='';
+  if(trending){ html+=`<div class="note" style="background:#fdf3e0;border-color:#f0d9ad"><b>⚠ This series is trending, not stationary.</b>
+    ${Math.round(outFrac*100)}% of weeks fall outside the 3σ limits because the mean itself is drifting &mdash; these are <i>not</i> individual outlier weeks.
+    Shewhart (I-chart) limits assume a stable mean and will over-flag a steady climb or decline. For a trending series, rely on the
+    <b>Trend &amp; Signals</b> view, the <b>EWMA</b> chart, and <b>CUSUM</b> below &mdash; they are built to track drift. (See Method &amp; Caveats → non-stationarity.)</div>`; }
+  [1,3,5,6].forEach(r=>{ if(hits[r].length){ html+=`<div class="note" style="margin:6px 0"><b>${labels[r]}</b> &mdash; weeks: `+
+    hits[r].map(i=>`${s.weeks[i]} (${round(y[i],1)})`).join(', ')+`</div>`; } });
+  if(!trending) nl.innerHTML = html || `<div class="note" style="background:#eafaf0;border-color:#bfe6cd"><b>No Nelson-rule violations.</b> The series is statistically stable across rules 1/3/5/6.</div>`;
+  else nl.innerHTML = html;
+  // EWMA
+  const ew=ewma(y); const eh=document.getElementById('ewmaChart');
+  const ec=chart(eh,{xLabels:s.weeks,n:y.length,autorange:[ew.z,ew.ucl,ew.lcl]});
+  addBand(ec,ew.lcl,ew.ucl,'#e7e2f3'); hline(ec,ew.center,'#1a8f4c','5 4','target');
+  addLine(ec,ew.z,'#4D148C',2.2);
+  const ewBreak=ew.z.map((z,i)=> z>ew.ucl[i]||z<ew.lcl[i]?i:-1).filter(i=>i>=0);
+  addDots(ec,ew.z,ewBreak,'#c62828',4);
+  // CUSUM
+  const cu=cusum(y); const ch=document.getElementById('cusumChart');
+  const cc=chart(ch,{xLabels:s.weeks,n:y.length,ymin:0,autorange:[cu.Sh,cu.Sl,[cu.h]]});
+  hline(cc,cu.h,'#9aa0b5','4 3','h '+round(cu.h,1));
+  addLine(cc,cu.Sh,'#1a8f4c',2); addLine(cc,cu.Sl,'#c62828',2);
+}
+
+function renderMom(s,y){
+  document.getElementById('momCaveat').innerHTML='These are <b>communication aids</b>. ROC is a clean plain-language change metric; MACD and RSI are labelled <i>indicative only</i> &mdash; at ~25 weekly points their "overbought/oversold reversal" calls have no mechanism in operations data. Do not auto-alert on them.';
+  const cards=document.getElementById('momCards'); cards.innerHTML='';
+  const r4=last(roc(y,4)), r13=last(roc(y,13)), rs=last(rsi(y,7).filter(v=>v!=null)), mc=macd(y);
+  card(cards, r4>=0?'good':'bad','ROC 4-week', (r4>=0?'+':'')+round(r4,1)+'%','vs a month ago');
+  card(cards, r13>=0?'good':'bad','ROC 13-week', (r13>=0?'+':'')+round(r13,1)+'%','vs a quarter ago');
+  card(cards,'neutral','RSI(7)', rs!=null?round(rs,0):'–', (rs>80?'stretched high':rs<20?'stretched low':'neutral')+' · indicative');
+  card(cards,'neutral','MACD hist', round(last(mc.hist),2), (last(mc.hist)>=0?'short-term above baseline':'below baseline')+' · indicative');
+  // ROC chart
+  const rc=chart(document.getElementById('rocChart'),{xLabels:s.weeks,n:y.length,autorange:[roc(y,4),roc(y,13),[0]]});
+  hline(rc,0,'#9aa0b5','3 3'); addLine(rc,roc(y,4),'#4D148C',2); addLine(rc,roc(y,13),'#FF6600',2,'5 3');
+  // MACD
+  const mch=chart(document.getElementById('macdChart'),{xLabels:s.weeks,n:y.length,autorange:[mc.line,mc.signal,mc.hist,[0]]});
+  hline(mch,0,'#9aa0b5','3 3'); addBars(mch,mc.hist,'#bdbdd0'); addLine(mch,mc.line,'#4D148C',2); addLine(mch,mc.signal,'#FF6600',2);
+  // RSI
+  const rsv=rsi(y,7); const rsc=chart(document.getElementById('rsiChart'),{xLabels:s.weeks,n:y.length,ymin:0,ymax:100,autorange:[rsv]});
+  hline(rsc,80,'#c62828','4 3','80'); hline(rsc,20,'#1a8f4c','4 3','20'); hline(rsc,50,'#cfd3e0','2 3');
+  addLine(rsc,rsv,'#9b59b6',2.2);
+}
+
+function renderForecast(s,y,goal){
+  const h=Math.max(1,Math.min(12,parseInt(horizonInp.value)||6));
+  const fc=ensembleForecast(y,h); const bt=backtest(y);
+  // build extended arrays
+  const n=y.length; const labels=s.weeks.slice();
+  for(let i=1;i<=h;i++) labels.push('+'+i);
+  const actual=y.concat(Array(h).fill(null));
+  const fpath=Array(n).fill(null); fpath[n-1]=y[n-1]; fc.pts.forEach((p,i)=>fpath[n+i]=p);
+  const lo=Array(n).fill(null), hi=Array(n).fill(null);
+  lo[n-1]=y[n-1]; hi[n-1]=y[n-1]; fc.band.forEach((b,i)=>{lo[n+i]=b.lo; hi[n+i]=b.hi;});
+  const ctx=chart(document.getElementById('fcstChart'),{xLabels:labels,n:labels.length,
+    autorange:[actual,fpath,lo,hi,[goal]]});
+  addBand(ctx,lo,hi,'#ffd9bd'); hline(ctx,goal,'#1a8f4c','5 4','Goal '+goal);
+  addLine(ctx,actual,'#4D148C',2.4); addLine(ctx,fpath,'#FF6600',2.4,'5 3');
+  // cards
+  const cards=document.getElementById('fcstCards'); cards.innerHTML='';
+  const nx=fc.pts[0], b0=fc.band[0]; const end=last(fc.pts), be=last(fc.band);
+  card(cards, nx>=goal?'good':(nx>=goal-5?'warn':'bad'),'Next week', round(nx,1),
+    '80% range '+round(b0.lo,1)+'–'+round(b0.hi,1));
+  card(cards, end>=goal?'good':'warn','Week +'+h, round(end,1),
+    'range '+round(be.lo,1)+'–'+round(be.hi,1));
+  card(cards, bt[0].mase<1?'good':'warn','Best model', bt[0].name, 'MASE '+round(bt[0].mase,2));
+  card(cards, fc.agree?'good':'neutral','Momentum gate', fc.agree?'Trend confirmed':'Trend damped',
+    fc.agree?'EMA & ROC agree':'signals disagree — trend weighted 0.4');
+  // backtest table (apply simplicity prior in display)
+  let rows='<table><tr><th>Model</th><th>MASE</th><th>RMSE</th><th>Backtest pts</th></tr>';
+  const bestM=bt[0].mase; bt.forEach(r=>{ const simple=(r.name==='SES'||r.name==='Damped Holt');
+    const within5= r.mase<=bestM*1.05; const isBest=(r===bt[0])|| (within5&&simple&&r.mase<=bt.find(x=>!( x.name==='SES'||x.name==='Damped Holt')).mase*1.0001);
+    rows+=`<tr class="${r===bt[0]?'best':''}"><td>${r.name}</td><td>${round(r.mase,2)}</td><td>${round(r.rmse,2)}</td><td>${r.n}</td></tr>`; });
+  rows+='</table>'; document.getElementById('backtestTable').innerHTML=rows;
+}
+
+/* ============================================================================
+   8. WIRING
+   ========================================================================== */
+function loadSeries(arr,msg){ SERIES=arr.filter(s=>s.y && s.y.length>=6); CUR=0;
+  const sel=document.getElementById('seriesSel'); sel.innerHTML='';
+  SERIES.forEach((s,i)=>{ const o=document.createElement('option'); o.value=i; o.textContent=s.name+'  ('+s.y.length+' wks)'; sel.appendChild(o); });
+  document.getElementById('status').innerHTML=msg+' &middot; '+SERIES.length+' series, '+
+    (SERIES[0]?SERIES[0].y.length:0)+' weeks each';
+  renderAll();
+}
+document.getElementById('seriesSel').addEventListener('change',e=>{CUR=+e.target.value;renderAll();});
+document.getElementById('goalInp').addEventListener('change',renderAll);
+document.getElementById('ppInp').addEventListener('change',renderAll);
+document.getElementById('horizonInp').addEventListener('change',renderAll);
+document.getElementById('demoBtn').addEventListener('click',()=>loadSeries(makeDemo(),'Synthetic demo data (no real facility data)'));
+document.getElementById('loadBtn').addEventListener('click',()=>document.getElementById('fileInp').click());
+document.getElementById('fileInp').addEventListener('change',e=>{ const f=e.target.files[0]; if(!f)return;
+  const rd=new FileReader(); rd.onload=()=>{ try{ const arr=parseCSV(rd.result);
+    if(!arr.length) throw new Error('no series parsed'); loadSeries(arr,'Loaded '+f.name+' (local, stays on this machine)'); }
+    catch(err){ document.getElementById('status').textContent='Could not parse CSV: '+err.message; } };
+  rd.readAsText(f); });
+document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
+  t.classList.add('active'); document.getElementById('p-'+t.dataset.t).classList.add('active');
+}));
+
+/* --- onboarding / quick-start --- */
+const store={ get:k=>{try{return localStorage.getItem(k)}catch(e){return null}},
+              set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}} };
+const welcome=document.getElementById('welcome');
+function showWelcome(){ welcome.classList.remove('hide'); }
+function hideWelcome(){ welcome.classList.add('hide');
+  if(document.getElementById('dontShow').checked) store.set('dsl_seen','1'); }
+document.getElementById('helpBtn').addEventListener('click',showWelcome);
+document.getElementById('startBtn').addEventListener('click',hideWelcome);
+welcome.addEventListener('click',e=>{ if(e.target===welcome) hideWelcome(); });
+if(!store.get('dsl_seen')) showWelcome();
+document.getElementById('qsX').addEventListener('click',()=>document.getElementById('quickstart').classList.add('hide'));
+
+/* --- scorecard status loader --- */
+document.getElementById('scBtn').addEventListener('click',()=>document.getElementById('scFile').click());
+document.getElementById('scFile').addEventListener('change',e=>{ const f=e.target.files[0]; if(!f)return;
+  const rd=new FileReader(); rd.onload=()=>{ try{ SCORECARD=parseScorecardCSV(rd.result);
+    document.getElementById('scStatus').innerHTML='✓ Scorecard loaded ('+SCORECARD.length+' facilities) — focus now reflects real RED cells';
+    renderAll(); } catch(err){ document.getElementById('scStatus').textContent='Could not parse: '+err.message; } };
+  rd.readAsText(f); });
+
+/* --- recap draft --- */
+document.getElementById('recapBtn').addEventListener('click',()=>{
+  document.getElementById('recapText').value=generateNarrative();
+  document.getElementById('recapBox').classList.remove('hide'); });
+document.getElementById('copyRecap').addEventListener('click',()=>{
+  const ta=document.getElementById('recapText'); ta.select();
+  navigator.clipboard?navigator.clipboard.writeText(ta.value).then(()=>msg()):document.execCommand('copy')&&msg();
+  function msg(){ document.getElementById('copyMsg').textContent='Copied ✓'; setTimeout(()=>document.getElementById('copyMsg').textContent='',2000); } });
+
+// boot
+loadSeries(makeDemo(),'Synthetic demo data (no real facility data)');
+</script>
+</body>
+</html>
