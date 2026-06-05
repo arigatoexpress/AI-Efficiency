@@ -2,6 +2,8 @@
 
 A one-page "how to use it" for each district's subteam. No stats or coding background needed. Print it, hand it out.
 
+**Focus area:** Pacific Northwest, Mountain, Western Rockies, Columbia River, Northern California (NORTHWEST) and Red River (MID-AMERICA). Load the focus-area file and use the **Region / District** dropdown to view all districts together or drill into yours.
+
 ---
 
 ## What this tool is for

@@ -576,16 +576,21 @@ function mulberry32(seed){ return function(){ let t=seed+=0x6D2B79F5;
   t=Math.imul(t^t>>>15,t|1); t^=t+Math.imul(t^t>>>7,t|61); return ((t^t>>>14)>>>0)/4294967296; }; }
 function makeDemo(){
   // [code, region, district] — region/district tags drive the scope filter.
-  // Facility codes are FICTIONAL (DEMO-*); values are synthetic. Mountain has 5 so
-  // "filter to Mountain" is demonstrable. (Real data is loaded via CSV, never shipped here.)
+  // Facility codes are FICTIONAL (DEMO-*); values are synthetic. The demo mirrors the
+  // FOCUS AREA: the 6 districts PWXX/MTXX/WKXX/CRXX/NRXX (NORTHWEST) + RRXX (MID-AMERICA),
+  // shown by friendly name. (Real data is loaded via CSV, never shipped here.)
   const meta=[
+    ['DEMO-PW1','NORTHWEST','Pacific Northwest'], ['DEMO-PW2','NORTHWEST','Pacific Northwest'],
+    ['DEMO-PW3','NORTHWEST','Pacific Northwest'],
     ['DEMO-MT1','NORTHWEST','Mountain'], ['DEMO-MT2','NORTHWEST','Mountain'],
     ['DEMO-MT3','NORTHWEST','Mountain'], ['DEMO-MT4','NORTHWEST','Mountain'],
-    ['DEMO-MT5','NORTHWEST','Mountain'], ['DEMO-CR1','NORTHWEST','Columbia River'],
-    ['DEMO-NC1','NORTHWEST','Northern California'], ['DEMO-EA1','EASTERN','Carolina'],
-    ['DEMO-NE1','NORTHEAST','New England'], ['DEMO-CE1','CENTRAL','Great Lakes'],
-    ['DEMO-CE2','CENTRAL','East Tennessee'], ['DEMO-MW1','MID-WEST','Prairie'],
-    ['DEMO-MA1','MID-AMERICA','East Texas'], ['DEMO-SW1','SOUTHWEST','Inland Empire'],
+    ['DEMO-WK1','NORTHWEST','Western Rockies'], ['DEMO-WK2','NORTHWEST','Western Rockies'],
+    ['DEMO-WK3','NORTHWEST','Western Rockies'], ['DEMO-WK4','NORTHWEST','Western Rockies'],
+    ['DEMO-CR1','NORTHWEST','Columbia River'], ['DEMO-CR2','NORTHWEST','Columbia River'],
+    ['DEMO-CR3','NORTHWEST','Columbia River'],
+    ['DEMO-NR1','NORTHWEST','Northern California'], ['DEMO-NR2','NORTHWEST','Northern California'],
+    ['DEMO-RR1','MID-AMERICA','Red River'], ['DEMO-RR2','MID-AMERICA','Red River'],
+    ['DEMO-RR3','MID-AMERICA','Red River'],
   ];
   const weeks=[]; // 26 labels ending 05/23/26
   const base=new Date(2025,10,30); // Nov 30 2025 (label only; not used for math)
@@ -601,8 +606,8 @@ function makeDemo(){
     for(let t=0;t<26;t++){ lvl+=drift;
       const season=seasonAmp*Math.sin((t/4.3)*2*Math.PI + idx);
       let v=lvl+season+(rng()-0.5)*2*noise;
-      if(idx===2 && t===18) v-=8;            // DEMO-MT3 (Mountain): injected outage shock -> outlier
-      if(idx===4) v-=t*0.3;                   // DEMO-MT5 (Mountain): steady decline -> trend flag
+      if(idx===5 && t===18) v-=8;            // DEMO-MT3 (Mountain): injected outage shock -> outlier
+      if(idx===6) v-=t*0.3;                   // DEMO-MT4 (Mountain): steady decline -> trend flag
       y.push(round(Math.max(35,v),1)); }
     return {name:m[0], region:m[1], district:m[2], weeks, y};
   });
@@ -968,9 +973,8 @@ function loadSeries(arr,msg,isDemo){ SERIES=arr.filter(s=>s.y && s.y.length>=6);
   if(!goalTouched){ const allv=SERIES.flatMap(s=>s.y).slice().sort((a,b)=>a-b); const med=allv.length?allv[Math.floor(allv.length/2)]:0;
     if(med>=85) goalInp.value=100; else if(med>=45) goalInp.value=68.8; }
   buildScopeOptions();
-  // default scope: Mountain if present (per request), else All
-  const hasMtn=SERIES.some(s=>(s.district||'')==='Mountain'||(s.region||'')==='Mountain');
-  SCOPE=hasMtn?'Mountain':'ALL';
+  // default scope: the whole focus area (All loaded districts); drill into any one via the dropdown
+  SCOPE='ALL';
   const ss=document.getElementById('scopeSel'); if(ss) ss.value=SCOPE;
   document.getElementById('status').innerHTML=msg+' &middot; '+SERIES.length+' series, '+
     (SERIES[0]?SERIES[0].y.length:0)+' weeks each';
