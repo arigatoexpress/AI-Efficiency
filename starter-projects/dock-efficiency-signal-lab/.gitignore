@@ -4,11 +4,15 @@
 # Rules are name- and location-agnostic (survive renames / moved subfolders).
 # ==========================================================================
 
-# Real per-facility / per-region exports (any folder)
+# Real per-facility / per-region / per-district exports (any folder)
 mountain-region.csv
+focus-districts.csv
 **/mountain-region.csv
+**/focus-districts.csv
 *-region.csv
 **/*-region.csv
+*-districts.csv
+**/*-districts.csv
 *-real.csv
 real-*.csv
 
