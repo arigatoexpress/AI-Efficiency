@@ -13,10 +13,11 @@ Each week the team rebuilds rankings and explanation-of-change narratives by han
 - **Momentum (TA)** — ROC (legible MoM/QoQ change) plus MACD and RSI labeled *indicative only*.
 - **Forecast** — ensemble of SES + damped-Holt(φ=0.9) + linear trend, momentum-gated, with an 80% prediction band that widens with horizon, and a walk-forward (rolling-origin) MASE backtest that auto-selects the best model with a simplicity prior.
 - **Rankings & $ Impact** — top/bottom performers across all loaded series, each with its trend regime, process state, and the dollar value of its gap to goal. Uses the recap's CFO-legible translation (`$/point ÷ 52 weeks`): set the goal to the engineered goal (e.g. 68.8) and `$/point/year` to $50M to reproduce the weekly "≈ −$5.2M vs plan" figure. Each weak facility is heuristically mapped to a Scorecard section (Planning / Scheduling / Execution).
+- **Region / District filter** — when the data carries `region`/`district` tags, a scope dropdown lets you focus everything (facility list, rankings, recap) on one region or district (e.g. the **Mountain** district in the NORTHWEST region). The goal line auto-calibrates to the data's scale (≈100 for "% of goal", ≈68.8 for raw efficiency).
 
 ## How to run
 
-Just open `app/index.html` in any browser. No install, no server, no internet. It boots with synthetic demo data.
+Just open `index.html` in any browser. No install, no server, no internet. It boots with synthetic demo data.
 
 - **Verify it's offline:** open your browser's Network tab — there are zero requests.
 - **Analyze real data:** click **Load CSV…** and pick a local file (see format below). The file is read in-browser and never leaves your machine.
@@ -31,6 +32,12 @@ facility,week,value
 0275-NCRS,11/30,82.4
 0275-NCRS,12/07,79.1
 ...
+```
+Optionally add `region` and `district` columns to enable the scope filter (values below are illustrative/synthetic):
+```
+facility,region,district,week,value
+SYNTH-01,WEST,Summit,05/16/26,96.4
+SYNTH-01,WEST,Summit,05/23/26,98.1
 ```
 
 **Wide** (first column = facility, remaining columns = week labels):
@@ -63,13 +70,13 @@ The app is built for ops supervisors with no stats background:
 
 | File | Purpose |
 |------|---------|
-| `app/index.html` | The entire app (HTML + CSS + vanilla JS, no dependencies) |
-| `app/sample-data.csv` | Synthetic example of the productivity input format |
-| `app/sample-scorecard.csv` | Synthetic example of the Scorecard-status format |
+| `index.html` | The entire app (HTML + CSS + vanilla JS, no dependencies) |
 | `README.md` | This file |
 | `governance-review.md` | Data, risk, and approval considerations |
 | `demo-script.md` | Safe walkthrough for presenting to a team |
 | `district-subteam-guide.md` | Printable one-pager for each district subteam |
+| `sample-data.csv` | Synthetic example of the productivity input format |
+| `sample-scorecard.csv` | Synthetic example of the Scorecard-status format |
 
 ## What this is **not**
 

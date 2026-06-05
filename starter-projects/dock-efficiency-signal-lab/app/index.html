@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<!-- Defense-in-depth: the app makes no network calls; this CSP makes that physically enforceable
+     even if the file is later edited. connect-src 'none' blocks all fetch/XHR/websocket. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'none'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; base-uri 'none'; form-action 'none'" />
 <title>Dock Efficiency Signal Lab</title>
 <!--
   Dock Efficiency Signal Lab
@@ -132,6 +135,7 @@
 <header>
   <h1>Dock Efficiency Signal Lab</h1>
   <span class="tag">Offline</span>
+  <span class="tag" id="demoBadge" style="background:var(--warn);display:none">⚠ Synthetic demo data</span>
   <span class="gov"><span class="dot"></span> No network calls &middot; data stays on this machine</span>
   <button class="helpbtn" id="helpBtn" title="What is this? / Help">?</button>
 </header>
@@ -168,6 +172,10 @@
     <button class="x" id="qsX" title="Hide">×</button>
   </div>
   <div class="controls">
+    <div class="ctl" id="scopeCtl">
+      <label>Region / District</label>
+      <select id="scopeSel"></select>
+    </div>
     <div class="ctl">
       <label>Facility / Series</label>
       <select id="seriesSel"></select>
@@ -567,15 +575,25 @@ function backtest(y,hMax=3,minTrain=12){
 function mulberry32(seed){ return function(){ let t=seed+=0x6D2B79F5;
   t=Math.imul(t^t>>>15,t|1); t^=t+Math.imul(t^t>>>7,t|61); return ((t^t>>>14)>>>0)/4294967296; }; }
 function makeDemo(){
-  const names=['0083-NWRS','0183-BRRS','0275-NCRS','0318-SARS','0322-PTRS','0378-LERS',
-               '0438-ETRS','0493-VBRS','0622-RORS','0765-SDRS','0793-ALRS','0869-GDRS'];
+  // [code, region, district] — region/district tags drive the scope filter.
+  // Facility codes are FICTIONAL (DEMO-*); values are synthetic. Mountain has 5 so
+  // "filter to Mountain" is demonstrable. (Real data is loaded via CSV, never shipped here.)
+  const meta=[
+    ['DEMO-MT1','NORTHWEST','Mountain'], ['DEMO-MT2','NORTHWEST','Mountain'],
+    ['DEMO-MT3','NORTHWEST','Mountain'], ['DEMO-MT4','NORTHWEST','Mountain'],
+    ['DEMO-MT5','NORTHWEST','Mountain'], ['DEMO-CR1','NORTHWEST','Columbia River'],
+    ['DEMO-NC1','NORTHWEST','Northern California'], ['DEMO-EA1','EASTERN','Carolina'],
+    ['DEMO-NE1','NORTHEAST','New England'], ['DEMO-CE1','CENTRAL','Great Lakes'],
+    ['DEMO-CE2','CENTRAL','East Tennessee'], ['DEMO-MW1','MID-WEST','Prairie'],
+    ['DEMO-MA1','MID-AMERICA','East Texas'], ['DEMO-SW1','SOUTHWEST','Inland Empire'],
+  ];
   const weeks=[]; // 26 labels ending 05/23/26
   const base=new Date(2025,10,30); // Nov 30 2025 (label only; not used for math)
   for(let i=0;i<26;i++){ const d=new Date(base.getTime()+i*7*864e5);
     weeks.push((d.getMonth()+1)+'/'+d.getDate()); }
   const rng=mulberry32(20260523);
   // Raw dock-efficiency units (engineered goal ~68.8), matching the weekly recap metric.
-  const series=names.map((nm,idx)=>{
+  const series=meta.map((m,idx)=>{
     const start=58+rng()*14;                 // 58-72 starting efficiency
     const drift=(rng()-0.45)*0.35;           // slow trend per week
     const seasonAmp=1+rng()*2; const noise=1+rng()*1.3;
@@ -583,10 +601,10 @@ function makeDemo(){
     for(let t=0;t<26;t++){ lvl+=drift;
       const season=seasonAmp*Math.sin((t/4.3)*2*Math.PI + idx);
       let v=lvl+season+(rng()-0.5)*2*noise;
-      if(idx===2 && t===18) v-=8;            // injected outage shock -> outlier
-      if(idx===8) v-=t*0.3;                   // steady decline -> trend flag
+      if(idx===2 && t===18) v-=8;            // DEMO-MT3 (Mountain): injected outage shock -> outlier
+      if(idx===4) v-=t*0.3;                   // DEMO-MT5 (Mountain): steady decline -> trend flag
       y.push(round(Math.max(35,v),1)); }
-    return {name:nm, weeks, y};
+    return {name:m[0], region:m[1], district:m[2], weeks, y};
   });
   return series;
 }
@@ -600,11 +618,16 @@ function parseCSV(text){
   const fi=header.findIndex(h=>/facility|series|location|name|code|lp/.test(h));
   const wi=header.findIndex(h=>/week|date|ending|we\b/.test(h));
   const vi=header.findIndex(h=>/value|prod|tlh|%|goal|actual/.test(h));
-  // LONG format: facility,week,value
+  const ri=header.findIndex(h=>/^reg|region/.test(h));
+  const di=header.findIndex(h=>/^dist|district/.test(h));
+  // LONG format: facility,week,value (+ optional region, district)
   if(fi>=0 && wi>=0 && vi>=0){
     const map={};
     for(let r=1;r<rows.length;r++){ const f=rows[r][fi]; const w=rows[r][wi]; const v=parseFloat(rows[r][vi]);
-      if(!f||isNaN(v))continue; (map[f]=map[f]||{weeks:[],y:[]}); map[f].weeks.push(w); map[f].y.push(v); }
+      if(!f||isNaN(v))continue; (map[f]=map[f]||{weeks:[],y:[],region:'',district:''});
+      map[f].weeks.push(w); map[f].y.push(v);
+      if(ri>=0 && rows[r][ri]) map[f].region=rows[r][ri];
+      if(di>=0 && rows[r][di]) map[f].district=rows[r][di]; }
     return Object.entries(map).map(([name,o])=>({name,...o}));
   }
   // WIDE format: first col = facility, remaining cols = week labels
@@ -666,8 +689,19 @@ function card(host,kind,k,v,d){ const e=document.createElement('div'); e.classNa
 /* ============================================================================
    7. RENDER PIPELINE
    ========================================================================== */
-let SERIES=[], CUR=0;
-function currentSeries(){ return SERIES[CUR]; }
+let SERIES=[], VIEW=[], CUR=0, SCOPE='ALL', goalTouched=false;
+function currentSeries(){ return VIEW[CUR]; }
+// VIEW = SERIES filtered to the selected region/district scope
+function scopeKey(s){ return {region:(s.region||'').trim(), district:(s.district||'').trim()}; }
+function inScope(s){ if(SCOPE==='ALL') return true; const k=scopeKey(s);
+  return k.region===SCOPE || k.district===SCOPE; }
+function applyScope(){ VIEW=SERIES.filter(inScope);
+  if(!VIEW.length){ VIEW=SERIES.slice(); SCOPE='ALL'; const ss=document.getElementById('scopeSel'); if(ss) ss.value='ALL'; }
+  CUR=0;
+  const sel=document.getElementById('seriesSel'); sel.innerHTML='';
+  VIEW.forEach((s,i)=>{ const o=document.createElement('option'); o.value=i;
+    o.textContent=s.name+'  ('+s.y.length+' wks)'; sel.appendChild(o); });
+  renderAll(); }
 
 function renderAll(){
   const s=currentSeries(); if(!s){return;} const y=s.y; const goal=parseFloat(goalInp.value)||100;
@@ -676,7 +710,9 @@ function renderAll(){
   renderRankings(goal,perPoint);
 }
 
-/* ---- Rankings & $ Impact (across ALL loaded series) ---- */
+/* ---- Rankings & $ Impact (across the in-scope view) ---- */
+// escape untrusted CSV-supplied strings before any innerHTML interpolation
+function esc(s){ return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function fmtMoney(x){ const a=Math.abs(x), sgn=x<0?'−':'+';
   if(a>=1e6) return sgn+'$'+(a/1e6).toFixed(2)+'M';
   if(a>=1e3) return sgn+'$'+Math.round(a/1e3)+'K';
@@ -717,22 +753,23 @@ function parseScorecardCSV(text){
   return rows.slice(1).filter(r=>r[fi]).map(r=>({key:r[fi],planning:r[pi],scheduling:r[si],execution:r[ei]})); }
 
 function rankRows(goal,perPoint){
-  return SERIES.map(s=>{ const v=last(s.y),gap=v-goal,wk=gap*perPoint/52;
+  return VIEW.map(s=>{ const v=last(s.y),gap=v-goal,wk=gap*perPoint/52;
     return {name:s.name,v,gap,wk,trend:trendRegime(s.y),spc:spcState(s.y),focus:focusFor(s)}; })
     .sort((a,b)=>b.v-a.v); }
 
 /* --- Local, governance-safe recap-text generator (no LLM, no network) --- */
 function generateNarrative(){
-  if(!SERIES.length) return 'Load data first.';
+  if(!VIEW.length) return 'Load data first.';
   const goal=parseFloat(goalInp.value)||0, perPoint=parseFloat(document.getElementById('ppInp').value)||0;
   const rows=rankRows(goal,perPoint); const avg=mean(rows.map(r=>r.v)); const netWk=(avg-goal)*perPoint/52;
   const below=rows.filter(r=>r.gap<0).length; const N=Math.max(1,Math.min(5,Math.floor(rows.length/2)));
   const bottom=rows.slice(-N).reverse(), top=rows.slice(0,N);
-  const wk=SERIES[0]&&SERIES[0].weeks?last(SERIES[0].weeks):'';
+  const wk=VIEW[0]&&VIEW[0].weeks?last(VIEW[0].weeks):'';
+  const scopeLabel=SCOPE==='ALL'?'all regions':SCOPE;
   const strip=h=>String(h).replace(/<[^>]*>/g,'').replace(/&middot;/g,'·').replace(/&amp;/g,'&').replace(/&[a-z]+;/g,' ').trim();
   let t='';
   t+=`DOCK EFFICIENCY — TOP/BOTTOM PERFORMER RECAP (auto-draft, review before sending)\n`;
-  t+=`Week ending ${wk} · ${rows.length} facilities\n`;
+  t+=`Scope: ${scopeLabel} · week ending ${wk} · ${rows.length} facilities\n`;
   t+=`${'='.repeat(64)}\n\n`;
   t+=`NETWORK: efficiency ${round(avg,1)} vs goal ${round(goal,1)} (${avg-goal>=0?'+':''}${round(avg-goal,1)} pts). `;
   t+=`${netWk>=0?'Favorable':'Unfavorable'} to plan ≈ ${fmtMoney(netWk)}/week (${fmtMoney(netWk*52)} annualized if sustained). `;
@@ -748,7 +785,7 @@ function generateNarrative(){
 }
 
 function renderRankings(goal,perPoint){
-  if(!SERIES.length) return;
+  if(!VIEW.length) return;
   const rows=rankRows(goal,perPoint);
   const N=Math.max(1,Math.min(5,Math.floor(rows.length/2)));
   const top=rows.slice(0,N), bottom=rows.slice(-N).reverse();
@@ -756,7 +793,8 @@ function renderRankings(goal,perPoint){
   // Network $ from the AVERAGE gap (recap method: one network number vs goal), NOT the sum of facilities.
   const netWk=(avg-goal)*perPoint/52;
   const cards=document.getElementById('rankCards'); cards.innerHTML='';
-  card(cards, avg>=goal?'good':'bad','Network efficiency', round(avg,1), 'avg vs goal '+round(goal,1)+' ('+(avg-goal>=0?'+':'')+round(avg-goal,1)+' pts)');
+  const scopeName=SCOPE==='ALL'?'Network':SCOPE;
+  card(cards, avg>=goal?'good':'bad',scopeName+' efficiency', round(avg,1), 'avg vs goal '+round(goal,1)+' ('+(avg-goal>=0?'+':'')+round(avg-goal,1)+' pts), '+rows.length+' fac.');
   card(cards, netWk>=0?'good':'bad','Weekly $ vs plan', fmtMoney(netWk), 'avg gap × $/pt ÷ 52');
   card(cards, netWk>=0?'good':'bad','Annualized', fmtMoney(netWk*52), 'if sustained 52 wks');
   card(cards, below>rows.length/2?'bad':'warn','Below goal', below+' / '+rows.length, 'facilities under '+round(goal,1));
@@ -764,7 +802,7 @@ function renderRankings(goal,perPoint){
   function tbl(list,withFocus){
     let h='<table><tr><th>#</th><th>Facility</th><th>% of goal</th><th>Gap</th><th>Weekly&nbsp;$</th><th>Trend</th><th>Process</th>'+(withFocus?'<th style="text-align:left">Likely focus (Scorecard)</th>':'')+'</tr>';
     list.forEach((r,i)=>{ const bw=Math.round(56*r.v/vmax);
-      h+=`<tr><td>${i+1}</td><td>${r.name}</td>`+
+      h+=`<tr><td>${i+1}</td><td>${esc(r.name)}</td>`+
          `<td><span style="display:inline-block;height:8px;width:${bw}px;background:${r.gap>=0?'#1a8f4c':'#c62828'};border-radius:2px;margin-right:6px;vertical-align:middle"></span>${round(r.v,1)}</td>`+
          `<td style="color:${r.gap>=0?'#1a8f4c':'#c62828'}">${r.gap>=0?'+':''}${round(r.gap,1)}</td>`+
          `<td style="color:${r.wk>=0?'#1a8f4c':'#c62828'}">${fmtMoney(r.wk)}</td>`+
@@ -912,18 +950,38 @@ function renderForecast(s,y,goal){
 /* ============================================================================
    8. WIRING
    ========================================================================== */
-function loadSeries(arr,msg){ SERIES=arr.filter(s=>s.y && s.y.length>=6); CUR=0;
-  const sel=document.getElementById('seriesSel'); sel.innerHTML='';
-  SERIES.forEach((s,i)=>{ const o=document.createElement('option'); o.value=i; o.textContent=s.name+'  ('+s.y.length+' wks)'; sel.appendChild(o); });
+function buildScopeOptions(){
+  const ss=document.getElementById('scopeSel'); if(!ss) return;
+  const regions=[...new Set(SERIES.map(s=>(s.region||'').trim()).filter(Boolean))].sort();
+  const rset=new Set(regions);
+  const districts=[...new Set(SERIES.map(s=>(s.district||'').trim()).filter(Boolean))].sort().filter(d=>!rset.has(d));
+  let html='<option value="ALL">All ('+SERIES.length+')</option>';
+  if(regions.length) html+='<optgroup label="Regions">'+regions.map(r=>`<option value="${esc(r)}">${esc(r)}</option>`).join('')+'</optgroup>';
+  if(districts.length) html+='<optgroup label="Districts">'+districts.map(d=>`<option value="${esc(d)}">${esc(d)}</option>`).join('')+'</optgroup>';
+  ss.innerHTML=html;
+  document.getElementById('scopeCtl').style.display=(regions.length||districts.length)?'':'none';
+}
+function loadSeries(arr,msg,isDemo){ SERIES=arr.filter(s=>s.y && s.y.length>=6); CUR=0;
+  document.getElementById('demoBadge').style.display=isDemo?'':'none';
+  // auto-calibrate the goal line to the data's scale (% of goal ≈ 100, raw efficiency ≈ 68.8),
+  // but never overwrite a goal the user has typed.
+  if(!goalTouched){ const allv=SERIES.flatMap(s=>s.y).slice().sort((a,b)=>a-b); const med=allv.length?allv[Math.floor(allv.length/2)]:0;
+    if(med>=85) goalInp.value=100; else if(med>=45) goalInp.value=68.8; }
+  buildScopeOptions();
+  // default scope: Mountain if present (per request), else All
+  const hasMtn=SERIES.some(s=>(s.district||'')==='Mountain'||(s.region||'')==='Mountain');
+  SCOPE=hasMtn?'Mountain':'ALL';
+  const ss=document.getElementById('scopeSel'); if(ss) ss.value=SCOPE;
   document.getElementById('status').innerHTML=msg+' &middot; '+SERIES.length+' series, '+
     (SERIES[0]?SERIES[0].y.length:0)+' weeks each';
-  renderAll();
+  applyScope();
 }
 document.getElementById('seriesSel').addEventListener('change',e=>{CUR=+e.target.value;renderAll();});
-document.getElementById('goalInp').addEventListener('change',renderAll);
+document.getElementById('scopeSel').addEventListener('change',e=>{SCOPE=e.target.value;applyScope();});
+document.getElementById('goalInp').addEventListener('change',()=>{goalTouched=true;renderAll();});
 document.getElementById('ppInp').addEventListener('change',renderAll);
 document.getElementById('horizonInp').addEventListener('change',renderAll);
-document.getElementById('demoBtn').addEventListener('click',()=>loadSeries(makeDemo(),'Synthetic demo data (no real facility data)'));
+document.getElementById('demoBtn').addEventListener('click',()=>loadSeries(makeDemo(),'Synthetic demo data (no real facility data)',true));
 document.getElementById('loadBtn').addEventListener('click',()=>document.getElementById('fileInp').click());
 document.getElementById('fileInp').addEventListener('change',e=>{ const f=e.target.files[0]; if(!f)return;
   const rd=new FileReader(); rd.onload=()=>{ try{ const arr=parseCSV(rd.result);
@@ -967,7 +1025,7 @@ document.getElementById('copyRecap').addEventListener('click',()=>{
   function msg(){ document.getElementById('copyMsg').textContent='Copied ✓'; setTimeout(()=>document.getElementById('copyMsg').textContent='',2000); } });
 
 // boot
-loadSeries(makeDemo(),'Synthetic demo data (no real facility data)');
+loadSeries(makeDemo(),'Synthetic demo data (no real facility data)',true);
 </script>
 </body>
 </html>
