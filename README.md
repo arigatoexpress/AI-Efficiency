@@ -1,14 +1,16 @@
-# AI Efficiency Team
+# FedEx AI Efficiency Hub
 
 <p align="center">
-  <img src="assets/hero-banner.svg" alt="FedEx Logistics Intelligence System banner" width="100%">
+  <img src="assets/hero-banner.svg" alt="FedEx AI Efficiency Hub banner" width="100%">
 </p>
 
-> Operations-led AI efficiency hub for FedEx. Turns real operational friction into reusable prompts, starter projects, user guides, and governance-ready pilot packets — no coding required.
+> **One platform for safe, useful AI in operations.** Operations-led tools, prompts, and guides that turn real operational friction into reusable, governance-ready AI — built by ops people, for ops people. No coding required to use it.
 
-**Tech stack:** Markdown docs · Google AI Studio · Gemini · Cloud Run · React/Vite prototypes
+### 👉 Open the hub: [`index.html`](index.html)
 
-*[Agent collaborators: see [AGENTS.md](AGENTS.md)]*
+A single, offline front door that ties everything together — the four tools, the prompt library, the docs, and a diagram of how they connect. Open it in any browser, or [view it live](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/index.html).
+
+**Tech stack:** Static HTML hub · Markdown docs · Google AI Studio · Gemini · Cloud Run · React/Vite prototypes &middot; *[Agent collaborators: see [AGENTS.md](AGENTS.md)]*
 
 ---
 
@@ -21,6 +23,10 @@ FedEx moves millions of packages daily across Express, Ground, and Freight netwo
 - The safest way to start is with public data, synthetic scenarios, and copy-paste prompts.
 - Small pilots with clear metrics beat big promises with vague outcomes.
 - Every AI output needs a human review step before it becomes a decision.
+
+### How it all connects
+
+Ideas come in the front door and become projects. Daily **prompts** power managers' routine drafts. Before a shift, **Station Ops Intelligence** turns public risk signals into reviewed briefs; after the week, the **Dock Efficiency Signal Lab** turns dock KPIs into focus signals. **Governance** gates everything, and a shared data model is the future state. See the diagram on the [hub](index.html).
 
 ---
 
@@ -62,7 +68,7 @@ Our most mature starter project is a live, public-data decision-support dashboar
 
 ## Prompt Library at a Glance
 
-Over **40 copy-paste prompts** organized by what FedEx managers actually do:
+**72 copy-paste prompts** across 11 categories, organized by what FedEx managers actually do:
 
 | Category | Examples |
 |----------|----------|

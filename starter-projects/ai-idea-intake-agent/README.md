@@ -1,5 +1,7 @@
 # AI Idea Intake Agent
 
+> **Part of the [FedEx AI Efficiency Hub](../../index.html).** Public + synthetic data only · human review required.
+
 ## What This Is
 
 AI Idea Intake Agent is a safe concept for a Teams/Copilot or Gemini-channel
@@ -138,3 +140,9 @@ pull request for review.
 - [Microsoft Teams app permissions and consent](https://learn.microsoft.com/en-us/microsoftteams/app-permissions)
 - [Google Workspace updates at I/O 2026](https://blog.google/products-and-platforms/products/workspace/workspace-updates/)
 - [Google AI Studio at I/O 2026](https://blog.google/innovation-and-ai/technology/developers-tools/google-ai-studio-io-2026/)
+
+---
+### Part of the AI Efficiency platform
+- **Hub / all tools:** [../../index.html](../../index.html)
+- **Related:** [Issue templates](https://github.com/arigatoexpress/AI-Efficiency/tree/main/.github/ISSUE_TEMPLATE) (where ideas land) · [Pilot program template](../../docs/pilot-program-template.md) (where approved ideas go next)
+- **Governance:** [Project review checklist](../../docs/governance/project-review-checklist.md)

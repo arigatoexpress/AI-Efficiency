@@ -20,8 +20,7 @@ should follow the same shape.
 
 Current implementation track:
 
-- [regional-intel-workbench PR #22](https://github.com/arigatoexpress/regional-intel-workbench/pull/22)
-  extends the existing `regional-intel intel-foundry-export` command with
+- An internal implementation track (private repo) extends the export command with
   `--include-logistics-fixture`, deterministic logistics NDJSON object files,
   manifest hashes, provenance drop reporting, Kadima status/discovery commands,
   and a dry-run upload planner.
@@ -33,14 +32,14 @@ Last live readback: 2026-05-23.
 The current Kadima target is reachable at:
 
 ```text
-https://kadima.usw-17.palantirfoundry.com
+https://<your-foundry-instance>.palantirfoundry.com
 ```
 
 The connected credential can read Ontology metadata. It sees two ontologies and
 uses this configured default:
 
 ```text
-ontology-8928df68-411d-463a-9683-33687b864e51
+ontology-<id-redacted>
 ```
 
 Relevant visible object types include:

@@ -1,5 +1,7 @@
 # Docs
 
+> **Part of the [FedEx AI Efficiency Hub](../index.html).** Start at the [hub](../index.html) for the full platform; this folder holds the underlying guides, standards, and templates.
+
 This folder contains guides, standards, and templates for the AI Efficiency Team.
 
 ## Start Here

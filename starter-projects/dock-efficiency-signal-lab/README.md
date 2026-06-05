@@ -1,5 +1,7 @@
 # Dock Efficiency Signal Lab
 
+> **Part of the [FedEx AI Efficiency Hub](../../index.html).** Public + synthetic data only · human review required.
+
 A single-file, fully **offline** dashboard that applies trading-style **technical-analysis (TA)** indicators, rigorous **Statistical Process Control (SPC)**, and lightweight **forecasting** to weekly operations KPIs — built for the dock-efficiency / TLH-%-of-goal reporting workflow.
 
 > **Thesis:** Traders and quality engineers independently invented the same toolkit — moving averages, bands, momentum, crossovers. On ~25 weekly operations points, the **SPC** version of each tool carries a quantified false-alarm rate and is the one to *alert* on; the **TA** version is the same shape with friendlier labels — great for communicating to managers, but not for driving automated decisions. This tool ships both, clearly separated.
@@ -81,3 +83,9 @@ The app is built for ops supervisors with no stats background:
 ## What this is **not**
 
 It is not a trading system, and ops KPIs are not tradeable prices — there is no "momentum trade," and a facility at "RSI 75" is not "due for a pullback." Every flagged signal is a prompt to investigate (pair it with the relevant lanefull/rehandle playbook), not a conclusion. See the in-app **Method & Caveats** tab for the full honest treatment of small-sample limits, autocorrelation, and multiple comparisons.
+
+---
+### Part of the AI Efficiency platform
+- **Hub / all tools:** [../../index.html](../../index.html)
+- **Related:** [Station Ops Intelligence](../fedex-logistics-intelligence-system/README.md) (the pre-shift, external-risk half) · [Prompts that narrate KPIs: Data & reporting](../../prompts/data-and-reporting.md)
+- **Governance:** [Project review checklist](../../docs/governance/project-review-checklist.md)

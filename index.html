@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<!-- Self-contained, offline front door for the AI Efficiency platform. No network calls. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'none'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; base-uri 'none'" />
+<title>FedEx AI Efficiency Hub</title>
+<style>
+  :root{
+    --purple:#4D148C; --orange:#FF6600; --ink:#1a1d23; --muted:#6b7280;
+    --bg:#f6f7f9; --surface:#ffffff; --border:#e2e8f0; --good:#1a8f4c;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       color:var(--ink);background:var(--bg);line-height:1.6;font-size:15px}
+  a{color:var(--purple);text-decoration:none}
+  a:hover{text-decoration:underline}
+  /* nav */
+  nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);
+      border-bottom:1px solid var(--border);display:flex;align-items:center;gap:18px;padding:10px 22px;flex-wrap:wrap}
+  nav .brand{font-weight:800;color:var(--purple);font-size:15px;letter-spacing:.2px}
+  nav .brand span{color:var(--orange)}
+  nav .links{display:flex;gap:16px;flex-wrap:wrap;margin-left:auto;font-size:13.5px;font-weight:600}
+  nav .links a{color:var(--muted)} nav .links a:hover{color:var(--purple);text-decoration:none}
+  /* hero */
+  header.hero{background:linear-gradient(115deg,var(--purple),#6a2bb0 60%,#7d3bc4);color:#fff;padding:54px 22px 48px}
+  .wrap{max-width:1080px;margin:0 auto}
+  .hero .accent{width:64px;height:5px;background:var(--orange);border-radius:3px;margin-bottom:18px}
+  .hero h1{font-size:40px;font-weight:800;margin:0 0 10px;line-height:1.12}
+  .hero p.lead{font-size:18px;opacity:.95;max-width:760px;margin:0 0 22px}
+  .hero .cta{display:flex;gap:12px;flex-wrap:wrap}
+  .btn{display:inline-block;padding:11px 20px;border-radius:9px;font-weight:700;font-size:14px;cursor:pointer}
+  .btn.primary{background:var(--orange);color:#fff} .btn.primary:hover{filter:brightness(1.07);text-decoration:none}
+  .btn.ghost{background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.45)} .btn.ghost:hover{background:rgba(255,255,255,.25);text-decoration:none}
+  .hero .tagline{margin-top:20px;font-size:13.5px;opacity:.85}
+  /* sections */
+  section{padding:46px 22px;border-bottom:1px solid var(--border)}
+  section:nth-child(even){background:var(--surface)}
+  h2{font-size:26px;color:var(--purple);margin:0 0 6px;font-weight:750}
+  h2 .num{color:var(--orange);font-weight:800;margin-right:8px}
+  .sub{color:var(--muted);font-size:15px;margin:0 0 26px;max-width:760px}
+  /* principle / path cards */
+  .grid{display:grid;gap:16px}
+  .g3{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+  .g2{grid-template-columns:repeat(auto-fit,minmax(330px,1fr))}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 22px}
+  section:nth-child(even) .card{background:#fafbfc}
+  .card h3{margin:0 0 7px;font-size:17px;color:var(--ink)}
+  .card h3 .ico{color:var(--orange);margin-right:7px}
+  .card p{margin:0 0 8px;color:var(--muted);font-size:14px}
+  .card .when{font-size:13.5px;color:var(--ink);background:#f3f0fb;border-left:3px solid var(--purple);
+              padding:7px 11px;border-radius:0 7px 7px 0;margin:10px 0}
+  .card .when b{color:var(--purple)}
+  .badge{display:inline-block;background:var(--orange);color:#fff;font-size:11px;font-weight:700;
+         padding:3px 9px;border-radius:20px;text-transform:uppercase;letter-spacing:.04em}
+  .badge.alt{background:var(--purple)} .badge.gray{background:#94a3b8} .badge.green{background:var(--good)}
+  .card .actions{margin-top:12px;display:flex;gap:14px;flex-wrap:wrap;font-size:13.5px;font-weight:600}
+  .toolhead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:2px}
+  /* tables */
+  table{border-collapse:collapse;width:100%;font-size:13.5px;background:var(--surface);border-radius:10px;overflow:hidden}
+  th,td{border:1px solid var(--border);padding:9px 12px;text-align:left;vertical-align:top}
+  th{background:#f4f2f9;color:var(--purple);font-weight:700}
+  td .pair{display:block;color:var(--muted);font-size:12px;margin-top:3px}
+  /* principle list */
+  ul.clean{list-style:none;padding:0;margin:0}
+  ul.clean li{padding:9px 0 9px 30px;position:relative;border-bottom:1px solid var(--border);font-size:14.5px}
+  ul.clean li:last-child{border-bottom:none}
+  ul.clean li::before{content:"✓";position:absolute;left:4px;color:var(--good);font-weight:800}
+  .note{background:#f6f2fb;border:1px solid #e6dcf5;border-radius:10px;padding:13px 16px;font-size:13.5px;color:#403a52;margin-top:18px}
+  .note b{color:var(--purple)}
+  /* diagram */
+  .diagram{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px;overflow-x:auto}
+  svg{display:block;max-width:100%;height:auto}
+  footer{padding:34px 22px;background:#1a1d23;color:#cbd5e1;font-size:13px}
+  footer .wrap{display:flex;flex-wrap:wrap;gap:22px;justify-content:space-between;align-items:flex-start}
+  footer b{color:#fff} footer a{color:#cbabe6}
+  footer .disc{font-size:12px;color:#94a3b8;margin-top:14px;max-width:640px}
+  .pill{display:inline-block;font-size:12px;padding:3px 10px;border-radius:20px;background:#f0edf7;color:var(--purple);font-weight:600;margin:2px 4px 2px 0}
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="brand">FedEx <span>AI Efficiency</span> Hub</span>
+  <span class="links">
+    <a href="#workflow">How it fits</a>
+    <a href="#tools">Tools</a>
+    <a href="#prompts">Prompts</a>
+    <a href="#docs">Docs</a>
+    <a href="#govern">Governance</a>
+    <a href="#involved">Get involved</a>
+  </span>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="accent"></div>
+    <h1>One platform for safe, useful AI in operations.</h1>
+    <p class="lead">Operations-led tools, prompts, and guides that turn real operational friction into reusable, governance-ready AI — built by ops people, for ops people. No coding required to use it.</p>
+    <div class="cta">
+      <a class="btn primary" href="#tools">Explore the tools →</a>
+      <a class="btn ghost" href="#workflow">See how it connects</a>
+    </div>
+    <p class="tagline">Public &amp; synthetic data only &middot; human review on every decision &middot; AI saves time, it doesn't replace judgment.</p>
+  </div>
+</header>
+
+<!-- WHY -->
+<section id="why">
+  <div class="wrap">
+    <h2>Why this exists</h2>
+    <p class="sub">FedEx's enterprise <b>AI Education &amp; Literacy</b> program asks every team to find safe, practical AI wins. This hub is our regional contribution: instead of scattered experiments, it's one coherent set of tools and resources that share the same principles, the same governance gate, and the same plain-English voice — so a manager can start today and a reviewer can trust what they see.</p>
+    <div class="grid g3">
+      <div class="card"><h3><span class="ico">◆</span>Start today</h3><p>Copy-paste prompts and a runnable offline dashboard mean value in minutes, not a project plan.</p></div>
+      <div class="card"><h3><span class="ico">◆</span>Safe by design</h3><p>Real data stays local; only public and synthetic data is ever shown or shared. Every output gets human review.</p></div>
+      <div class="card"><h3><span class="ico">◆</span>Small, measurable pilots</h3><p>Each tool is a focused pilot with a clear success metric — not broad, vague automation.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- WORKFLOW DIAGRAM -->
+<section id="workflow">
+  <div class="wrap">
+    <h2><span class="num">1</span>How it all connects</h2>
+    <p class="sub">Ideas come in the front door and become projects. Daily <b>prompts</b> power managers' routine drafts. Before a shift, <b>Station Ops Intelligence</b> turns public risk signals into reviewed briefs; after the week, the <b>Dock Efficiency Signal Lab</b> turns dock KPIs into focus signals. <b>Governance</b> gates everything, and a shared data model is the future state.</p>
+    <div class="diagram">
+      <svg viewBox="0 0 920 360" role="img" aria-label="Workflow: idea intake and prompts feed two manager tools, gated by governance, exporting to a future shared ontology">
+        <defs>
+          <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0 0L10 5L0 10z" fill="#9aa0b5"/>
+          </marker>
+          <style>
+            .box{rx:10;ry:10;stroke-width:1.5}
+            .lbl{font:600 13px -apple-system,Segoe UI,sans-serif;fill:#1a1d23}
+            .sub2{font:500 10.5px -apple-system,Segoe UI,sans-serif;fill:#6b7280}
+            .edge{stroke:#9aa0b5;stroke-width:1.6;fill:none}
+            .gate{stroke:#FF6600;stroke-width:1.5;stroke-dasharray:5 4;fill:none}
+            .elbl{font:600 10px -apple-system,Segoe UI,sans-serif;fill:#6b7280}
+          </style>
+        </defs>
+        <!-- inputs column -->
+        <rect class="box" x="20" y="40" width="170" height="56" fill="#f3f0fb" stroke="#cbb8e8"/>
+        <text class="lbl" x="34" y="64">AI Idea Intake</text><text class="sub2" x="34" y="82">capture · score · route</text>
+        <rect class="box" x="20" y="150" width="170" height="56" fill="#f3f0fb" stroke="#cbb8e8"/>
+        <text class="lbl" x="34" y="174">Prompt Library</text><text class="sub2" x="34" y="192">72 ops prompts</text>
+        <rect class="box" x="20" y="260" width="170" height="56" fill="#eef6ff" stroke="#bcd4ef"/>
+        <text class="lbl" x="34" y="284">Public + Synthetic</text><text class="sub2" x="34" y="302">weather · road · seismic</text>
+        <!-- two tools (the ops console halves) -->
+        <rect class="box" x="360" y="70" width="210" height="74" fill="#fff" stroke="#4D148C"/>
+        <text class="lbl" x="378" y="98">Station Ops Intelligence</text><text class="sub2" x="378" y="116">PRE-SHIFT · external risk</text><text class="sub2" x="378" y="132">→ AI-drafted briefs</text>
+        <rect class="box" x="360" y="186" width="210" height="74" fill="#fff" stroke="#4D148C"/>
+        <text class="lbl" x="378" y="214">Dock Efficiency Signal Lab</text><text class="sub2" x="378" y="232">POST-WEEK · internal KPIs</text><text class="sub2" x="378" y="248">→ real signals + $ focus</text>
+        <!-- managers -->
+        <rect class="box" x="690" y="128" width="170" height="74" fill="#fff5ee" stroke="#FF6600"/>
+        <text class="lbl" x="706" y="158">Managers</text><text class="sub2" x="706" y="176">reviewed briefs</text><text class="sub2" x="706" y="192">&amp; focus lists</text>
+        <!-- governance gate -->
+        <rect class="box" x="360" y="300" width="500" height="44" fill="#fdf6ee" stroke="#FF6600"/>
+        <text class="lbl" x="378" y="327">Governance gate — public/synthetic only · human review · documented</text>
+        <!-- future ontology -->
+        <rect class="box" x="690" y="40" width="170" height="56" fill="#f8fafc" stroke="#cbd5e1" stroke-dasharray="4 3"/>
+        <text class="lbl" x="706" y="62">Shared Ontology</text><text class="sub2" x="706" y="80">Foundry · planned</text>
+        <!-- edges -->
+        <path class="edge" d="M190 178 H360" marker-end="url(#arr)"/><text class="elbl" x="240" y="170">power drafts</text>
+        <path class="edge" d="M190 168 C 280 168, 280 110, 360 107" marker-end="url(#arr)"/>
+        <path class="edge" d="M190 178 C 280 200, 280 222, 360 222" marker-end="url(#arr)"/>
+        <path class="edge" d="M190 282 C 280 282, 290 120, 360 112" marker-end="url(#arr)"/><text class="elbl" x="232" y="300">public signals</text>
+        <path class="edge" d="M190 290 C 290 300, 300 240, 360 232" marker-end="url(#arr)"/>
+        <path class="edge" d="M570 107 C 640 107, 650 150, 690 158" marker-end="url(#arr)"/>
+        <path class="edge" d="M570 223 C 640 223, 650 185, 690 178" marker-end="url(#arr)"/>
+        <path class="edge" d="M110 96 V150" marker-end="url(#arr)"/><text class="elbl" x="116" y="126">becomes</text>
+        <!-- gate dashed up to the two tools + ontology -->
+        <path class="gate" d="M470 300 V260"/><path class="gate" d="M560 300 C 560 180, 720 140, 770 96"/>
+        <path class="edge" d="M570 90 C 640 78, 650 70, 690 68" marker-end="url(#arr)" stroke-dasharray="4 3"/><text class="elbl" x="600" y="64">export (planned)</text>
+      </svg>
+    </div>
+    <div class="note"><b>Two halves of one ops console:</b> Station Ops Intelligence looks <i>outward</i> before a shift; the Dock Efficiency Signal Lab looks <i>inward</i> after the week. Same principles, same governance gate, same plain-English voice.</div>
+  </div>
+</section>
+
+<!-- TOOLS -->
+<section id="tools">
+  <div class="wrap">
+    <h2><span class="num">2</span>The tools</h2>
+    <p class="sub">Four focused tools, each a small pilot with a clear job. Pick by the question you're trying to answer.</p>
+    <div class="grid g2">
+
+      <div class="card">
+        <div class="toolhead"><h3>Station Ops Intelligence</h3><span class="badge green">Built · Live</span></div>
+        <p>A public-data console that surfaces weather, road, and seismic risk before a shift and drafts pre-shift / handoff / after-action memos with AI — every item labeled and "needs manager verification."</p>
+        <div class="when"><b>Use this when:</b> you want to see external risk before a shift and get a draft brief you can edit.</div>
+        <div class="actions">
+          <a href="https://fedex-logistics-intelligence-system-267358751314.us-east1.run.app" target="_blank" rel="noopener">▶ Live demo</a>
+          <a href="starter-projects/fedex-logistics-intelligence-system/README.md">Project &amp; quick-start</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="toolhead"><h3>Dock Efficiency Signal Lab</h3><span class="badge green">Built · Offline</span></div>
+        <p>An offline, single-file dashboard that applies quality-control statistics (SPC), trading-style indicators, and forecasting to weekly dock KPIs — ranking top/bottom performers with a dollars-vs-plan view, scoped to your districts.</p>
+        <div class="when"><b>Use this when:</b> you have weekly TLH / %-of-goal numbers and want to know which moves are real and which districts to focus on.</div>
+        <div class="actions">
+          <a href="starter-projects/dock-efficiency-signal-lab/app/index.html">▶ Open the app (offline)</a>
+          <a href="starter-projects/dock-efficiency-signal-lab/README.md">How it works</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="toolhead"><h3>AI Idea Intake Agent</h3><span class="badge alt">Concept</span></div>
+        <p>A safe Teams/Copilot or Gemini-channel flow to capture employee AI ideas, gather feedback, and triage use cases — with a scoring rubric and an intake template you can reuse today.</p>
+        <div class="when"><b>Use this when:</b> you have an AI idea and want it captured, scored, and routed safely.</div>
+        <div class="actions">
+          <a href="starter-projects/ai-idea-intake-agent/intake-template.md">Intake template</a>
+          <a href="starter-projects/ai-idea-intake-agent/triage-rubric.md">Triage rubric</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="toolhead"><h3>Delivery Markets Lab</h3><span class="badge gray">External reference</span></div>
+        <p>A synthetic, prediction-market-style prototype kept as a teaching reference — a governance example of how to make an ambitious external concept tangible without touching real data.</p>
+        <div class="when"><b>Use this when:</b> you want a worked example of safely documenting an external AI-Studio prototype.</div>
+        <div class="actions">
+          <a href="starter-projects/fedex-delivery-markets/README.md">Reference &amp; governance notes</a>
+        </div>
+      </div>
+
+    </div>
+    <div class="note">Every tool ships with a <b>README</b>, a <b>demo script</b>, and a <b>governance review</b>, and is built on public or synthetic data. See all four in <a href="starter-projects/README.md">starter-projects/</a>.</div>
+  </div>
+</section>
+
+<!-- PROMPTS -->
+<section id="prompts">
+  <div class="wrap">
+    <h2><span class="num">3</span>Prompt library</h2>
+    <p class="sub"><b>72 copy-paste prompts</b> organized by what managers actually do. New to AI? Start with <a href="prompts/prompt-engineering-basics.md">Prompt engineering basics</a> and the <a href="docs/ai-workplace-user-guide.md">AI workplace user guide</a>.</p>
+    <table>
+      <tr><th>Category</th><th>Best for</th></tr>
+      <tr><td><a href="prompts/daily-operations.md">Daily operations</a><span class="pair">↔ feeds Station Ops "Manager Drafts"</span></td><td>Shift briefs, handoffs, escalations, after-action reviews</td></tr>
+      <tr><td><a href="prompts/safety-and-compliance.md">Safety &amp; compliance</a></td><td>Huddles, near-miss reports, seasonal alerts, meeting agendas</td></tr>
+      <tr><td><a href="prompts/peak-season-and-surge.md">Peak season &amp; surge</a></td><td>Pre-peak planning, surge checklists, post-peak reviews</td></tr>
+      <tr><td><a href="prompts/meeting-and-communication.md">Meeting &amp; communication</a></td><td>Agendas, action items, emails, executive updates</td></tr>
+      <tr><td><a href="prompts/customer-and-contractor-comms.md">Customer &amp; contractor comms</a></td><td>Service alerts, escalations, ISP briefings, recognition</td></tr>
+      <tr><td><a href="prompts/linehaul-and-routing.md">Linehaul &amp; routing</a></td><td>Feeder delays, alternate routing, P&amp;D density, cross-dock</td></tr>
+      <tr><td><a href="prompts/process-improvement.md">Process improvement</a></td><td>Root-cause analysis, improvement proposals, documentation</td></tr>
+      <tr><td><a href="prompts/data-and-reporting.md">Data &amp; reporting</a><span class="pair">↔ narrates Dock Signal Lab KPIs</span></td><td>Summarizing metrics, dashboards, explaining trends</td></tr>
+      <tr><td><a href="prompts/bid-and-opportunity-support.md">Bid &amp; opportunity support</a></td><td>Proposal drafts, capability summaries, risk assessments</td></tr>
+      <tr><td><a href="prompts/governance-safe-use.md">Governance-safe use</a></td><td>Is this use case safe? Documenting AI use, review prep</td></tr>
+    </table>
+    <div class="note">Every prompt carries the <b>Safe Prompt Rule</b>: remove sensitive data first, review the output before sharing, and keep a human in charge of every decision. Browse all in <a href="prompts/README.md">prompts/</a>.</div>
+  </div>
+</section>
+
+<!-- DOCS + GOVERNANCE -->
+<section id="docs">
+  <div class="wrap">
+    <h2><span class="num">4</span>Learn &amp; govern</h2>
+    <p class="sub">Plain-English guides to get started, and one governance gate that every tool and pilot passes through.</p>
+    <div class="grid g2">
+      <div class="card">
+        <h3><span class="ico">📘</span>Learn</h3>
+        <ul class="clean">
+          <li><a href="docs/ai-workplace-user-guide.md">AI workplace user guide</a> — start here if you're new</li>
+          <li><a href="docs/fedex-ai-literacy-guide.md">FedEx AI literacy guide</a> — how we align with the enterprise program</li>
+          <li><a href="docs/fedex-terminology.md">Operations terminology</a> — quick reference</li>
+          <li><a href="docs/technology/gemini-for-ops-managers.md">Gemini</a> · <a href="docs/technology/chatgpt-copilot-workplace-guide.md">ChatGPT/Copilot</a> · <a href="docs/technology/google-ai-studio-guide.md">AI Studio</a> guides</li>
+        </ul>
+      </div>
+      <div class="card" id="govern">
+        <h3><span class="ico">🛡️</span>Govern</h3>
+        <ul class="clean">
+          <li><a href="docs/governance/project-review-checklist.md">Project review checklist</a> — the one gate every project passes</li>
+          <li><a href="docs/governance/ai-use-policy.md">AI use policy</a> &amp; <a href="docs/governance/feedback-and-screenshot-intake-rules.md">screenshot/feedback rules</a></li>
+          <li><a href="docs/pilot-program-template.md">Pilot program template</a> — propose a measurable pilot</li>
+          <li><a href="SECURITY.md">What does not belong here</a> — the data line we never cross</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 style="margin-top:30px;color:var(--purple)">The three principles, once</h3>
+    <ul class="clean" style="max-width:820px">
+      <li><b>Protect people, customers, and the company first.</b> Never paste confidential, customer, route, security, employee, or proprietary data into public or unapproved AI tools.</li>
+      <li><b>Keep real data local — public &amp; synthetic only.</b> Tools demo on synthetic data; real numbers stay on your machine.</li>
+      <li><b>Human review before any action.</b> AI drafts and analyzes; a person decides, sends, and is accountable.</li>
+    </ul>
+    <div class="note">Planned / research tracks — <span class="pill">Foundry shared ontology</span><span class="pill">Teams &amp; Telegram intake</span><span class="pill">Privacy (FHE) research</span> — are on the <a href="ROADMAP.md">roadmap</a>, clearly marked as future state.</div>
+  </div>
+</section>
+
+<!-- INVOLVED -->
+<section id="involved">
+  <div class="wrap">
+    <h2><span class="num">5</span>Get involved</h2>
+    <p class="sub">This is a team effort. Bring an idea, a use case, or a prompt.</p>
+    <div class="grid g3">
+      <div class="card"><h3><span class="ico">💡</span>Submit an AI idea</h3><p>Capture it through the <a href="starter-projects/ai-idea-intake-agent/intake-template.md">intake template</a> or a GitHub issue, and we'll triage it.</p></div>
+      <div class="card"><h3><span class="ico">🧪</span>Propose a pilot</h3><p>Use the <a href="docs/pilot-program-template.md">pilot template</a> to scope a small, measurable test.</p></div>
+      <div class="card"><h3><span class="ico">🤝</span>Contribute</h3><p>See <a href="CONTRIBUTING.md">CONTRIBUTING.md</a> and the <a href="https://github.com/arigatoexpress/AI-Efficiency/tree/main/.github/ISSUE_TEMPLATE">issue templates</a> for ideas, use cases, and prompts.</p></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div>
+      <b>FedEx AI Efficiency Hub</b><br/>
+      Station Ops Intelligence · Dock Efficiency Signal Lab · AI Idea Intake · Delivery Markets Lab<br/>
+      <span style="font-size:12px">Part of FedEx's AI Education &amp; Literacy program.</span>
+    </div>
+    <div style="font-size:13px">
+      <b>More</b><br/>
+      <a href="README.md">Repository README</a> · <a href="ROADMAP.md">Roadmap</a> · <a href="CONTRIBUTING.md">Contributing</a> · <a href="docs/governance/project-review-checklist.md">Governance</a>
+    </div>
+  </div>
+  <div class="wrap">
+    <p class="disc">Prototype / pilot resources. Not a production FedEx system. Every tool here uses public or synthetic data only and requires human review before any operational decision or external communication. Real, confidential, customer, or proprietary data never belongs in these tools.</p>
+  </div>
+</footer>
+
+</body>
+</html>

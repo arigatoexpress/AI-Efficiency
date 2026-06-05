@@ -1,5 +1,7 @@
 # FedEx Logistics Intelligence System
 
+> **Part of the [FedEx AI Efficiency Hub](../../index.html).** Public + synthetic data only · human review required.
+
 <p align="center">
   <img src="../../assets/hero-banner.svg" alt="FedEx Logistics Intelligence System banner" width="100%">
 </p>
@@ -199,3 +201,9 @@ See [governance-review.md](governance-review.md) for data classification, risk n
 - [x] No command-console language.
 - [ ] Cloud Run v2 deployment (ready to deploy from `app/`).
 - [ ] Foundry dataset RID mapping (dry-run blocked pending approval).
+
+---
+### Part of the AI Efficiency platform
+- **Hub / all tools:** [../../index.html](../../index.html)
+- **Related:** [Dock Efficiency Signal Lab](../dock-efficiency-signal-lab/README.md) (the post-week, internal-KPI half) · [Prompts that feed this: Daily operations](../../prompts/daily-operations.md)
+- **Governance:** [Project review checklist](../../docs/governance/project-review-checklist.md)

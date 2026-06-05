@@ -576,9 +576,9 @@ function mulberry32(seed){ return function(){ let t=seed+=0x6D2B79F5;
   t=Math.imul(t^t>>>15,t|1); t^=t+Math.imul(t^t>>>7,t|61); return ((t^t>>>14)>>>0)/4294967296; }; }
 function makeDemo(){
   // [code, region, district] — region/district tags drive the scope filter.
-  // Facility codes are FICTIONAL (DEMO-*); values are synthetic. The demo mirrors the
-  // FOCUS AREA: the 6 districts PWXX/MTXX/WKXX/CRXX/NRXX (NORTHWEST) + RRXX (MID-AMERICA),
-  // shown by friendly name. (Real data is loaded via CSV, never shipped here.)
+  // Facility codes are FICTIONAL (DEMO-*); values are synthetic. The demo mirrors a
+  // multi-district focus area shown by friendly name. (Real district codes and data
+  // are loaded via CSV locally, never shipped here.)
   const meta=[
     ['DEMO-PW1','NORTHWEST','Pacific Northwest'], ['DEMO-PW2','NORTHWEST','Pacific Northwest'],
     ['DEMO-PW3','NORTHWEST','Pacific Northwest'],

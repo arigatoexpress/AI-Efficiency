@@ -125,10 +125,9 @@ signals so the work can move into Palantir Foundry when access is approved.
 
 Current engineering track:
 
-- [regional-intel-workbench PR #22](https://github.com/arigatoexpress/regional-intel-workbench/pull/22)
-  extends the existing `intel-foundry-export` path with a
-  `--include-logistics-fixture` option for public/synthetic station-ops
-  logistics object files.
+- An internal implementation track (private repo) extends the
+  `intel-foundry-export` path with a `--include-logistics-fixture` option for
+  public/synthetic station-ops logistics object files.
 - The regional-intel integration can now check Kadima connectivity, read the
   configured ontology, list visible object and action types, and produce a
   dry-run upload plan without exposing credentials.

@@ -1,5 +1,7 @@
 # Starter Projects
 
+> **Part of the [FedEx AI Efficiency Hub](../index.html).** For the full picture — how these tools connect, the prompt library, and governance — start at the [hub](../index.html) or the [repo README](../README.md).
+
 Starter projects are early examples that the team can learn from, improve, and
 submit for review.
 

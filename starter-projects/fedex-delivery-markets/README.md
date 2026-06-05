@@ -1,5 +1,7 @@
 # Delivery Markets Lab
 
+> **Part of the [FedEx AI Efficiency Hub](../../index.html).** Public + synthetic data only · human review required.
+
 ## What This Is
 
 Delivery Markets Lab is a synthetic-data, paper-only prototype for discussing
@@ -110,3 +112,9 @@ release.
    for any future FedEx sandbox version.
 5. Keep this repo as the team-facing summary and the source repo as the code
    artifact.
+
+---
+### Part of the AI Efficiency platform
+- **Hub / all tools:** [../../index.html](../../index.html)
+- **Related:** [Google AI Studio guide](../../docs/technology/google-ai-studio-guide.md) (how to build/document a prototype like this safely)
+- **Governance:** [Project review checklist](../../docs/governance/project-review-checklist.md)
