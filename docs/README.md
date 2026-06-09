@@ -1,6 +1,6 @@
 # Docs
 
-> **Part of the [FedEx AI Efficiency Hub](../index.html).** Start at the [hub](../index.html) for the full platform; this folder holds the underlying guides, standards, and templates.
+> **Part of the FedEx AI Efficiency Hub.** Start at the [repo README](../README.md) or the [interactive hub page](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/index.html) for the full platform; this folder holds the underlying guides, standards, and templates.
 
 This folder contains guides, standards, and templates for the AI Efficiency Team.
 
@@ -12,6 +12,7 @@ This folder contains guides, standards, and templates for the AI Efficiency Team
 | [Getting started](getting-started.md) | Short first read for new team members. | New team members |
 | [FedEx AI literacy guide](fedex-ai-literacy-guide.md) | How this repo aligns with FedEx's enterprise AI Education program. | Everyone |
 | [FedEx terminology](fedex-terminology.md) | Quick reference for FedEx operations terms. | Anyone writing prompts or docs |
+| [Daily operations playbook](daily-ops-playbook.md) | Printable, run-it-every-day shift routine with ready-to-paste prompts. | FEC supervisors and managers |
 
 ## Governance and Standards
 
@@ -30,6 +31,8 @@ This folder contains guides, standards, and templates for the AI Efficiency Team
 | [Gemini for FEC supervisors and managers](technology/gemini-for-ops-managers.md) | Using Gemini safely in operations. | Gemini users |
 | [Google AI Studio guide](technology/google-ai-studio-guide.md) | Prototyping apps from prompts. | Technical builders |
 | [ChatGPT/Copilot workplace guide](technology/chatgpt-copilot-workplace-guide.md) | Using ChatGPT and Copilot at work. | Approved tool users |
+| [Agentic AI for operations](technology/agentic-ai-for-operations.md) | The four-rung agency ladder — what "agentic" means and how much review each rung needs. | Everyone — managers first |
+| [Google Cloud + ADK integration](technology/google-cloud-adk-integration.md) | Forward path: Vertex AI, the Agent Development Kit, Agent Engine, Cloud Run. | Engineers, technically-curious managers |
 
 ## Planning and Architecture
 
@@ -38,4 +41,5 @@ This folder contains guides, standards, and templates for the AI Efficiency Team
 | [Data source catalog](data-source-catalog.md) | Public data sources, rights, and provenance. | Technical builders |
 | [Documentation standard](documentation-standard.md) | How to write docs for this repo. | Contributors |
 | [Foundry integration roadmap](foundry-integration-roadmap.md) | Path to Palantir Foundry export. | Technical architects |
+| [Teams/Telegram intake agent roadmap](teams-telegram-agent-roadmap.md) | The planned, governance-gated idea-intake agent. | Team leads, governance reviewers |
 | [FHE/Zama research](fhe-zama-research.md) | Privacy-preserving encryption research. | Security researchers |

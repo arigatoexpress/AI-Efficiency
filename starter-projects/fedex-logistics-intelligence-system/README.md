@@ -1,6 +1,6 @@
 # FedEx Logistics Intelligence System
 
-> **Part of the [FedEx AI Efficiency Hub](../../index.html).** Public + synthetic data only · human review required.
+> **Part of the [FedEx AI Efficiency Hub](../../README.md).** Public + synthetic data only · human review required.
 
 <p align="center">
   <img src="../../assets/hero-banner.svg" alt="FedEx Logistics Intelligence System banner" width="100%">
@@ -204,6 +204,6 @@ See [governance-review.md](governance-review.md) for data classification, risk n
 
 ---
 ### Part of the AI Efficiency platform
-- **Hub / all tools:** [../../index.html](../../index.html)
+- **Hub / all tools:** [repo README](../../README.md) · [interactive hub page](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/index.html)
 - **Related:** [Dock Efficiency Signal Lab](../dock-efficiency-signal-lab/README.md) (the post-week, internal-KPI half) · [Prompts that feed this: Daily operations](../../prompts/daily-operations.md)
 - **Governance:** [Project review checklist](../../docs/governance/project-review-checklist.md)

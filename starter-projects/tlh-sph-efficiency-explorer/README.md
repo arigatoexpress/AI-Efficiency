@@ -1,6 +1,6 @@
 # TLH / SPH Efficiency Explorer
 
-> **Part of the [FedEx AI Efficiency Hub](../../index.html).** Public + synthetic data only · human review required.
+> **Part of the [FedEx AI Efficiency Hub](../../README.md).** Public + synthetic data only · human review required.
 
 A single-file, fully **offline** companion to the [Dock Efficiency Signal Lab](../dock-efficiency-signal-lab/README.md). The Signal Lab tracks one composite efficiency number over time and tells you whether a move is statistically real. This tool answers the question that composite hides: **which lever moved — throughput (SPH) or labor hours (TLH)?**
 
@@ -71,6 +71,7 @@ These sum **exactly** to `sph1 − sph0` (a Laspeyres-style split). The app chec
 |------|---------|
 | `app/index.html` | The entire app (HTML + CSS + vanilla JS, no dependencies) |
 | `app/sample-data.csv` | Synthetic example of the input format |
+| `test/run-checks.mjs` | Verification harness (run by CI): math identity, validation cases, CSV intake, offline guarantees |
 | `README.md` | This file |
 | `demo-script.md` | Safe walkthrough for presenting to a team |
 | `governance-review.md` | Data, risk, and approval considerations |
@@ -85,6 +86,6 @@ Offline prototype on synthetic data. Validated math (exact decomposition + start
 
 ---
 ### Part of the AI Efficiency platform
-- **Hub / all tools:** [../../index.html](../../index.html)
+- **Hub / all tools:** [repo README](../../README.md) · [interactive hub page](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/index.html)
 - **Related:** [Dock Efficiency Signal Lab](../dock-efficiency-signal-lab/README.md) (is the move statistically real?) · [Prompts that narrate KPIs: Data & reporting](../../prompts/data-and-reporting.md)
 - **Governance:** [Project review checklist](../../docs/governance/project-review-checklist.md)

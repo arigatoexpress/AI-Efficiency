@@ -6,11 +6,15 @@
 
 > **One platform for safe, useful AI in operations.** Operations-led tools, prompts, and guides that turn real operational friction into reusable, governance-ready AI — built by ops people, for ops people. No coding required to use it.
 
-### 👉 Open the hub: [`index.html`](index.html)
+## New Here? Three Ways To Get Value In Five Minutes
 
-A single, offline front door that ties everything together — the five tools, the prompt library, the docs, and a diagram of how they connect. Open it in any browser, or [view it live](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/index.html).
+No setup, no installs, no technical background:
 
-**Tech stack:** Static HTML hub · offline single-file tools · Markdown docs · Google AI Studio · Gemini · Cloud Run · React/Vite prototypes &middot; *[Agent collaborators: see [AGENTS.md](AGENTS.md)]*
+1. **Copy a prompt.** Open the [prompt library](prompts/README.md), pick a prompt, paste it into Gemini or ChatGPT, and fill in the brackets. 51 prompts for shift briefs, safety huddles, handoffs, peak planning, and more — each with its safety rule built in.
+2. **Read the starter guide.** The [AI workplace user guide](docs/ai-workplace-user-guide.md) is the plain-English explanation of what AI can (and can't) safely do for your day — written for the least technical teammate.
+3. **Try the live dashboard.** The [Station Ops Intelligence demo](https://fedex-logistics-intelligence-system-267358751314.us-east1.run.app) shows public weather and road risk before a shift and drafts briefs you can edit. Public data only; every output says "needs manager verification."
+
+Prefer a visual overview? **[View the interactive hub page](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/index.html)** — it shows how all the tools, prompts, and guides connect on one page. (It's this repo's `index.html`. If you have the repo downloaded on your computer, that file also opens directly in any browser and works fully offline — but on the GitHub website, use the link above.)
 
 ---
 
@@ -26,25 +30,25 @@ FedEx moves millions of packages daily across Express, Ground, and Freight netwo
 
 ### How it all connects
 
-Ideas come in the front door and become projects. Daily **prompts** power managers' routine drafts. Before a shift, **Station Ops Intelligence** turns public risk signals into reviewed briefs; after the week, the **Dock Efficiency Signal Lab** flags which dock-KPI moves are real and the **TLH/SPH Efficiency Explorer** shows which lever moved them. **Governance** gates everything, and a shared data model is the future state. See the diagram on the [hub](index.html).
+Ideas come in the front door and become projects. Daily **prompts** power managers' routine drafts. Before a shift, **Station Ops Intelligence** turns public risk signals into reviewed briefs; after the week, the **Dock Efficiency Signal Lab** flags which dock-KPI moves are real and the **TLH/SPH Efficiency Explorer** shows which lever moved them. **Governance** gates everything, and a shared data model is the future state. See the diagram on the [interactive hub page](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/index.html).
 
 ---
 
-## Start Here — No Tech Background Required
+## Start Here — Pick By What You Need
 
-| Area | What it is | Who it is for |
+| I want to… | Start with | Best for |
 | --- | --- | --- |
-| [AI workplace user guide](docs/ai-workplace-user-guide.md) | The foundational, plain-English guide for the least technical teammate. | Anyone new to AI |
-| [FedEx AI literacy guide](docs/fedex-ai-literacy-guide.md) | How this repo aligns with FedEx's enterprise AI Education program. | Everyone |
-| [Getting started](docs/getting-started.md) | The short first read for team members. | New team members |
-| [Prompt library](prompts/README.md) | Copyable prompts for daily operations, safety, peak season, linehaul, and customer communication. | Managers who want quick wins |
-| [Daily operations playbook](docs/daily-ops-playbook.md) | A printable, run-it-every-day playbook: phase-by-phase checklists plus ready-to-paste prompts for a full shift. | FEC supervisors and managers running a daily shift |
-| [Prompting basics](prompts/prompt-engineering-basics.md) | How to write better prompts without technical language. | Anyone using ChatGPT or Gemini |
-| [Gemini guide](docs/technology/gemini-for-ops-managers.md) | How to use Gemini well and safely in an operations context. | Gemini users |
-| [Agentic AI for operations](docs/technology/agentic-ai-for-operations.md) | What "agentic" actually means — a four-rung agency ladder that tells you how much human review an AI output needs. | Everyone — managers first |
-| [Google Cloud + ADK integration](docs/technology/google-cloud-adk-integration.md) | The forward path from AI Studio + Gemini to Vertex AI, the Agent Development Kit, and Cloud Run — internal data kept governance-gated. | Engineers and technically-curious managers |
-| [Governance checklist](docs/governance/project-review-checklist.md) | Review steps before sharing, piloting, or production use. | Team leads and reviewers |
-| [Pilot template](docs/pilot-program-template.md) | Propose a small, measurable AI pilot with clear success criteria. | Managers ready to experiment |
+| Understand AI basics, safely | [AI workplace user guide](docs/ai-workplace-user-guide.md) | Anyone new to AI |
+| See how this fits FedEx's AI program | [FedEx AI literacy guide](docs/fedex-ai-literacy-guide.md) | Everyone |
+| Get oriented in this repo | [Getting started](docs/getting-started.md) | New team members |
+| Save time on today's work | [Prompt library](prompts/README.md) | Managers who want quick wins |
+| Run a whole shift with AI support | [Daily operations playbook](docs/daily-ops-playbook.md) | FEC supervisors and managers running a daily shift |
+| Write better prompts | [Prompting basics](prompts/prompt-engineering-basics.md) | Anyone using ChatGPT or Gemini |
+| Use Gemini well at work | [Gemini guide](docs/technology/gemini-for-ops-managers.md) | Gemini users |
+| Understand "AI agents" | [Agentic AI for operations](docs/technology/agentic-ai-for-operations.md) | Everyone — managers first |
+| See the engineering forward path | [Google Cloud + ADK integration](docs/technology/google-cloud-adk-integration.md) | Engineers and technically-curious managers |
+| Review a project before sharing | [Governance checklist](docs/governance/project-review-checklist.md) | Team leads and reviewers |
+| Propose a small experiment | [Pilot template](docs/pilot-program-template.md) | Managers ready to experiment |
 
 ---
 
@@ -104,7 +108,7 @@ Today the Logistics Intelligence app runs on **Cloud Run** with **Google AI Stud
 
 ## Presentation Deck
 
-A browser-based slide deck for the regional standup is available at [`assets/presentation-deck.html`](assets/presentation-deck.html). Open it in any browser, navigate with arrow keys, and print to PDF if needed.
+A browser-based slide deck for the regional standup: **[view it online](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/assets/presentation-deck.html)** (navigate with arrow keys; print to PDF if needed). If you have the repo downloaded, the same deck is the file `assets/presentation-deck.html`.
 
 ## Starter Projects
 
@@ -117,6 +121,8 @@ Early examples the team can learn from, improve, and submit for review.
 | [TLH/SPH Efficiency Explorer](starter-projects/tlh-sph-efficiency-explorer/README.md) | **Offline single-file app** | Splits each week-over-week efficiency change into its two real levers — throughput (SPH) and labor hours (TLH) — so an hours-cut gain is never mistaken for a productivity win. Companion to the Signal Lab; fully offline. |
 | [AI Idea Intake Agent](starter-projects/ai-idea-intake-agent/README.md) | Concept and governance starter | Safe Teams/Copilot or Gemini-channel flow for AI ideas, feedback, and use-case triage. |
 | [Delivery Markets Lab](starter-projects/fedex-delivery-markets/README.md) | Prototype reference | Synthetic-data, paper-only delivery-market concept demo. |
+
+**To run the two offline tools** (Signal Lab and TLH/SPH Explorer): try them online first — [Signal Lab](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/starter-projects/dock-efficiency-signal-lab/app/index.html) · [TLH/SPH Explorer](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/starter-projects/tlh-sph-efficiency-explorer/app/index.html) — both load with synthetic demo data. To analyze real numbers, download the repo (green **Code** button → **Download ZIP**), unzip it, and double-click the tool's `app/index.html`: it runs entirely in your browser with no internet connection, so your data never leaves your machine.
 
 ---
 
@@ -132,6 +138,8 @@ Early examples the team can learn from, improve, and submit for review.
 ---
 
 ## Repository Structure
+
+**Tech stack:** Static HTML hub · offline single-file tools · Markdown docs · Google AI Studio · Gemini · Cloud Run · React/Vite prototypes · *AI agent collaborators: see [AGENTS.md](AGENTS.md)*
 
 ```text
 docs/

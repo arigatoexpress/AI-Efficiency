@@ -37,6 +37,12 @@ This repo is primarily documentation; there is no unified dev server.
 - **Docs:** Edit in Markdown and preview with any Markdown renderer.
 - **Logistics Intelligence System:** See `starter-projects/fedex-logistics-intelligence-system/README.md` for `npm install && npm run dev`.
 
+### Verification (run by CI on every PR — run locally before handing back)
+
+- `node scripts/check-docs.mjs` — relative links, raw.githack paths, prompt-count claims, HTML balance, offline CSP.
+- `node starter-projects/tlh-sph-efficiency-explorer/test/run-checks.mjs` — the explorer's exact-decomposition identity, validation cases, demo stories, CSV intake, offline guarantees.
+- In `starter-projects/fedex-logistics-intelligence-system/app`: `npm ci && npx tsc --noEmit && npm run build`.
+
 ## Safety boundaries
 
 - **Do NOT** add secrets, credentials, customer data, package data, employee data, route manifests, or proprietary FedEx internal data.
