@@ -71,6 +71,7 @@ These sum **exactly** to `sph1 − sph0` (a Laspeyres-style split). The app chec
 |------|---------|
 | `app/index.html` | The entire app (HTML + CSS + vanilla JS, no dependencies) |
 | `app/sample-data.csv` | Synthetic example of the input format |
+| `test/run-checks.mjs` | Verification harness (run by CI): math identity, validation cases, CSV intake, offline guarantees |
 | `README.md` | This file |
 | `demo-script.md` | Safe walkthrough for presenting to a team |
 | `governance-review.md` | Data, risk, and approval considerations |

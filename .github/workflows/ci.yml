@@ -1,0 +1,43 @@
+# CI for the AI Efficiency hub.
+# Actions are SHA-pinned per this repo's supply-chain hardening convention;
+# dependabot's github-actions ecosystem keeps the pins current.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  docs:
+    name: Docs — links, claims, offline guarantees
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: 22
+      - name: Check docs (links, prompt-count claims, HTML balance, CSP)
+        run: node scripts/check-docs.mjs
+      - name: TLH/SPH Efficiency Explorer checks (math identity, demo, CSV, offline)
+        run: node starter-projects/tlh-sph-efficiency-explorer/test/run-checks.mjs
+
+  app:
+    name: Logistics app — install, typecheck, build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: starter-projects/fedex-logistics-intelligence-system/app
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: starter-projects/fedex-logistics-intelligence-system/app/package-lock.json
+      - run: npm ci
+      - run: npx tsc --noEmit
+      - run: npm run build
