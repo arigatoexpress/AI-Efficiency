@@ -19,7 +19,7 @@ The repo turns operational friction into reusable AI assets: prompts for manager
 | `docs/demo-script.md` | Script for presenting the repo and prototype to leadership |
 | `docs/documentation-standard.md` | Style guide for all repo docs and starter projects |
 | `prompts/` | Copy-paste prompt library organized by operational area |
-| `prompts/README.md` | Index of 40+ prompts across 10 categories |
+| `prompts/README.md` | Index of 51 prompts across 10 categories |
 | `starter-projects/` | Runnable prototypes (React/Vite, AI Studio, Cloud Run) |
 | `starter-projects/fedex-logistics-intelligence-system/` | Most mature prototype — public-data ops dashboard with multi-station scenarios |
 | `starter-projects/dock-efficiency-signal-lab/` | Offline SPC + TA + forecasting on weekly dock KPIs (is the move real?) |
@@ -59,7 +59,7 @@ This repo is primarily documentation; there is no unified dev server.
 Active. Presentation-ready for the regional AI Efficiency group standup.
 
 - ✅ Root README with compelling narrative and quick-start paths
-- ✅ 40+ FedEx-specific prompts across 10 categories
+- ✅ 51 FedEx-specific prompts across 10 categories
 - ✅ FedEx AI literacy guide aligned with enterprise AI Education program
 - ✅ Pilot program template and demo script
 - ✅ Logistics Intelligence System with 4 multi-station scenarios

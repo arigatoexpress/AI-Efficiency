@@ -8,9 +8,9 @@
 
 ### 👉 Open the hub: [`index.html`](index.html)
 
-A single, offline front door that ties everything together — the four tools, the prompt library, the docs, and a diagram of how they connect. Open it in any browser, or [view it live](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/index.html).
+A single, offline front door that ties everything together — the five tools, the prompt library, the docs, and a diagram of how they connect. Open it in any browser, or [view it live](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/index.html).
 
-**Tech stack:** Static HTML hub · Markdown docs · Google AI Studio · Gemini · Cloud Run · React/Vite prototypes &middot; *[Agent collaborators: see [AGENTS.md](AGENTS.md)]*
+**Tech stack:** Static HTML hub · offline single-file tools · Markdown docs · Google AI Studio · Gemini · Cloud Run · React/Vite prototypes &middot; *[Agent collaborators: see [AGENTS.md](AGENTS.md)]*
 
 ---
 
@@ -26,7 +26,7 @@ FedEx moves millions of packages daily across Express, Ground, and Freight netwo
 
 ### How it all connects
 
-Ideas come in the front door and become projects. Daily **prompts** power managers' routine drafts. Before a shift, **Station Ops Intelligence** turns public risk signals into reviewed briefs; after the week, the **Dock Efficiency Signal Lab** turns dock KPIs into focus signals. **Governance** gates everything, and a shared data model is the future state. See the diagram on the [hub](index.html).
+Ideas come in the front door and become projects. Daily **prompts** power managers' routine drafts. Before a shift, **Station Ops Intelligence** turns public risk signals into reviewed briefs; after the week, the **Dock Efficiency Signal Lab** flags which dock-KPI moves are real and the **TLH/SPH Efficiency Explorer** shows which lever moved them. **Governance** gates everything, and a shared data model is the future state. See the diagram on the [hub](index.html).
 
 ---
 
@@ -62,7 +62,7 @@ Our most mature starter project is a live, public-data decision-support dashboar
 - Labels every data point as public fact, forecast, or synthetic demo.
 - Never touches internal FedEx package, route, or customer data.
 
-**Tech details:** React 18 + Vite frontend, Express + TypeScript backend, optional Gemini AI drafts.
+**Tech details:** React 19 + Vite frontend, Express + TypeScript backend, optional Gemini AI drafts.
 
 **Live demo:** [https://fedex-logistics-intelligence-system-267358751314.us-east1.run.app](https://fedex-logistics-intelligence-system-267358751314.us-east1.run.app)  
 **Try it locally:** See the [starter project page](starter-projects/fedex-logistics-intelligence-system/README.md) for screenshots, architecture, and a quick-start guide.
@@ -71,7 +71,7 @@ Our most mature starter project is a live, public-data decision-support dashboar
 
 ## Prompt Library at a Glance
 
-**72 copy-paste prompts** across 11 categories, organized by what FedEx managers actually do:
+**51 copy-paste prompts** across 10 categories — plus a [prompt-engineering basics](prompts/prompt-engineering-basics.md) guide — organized by what FedEx managers actually do:
 
 | Category | Examples |
 |----------|----------|
@@ -83,6 +83,8 @@ Our most mature starter project is a live, public-data decision-support dashboar
 | **Linehaul & Routing** | Feeder delays, alternate routing, P&D density, yard management, cross-dock timing |
 | **Process Improvement** | Root cause analysis, improvement proposals, workflow documentation |
 | **Data & Reporting** | Metrics summaries, dashboard explanations, trend analysis |
+| **Bid & Opportunity Support** | Opportunity intake, capability summaries, risk assessments |
+| **Governance-Safe Use** | Is this use case safe? Documenting AI use, review prep |
 
 All prompts include the **Safe Prompt Rule**: remove sensitive data first, review output before sharing, and keep a human in charge of every decision.
 
@@ -141,9 +143,15 @@ docs/
   daily-ops-playbook.md            ← Printable run-it-every-day playbook
   pilot-program-template.md        ← Propose a pilot
   demo-script.md                   ← Present this repo to leadership
+  data-source-catalog.md           ← Public-data sources, rights, caveats
+  foundry-integration-roadmap.md   ← Governance-gated Foundry export path
+  teams-telegram-agent-roadmap.md  ← Planned intake-agent track
+  fhe-zama-research.md             ← Privacy (FHE) research note
   governance/                      ← Checklists and policies
   technology/                      ← How-to guides for approved tools
     gemini-for-ops-managers.md
+    chatgpt-copilot-workplace-guide.md
+    google-ai-studio-guide.md
     agentic-ai-for-operations.md   ← The agency ladder, plainly
     google-cloud-adk-integration.md ← Vertex AI + ADK forward path
 prompts/

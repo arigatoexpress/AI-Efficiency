@@ -47,7 +47,7 @@ This is **not** a production FedEx system. It is **not** connected to internal p
 
 This repository now includes a complete, reviewable source tree in the [`app/`](app/) folder:
 
-- **React 18 + Vite** frontend with 5 manager-friendly panels.
+- **React 19 + Vite** frontend with 5 manager-friendly panels.
 - **Express + TypeScript** backend with server-side Gemini integration.
 - **Graceful fallback** when Gemini is unavailable.
 - **Zero command-console language** — every label is written for busy FEC supervisors and managers.
