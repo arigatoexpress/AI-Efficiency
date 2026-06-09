@@ -7,7 +7,7 @@ commitments.
 ## Opportunity Intake
 
 ```text
-Act as an operations manager helping organize a possible opportunity.
+Act as an FEC supervisor or manager helping organize a possible opportunity.
 
 Opportunity summary:
 [Paste non-sensitive summary.]

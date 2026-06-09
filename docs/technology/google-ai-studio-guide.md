@@ -63,13 +63,13 @@ Do not use AI Studio for:
 ## Beginner Prompt For AI Studio
 
 ```text
-Build a simple internal prototype for operations managers.
+Build a simple internal prototype for FEC supervisors and managers.
 
 Purpose:
 [describe the task]
 
 Users:
-Non-technical operations managers.
+Non-technical FEC supervisors and managers.
 
 Data:
 Use synthetic sample data only.

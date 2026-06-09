@@ -42,7 +42,7 @@ A human manager remains responsible for judgment, verification, and action.
 Use this shape when writing your own prompt:
 
 ```text
-Role: Act as a practical operations manager.
+Role: Act as a practical FEC supervisor or manager.
 Task: Help me produce [specific output].
 Context: Here is the non-sensitive background.
 Rules: Keep it accurate, concise, and action-oriented. Flag uncertainty.

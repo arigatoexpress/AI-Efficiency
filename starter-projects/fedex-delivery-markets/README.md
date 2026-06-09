@@ -14,7 +14,7 @@ visible.
 
 ## Who It Helps
 
-- Operations managers learning how to present AI/product ideas responsibly.
+- FEC supervisors and managers learning how to present AI/product ideas responsibly.
 - IT and governance reviewers who need a concrete prototype to evaluate.
 - The AI efficiency team as an example of safe demo boundaries.
 

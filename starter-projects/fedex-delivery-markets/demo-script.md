@@ -33,7 +33,7 @@ security, operational risk, monitoring, incident response, and ownership.
 ## What To Ask Governance
 
 - What would be the correct review path for an AI Studio prototype?
-- What data can operations managers use in approved AI tools?
+- What data can FEC supervisors and managers use in approved AI tools?
 - How should we handle synthetic demo data versus sandbox data?
 - What must be true before an app can be shared beyond the team?
 - What artifacts help governance review faster?

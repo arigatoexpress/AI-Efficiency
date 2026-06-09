@@ -3,7 +3,7 @@
 ## Report Summary
 
 ```text
-Summarize this report for an operations manager.
+Summarize this report for an FEC supervisor or manager.
 
 Report text or non-sensitive extract:
 [Paste text.]

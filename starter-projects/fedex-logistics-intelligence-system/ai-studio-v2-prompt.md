@@ -10,7 +10,7 @@ Build a full-stack Google AI Studio web app called Station Ops Intelligence
 Console.
 
 Audience:
-Non-technical station operations managers.
+Non-technical, station-level FEC supervisors and managers.
 
 Purpose:
 Help managers review public external risk signals before a shift. Focus on a
@@ -100,7 +100,7 @@ Use these after the first build.
 ### Make It Manager-Readable
 
 ```text
-Rewrite every label so a busy operations manager can understand it in under
+Rewrite every label so a busy FEC supervisor or manager can understand it in under
 five seconds. Remove military, hacker, surveillance, or production-command
 language.
 ```

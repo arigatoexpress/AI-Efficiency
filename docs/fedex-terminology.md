@@ -33,10 +33,21 @@ A plain-English glossary for AI Efficiency team members who work across Express,
 
 ## Roles
 
+> **Audience note — the standard term for this repo:** when a document
+> addresses front-line operations leadership, use **"FEC supervisors and
+> managers"** (singular: "FEC supervisor or manager"). Post-1Network,
+> front-line leadership roles fall under FEC — drafted here as Front-line
+> Engagement and Coordination (**TODO: confirm the official expansion of
+> "FEC" before external use**). "Operations Manager" is the Legacy Express
+> form of the role; it appears in this glossary for reference but should not
+> be used as the default audience term in new documents.
+
 | Term | What It Means |
 |------|--------------|
-| **Operations Manager** | Oversees day-to-day facility operations, staffing, and safety. Champions "Safety Above All." |
-| **Senior Manager** | Oversees multiple operations managers or a larger facility. |
+| **FEC Supervisor** | Front-line supervisor of day-to-day facility operations, staffing, and safety under the unified 1Network structure. Champions "Safety Above All." Current titles include Operations Supervisor / FEC Supervisor. |
+| **FEC Manager** | Manages a facility's FEC supervisors and the overall operation — the manager-level form of the front-line FEC leadership role. |
+| **Operations Manager** | Legacy Express form of the role now under FEC. Oversees day-to-day facility operations, staffing, and safety. |
+| **Senior Manager** | Oversees multiple FEC managers or a larger facility. |
 | **Sort Manager** | Manages the sort operation specifically — belt flow, chute assignments, unload/load timing. |
 | **P&D Manager** | Manages pickup and delivery operations — route planning, courier/ISP coordination, customer service. |
 | **Linehaul Manager** | Manages feeder and long-haul operations — trailer scheduling, carrier coordination, dispatch. |
@@ -46,6 +57,8 @@ A plain-English glossary for AI Efficiency team members who work across Express,
 
 | Term | What It Means | Note for AI Use |
 |------|--------------|-----------------|
+| **TLH (Total Labor Hours)** | The total labor hours a facility or operation uses in a period — the hours side of productivity. | Use facility/shift aggregates only — never individual employee hours |
+| **SPH (Shipments/Stops Per Hour)** | Throughput per labor hour (volume ÷ TLH) — the productivity side. Efficiency goals typically compare SPH to an engineered goal. | Use aggregates, never individual employee performance data |
 | **On-Time Performance** | Percentage of packages delivered within the committed service window. | Use general trends, not real numbers |
 | **Service Failure** | A package that missed its committed delivery time. | General discussion only |
 | **Misload** | A package loaded onto the wrong trailer or vehicle. | General process improvement |

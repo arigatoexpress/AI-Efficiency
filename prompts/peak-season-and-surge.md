@@ -5,7 +5,7 @@ Peak season (roughly October through January) is the highest-stakes period for F
 ## Pre-Peak Contingency Brief
 
 ```text
-Act as an operations manager preparing for peak season volume surge.
+Act as an FEC supervisor or manager preparing for peak season volume surge.
 
 Station/Region: [General region name]
 Historical context (scrubbed): [e.g., last year we saw volume increase in this general range]
@@ -25,7 +25,7 @@ Keep under 400 words. Use placeholders for any specific numbers.
 ## Daily Surge Checklist
 
 ```text
-Create a daily surge-readiness checklist for an operations manager.
+Create a daily surge-readiness checklist for an FEC supervisor or manager.
 
 Return as a printable checklist with:
 - Sort hub / station readiness (equipment, staffing plan, overflow space)

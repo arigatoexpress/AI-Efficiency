@@ -2,8 +2,8 @@
 
 Last reviewed: 2026-05-22
 
-This is the beginner guide for operations managers and team members who are new
-to AI. It is written for smart people who are busy, practical, and do not want
+This is the beginner guide for FEC supervisors, managers, and team members who
+are new to AI. It is written for smart people who are busy, practical, and do not want
 technical jargon.
 
 ## The One-Sentence Version
@@ -83,7 +83,7 @@ Stronger prompt:
 
 ```text
 Rewrite these non-sensitive shift notes into a clear handoff for the incoming
-operations manager. Keep it under 250 words. Separate confirmed facts from
+FEC supervisor or manager. Keep it under 250 words. Separate confirmed facts from
 items that need verification. End with owners and next steps.
 
 Notes:
@@ -105,7 +105,7 @@ Output: Return [format].
 Example:
 
 ```text
-Role: Act as a practical operations manager.
+Role: Act as a practical FEC supervisor or manager.
 Task: Turn my rough notes into a daily brief.
 Context: These are scrubbed notes from yesterday's shift.
 Rules: Do not invent facts. Flag missing owners and dates.

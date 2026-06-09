@@ -13,7 +13,8 @@ The repo turns operational friction into reusable AI assets: prompts for manager
 | `docs/` | Human-first guides, governance checklists, technology how-tos, and templates |
 | `docs/ai-workplace-user-guide.md` | Onboarding doc for the least technical teammate |
 | `docs/fedex-ai-literacy-guide.md` | How the repo aligns with FedEx's enterprise AI Education program |
-| `docs/fedex-terminology.md` | Quick reference for FedEx operations terms |
+| `docs/fedex-terminology.md` | Quick reference for FedEx operations terms — source of truth for the "FEC supervisors and managers" audience term |
+| `docs/technology/agentic-ai-for-operations.md` | The agency ladder — manager-level guide to agentic AI, indexes the ADK and intake-agent docs |
 | `docs/pilot-program-template.md` | Template for proposing small, measurable AI pilots |
 | `docs/demo-script.md` | Script for presenting the repo and prototype to leadership |
 | `docs/documentation-standard.md` | Style guide for all repo docs and starter projects |
@@ -21,6 +22,8 @@ The repo turns operational friction into reusable AI assets: prompts for manager
 | `prompts/README.md` | Index of 40+ prompts across 10 categories |
 | `starter-projects/` | Runnable prototypes (React/Vite, AI Studio, Cloud Run) |
 | `starter-projects/fedex-logistics-intelligence-system/` | Most mature prototype — public-data ops dashboard with multi-station scenarios |
+| `starter-projects/dock-efficiency-signal-lab/` | Offline SPC + TA + forecasting on weekly dock KPIs (is the move real?) |
+| `starter-projects/tlh-sph-efficiency-explorer/` | Offline TLH/SPH decomposition (which lever moved?) — companion to the Signal Lab |
 | `assets/` | Banners, screenshots, and architecture diagrams |
 | `.github/ISSUE_TEMPLATE/` | Issue templates for governance review |
 | `CONTRIBUTING.md` | Full contribution process |
@@ -43,7 +46,7 @@ This repo is primarily documentation; there is no unified dev server.
 
 ## Documentation style
 
-- Write for non-technical operations managers first.
+- Write for non-technical FEC supervisors and managers first.
 - Use plain English, short sections, and copyable examples.
 - Assume the reader is intelligent but busy and may be brand new to AI.
 - Explain acronyms the first time they appear.
@@ -62,6 +65,7 @@ Active. Presentation-ready for the regional AI Efficiency group standup.
 - ✅ Logistics Intelligence System with 4 multi-station scenarios
 - ✅ Source-owned rebuild builds clean with zero warnings
 - ✅ All synthetic data clearly labeled; no production claims
+- ✅ CTO review feedback implemented: "FEC supervisors and managers" audience standard (glossary is source of truth), agentic AI agency-ladder guide, TLH/SPH Efficiency Explorer (offline, exact decomposition)
 
 ---
 

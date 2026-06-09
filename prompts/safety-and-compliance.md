@@ -5,7 +5,7 @@ FedEx's first value is **Safety Above All**. These prompts help managers draft s
 ## Pre-Shift Safety Huddle Brief
 
 ```text
-Act as a safety-focused operations manager preparing a 2-minute huddle brief.
+Act as a safety-focused FEC supervisor or manager preparing a 2-minute huddle brief.
 
 Station: [Station name or code]
 Shift: [Day/Evening/Night]

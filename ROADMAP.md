@@ -1,6 +1,6 @@
 # AI Efficiency Team Roadmap
 
-Last reviewed: 2026-06-02
+Last reviewed: 2026-06-09
 
 This roadmap keeps the team focused on one useful path at a time: make the
 current logistics intelligence app credible, make the data provenance clean,
@@ -35,7 +35,7 @@ Verification:
 
 - no stale starter links;
 - no secrets or private operational data;
-- docs are readable by a non-technical operations manager.
+- docs are readable by a non-technical FEC supervisor or manager.
 
 ## Phase 1 - Logistics Intelligence App Hardening
 
@@ -67,7 +67,7 @@ Verification:
 
 Status: **Active**
 
-Goal: build the richest, most practical prompt library for FedEx operations managers.
+Goal: build the richest, most practical prompt library for FedEx FEC supervisors and managers.
 
 Deliverables:
 
@@ -84,7 +84,7 @@ Verification:
 
 - every prompt includes the safe-prompt rule;
 - terminology is accurate and sourced from public FedEx documents;
-- prompts are tested by at least one operations manager;
+- prompts are tested by at least one FEC supervisor or manager;
 - no proprietary FedEx procedures or internal system details are exposed.
 
 ## Phase 3 - Public Data Layer
@@ -246,6 +246,51 @@ Verification:
 - working local benchmark;
 - documented latency and accuracy tradeoffs;
 - security review before any production recommendation.
+
+## Phase 8 - CTO Team Alignment And Rollout
+
+Status: **Active** — review feedback implemented; cadence and rollout pending
+
+Goal: act on the CTO-team review of this repo and build the standing
+relationship: cohesive messaging, an agentic AI track, deeper efficiency
+tooling, and a monthly call where the bigger decisions get made deliberately.
+
+Delivered from the review feedback:
+
+- cohesive audience messaging — "FEC supervisors and managers" is the standard
+  term repo-wide, with the glossary as the single source of truth and
+  "Operations Manager" kept only as the Legacy Express reference;
+- agentic AI has a clear home — the agency-ladder guide
+  (`docs/technology/agentic-ai-for-operations.md`), wired into the hub, README,
+  and agent notes, indexing the ADK and intake-agent docs;
+- efficiency depth — the TLH/SPH Efficiency Explorer decomposes each
+  week-over-week efficiency change into exact throughput (SPH) and hours (TLH)
+  effects, so the two productivity levers are first-class instead of hidden in
+  one composite number.
+
+Still ahead:
+
+- validate the TLH/SPH decomposition against one real, locally-loaded weekly
+  export during a pilot;
+- stand up the monthly CTO-team call as the decision forum;
+- support the possible NW-region survey rollout (senior leadership down to
+  frontline FEC supervisors and managers) when it is scoped;
+- confirm the official expansion of "FEC" for the glossary.
+
+Open question (decide in the monthly CTO call — do not act unilaterally):
+
+- **Public repo vs private FedEx-only repo.** Making the repo private is
+  irreversible in practice (forks/clones of the public history exist) and
+  policy-bound. It trades community visibility for a wider internal data
+  envelope. This is a deliberate decision for the CTO call, not a changeset.
+
+Verification:
+
+- terminology sweep verified (only the glossary and explicit Legacy Express
+  references retain the old title);
+- the explorer's decomposition is exact (effects sum to the total change to
+  1e-9) with startup validation cases;
+- no real facility data committed; synthetic demo data clearly badged.
 
 ## Standing Rules
 

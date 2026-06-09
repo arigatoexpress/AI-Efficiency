@@ -88,6 +88,7 @@
     <a href="#workflow">How it fits</a>
     <a href="#tools">Tools</a>
     <a href="#prompts">Prompts</a>
+    <a href="#agentic">Agentic AI</a>
     <a href="#docs">Docs</a>
     <a href="#govern">Governance</a>
     <a href="#involved">Get involved</a>
@@ -183,7 +184,7 @@
 <section id="tools">
   <div class="wrap">
     <h2><span class="num">2</span>The tools</h2>
-    <p class="sub">Four focused tools, each a small pilot with a clear job. Pick by the question you're trying to answer.</p>
+    <p class="sub">Five focused tools, each a small pilot with a clear job. Pick by the question you're trying to answer.</p>
     <div class="grid g2">
 
       <div class="card">
@@ -207,6 +208,16 @@
       </div>
 
       <div class="card">
+        <div class="toolhead"><h3>TLH / SPH Efficiency Explorer</h3><span class="badge green">Built · Offline</span></div>
+        <p>An offline, single-file companion to the Signal Lab that splits each facility's week-over-week efficiency change into its two real levers — throughput (SPH) and labor hours (TLH) — so an hours-cut gain is never mistaken for a productivity win.</p>
+        <div class="when"><b>Use this when:</b> efficiency moved and you need to know <i>which lever moved it</i> before you replicate it or escalate it.</div>
+        <div class="actions">
+          <a href="starter-projects/tlh-sph-efficiency-explorer/app/index.html">▶ Open the app (offline)</a>
+          <a href="starter-projects/tlh-sph-efficiency-explorer/README.md">How it works</a>
+        </div>
+      </div>
+
+      <div class="card">
         <div class="toolhead"><h3>AI Idea Intake Agent</h3><span class="badge alt">Concept</span></div>
         <p>A safe Teams/Copilot or Gemini-channel flow to capture employee AI ideas, gather feedback, and triage use cases — with a scoring rubric and an intake template you can reuse today.</p>
         <div class="when"><b>Use this when:</b> you have an AI idea and want it captured, scored, and routed safely.</div>
@@ -226,7 +237,7 @@
       </div>
 
     </div>
-    <div class="note">Every tool ships with a <b>README</b>, a <b>demo script</b>, and a <b>governance review</b>, and is built on public or synthetic data. See all four in <a href="starter-projects/README.md">starter-projects/</a>.</div>
+    <div class="note">Every tool ships with a <b>README</b>, a <b>demo script</b>, and a <b>governance review</b>, and is built on public or synthetic data. See all five in <a href="starter-projects/README.md">starter-projects/</a>.</div>
   </div>
 </section>
 
@@ -252,10 +263,26 @@
   </div>
 </section>
 
+<!-- AGENTIC AI -->
+<section id="agentic">
+  <div class="wrap">
+    <h2><span class="num">4</span>Agentic AI</h2>
+    <p class="sub">A chat <b>answers</b>; an agent <b>acts</b>. Our shared mental model is a four-rung <b>agency ladder</b> — the rung an output came from tells you how much human review it needs. Tools are the control surface: every tool an agent can call must be justified.</p>
+    <table>
+      <tr><th>Rung</th><th>What it does</th><th>Where this repo is</th></tr>
+      <tr><td><b>1 · Assistant</b></td><td>Answers and drafts in one turn — no tools, no steps.</td><td><span class="badge green">Live</span> prompts &amp; Gemini drafts</td></tr>
+      <tr><td><b>2 · Tool-using assistant</b></td><td>Reads a file, searches, or calculates when you ask.</td><td><span class="badge green">Live</span> the offline apps</td></tr>
+      <tr><td><b>3 · Supervised agent</b></td><td>Plans steps toward a goal, pauses for human sign-off.</td><td><span class="badge alt">Planned</span> intake agent, Teams-first</td></tr>
+      <tr><td><b>4 · Autonomous agent</b></td><td>Runs a workflow end-to-end without a human in the loop.</td><td><span class="badge gray">Gated</span> not for FedEx ops data until governance approves</td></tr>
+    </table>
+    <div class="note">The safe habit: before you trust an output, ask <b>which rung it came from</b>. Full guide: <a href="docs/technology/agentic-ai-for-operations.md">Agentic AI for operations</a> · engineering path: <a href="docs/technology/google-cloud-adk-integration.md">Google Cloud + ADK</a> · first governed agent: <a href="docs/teams-telegram-agent-roadmap.md">intake agent roadmap</a>.</div>
+  </div>
+</section>
+
 <!-- DOCS + GOVERNANCE -->
 <section id="docs">
   <div class="wrap">
-    <h2><span class="num">4</span>Learn &amp; govern</h2>
+    <h2><span class="num">5</span>Learn &amp; govern</h2>
     <p class="sub">Plain-English guides to get started, and one governance gate that every tool and pilot passes through.</p>
     <div class="grid g2">
       <div class="card">
@@ -264,6 +291,7 @@
           <li><a href="docs/ai-workplace-user-guide.md">AI workplace user guide</a> — start here if you're new</li>
           <li><a href="docs/fedex-ai-literacy-guide.md">FedEx AI literacy guide</a> — how we align with the enterprise program</li>
           <li><a href="docs/fedex-terminology.md">Operations terminology</a> — quick reference</li>
+          <li><a href="docs/technology/agentic-ai-for-operations.md">Agentic AI for operations</a> — the agency ladder, plainly</li>
           <li><a href="docs/technology/gemini-for-ops-managers.md">Gemini</a> · <a href="docs/technology/chatgpt-copilot-workplace-guide.md">ChatGPT/Copilot</a> · <a href="docs/technology/google-ai-studio-guide.md">AI Studio</a> guides</li>
         </ul>
       </div>
@@ -291,7 +319,7 @@
 <!-- INVOLVED -->
 <section id="involved">
   <div class="wrap">
-    <h2><span class="num">5</span>Get involved</h2>
+    <h2><span class="num">6</span>Get involved</h2>
     <p class="sub">This is a team effort. Bring an idea, a use case, or a prompt.</p>
     <div class="grid g3">
       <div class="card"><h3><span class="ico">💡</span>Submit an AI idea</h3><p>Capture it through the <a href="starter-projects/ai-idea-intake-agent/intake-template.md">intake template</a> or a GitHub issue, and we'll triage it.</p></div>
@@ -305,7 +333,7 @@
   <div class="wrap">
     <div>
       <b>FedEx AI Efficiency Hub</b><br/>
-      Station Ops Intelligence · Dock Efficiency Signal Lab · AI Idea Intake · Delivery Markets Lab<br/>
+      Station Ops Intelligence · Dock Efficiency Signal Lab · TLH/SPH Efficiency Explorer · AI Idea Intake · Delivery Markets Lab<br/>
       <span style="font-size:12px">Part of FedEx's AI Education &amp; Literacy program.</span>
     </div>
     <div style="font-size:13px">

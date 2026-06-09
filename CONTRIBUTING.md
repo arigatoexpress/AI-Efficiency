@@ -1,6 +1,6 @@
 # Contributing
 
-This repo is meant to be easy for operations managers to use. Contributions do
+This repo is meant to be easy for FEC supervisors and managers to use. Contributions do
 not need to be complicated, but they do need to be clear and safe.
 
 ## Good Contributions

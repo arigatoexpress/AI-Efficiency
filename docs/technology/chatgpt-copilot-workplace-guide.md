@@ -3,7 +3,7 @@
 Last reviewed: 2026-05-22
 
 This guide explains how to use ChatGPT and Microsoft 365 Copilot at work in a
-simple, safe way. It is written for operations managers, not engineers.
+simple, safe way. It is written for FEC supervisors and managers, not engineers.
 
 ## Simple Difference
 
@@ -49,7 +49,7 @@ Project setup:
 2. Add a plain instruction, such as:
 
 ```text
-Act as a practical operations manager. Be concise. Use plain English. Ask
+Act as a practical FEC supervisor or manager. Be concise. Use plain English. Ask
 clarifying questions when needed. Flag anything that requires verification or
 governance review.
 ```
@@ -122,7 +122,7 @@ or "Needs date."
 ### Word Or Docs
 
 ```text
-Turn this rough outline into a one-page guide for operations managers. Use plain
+Turn this rough outline into a one-page guide for FEC supervisors and managers. Use plain
 English, short sections, and a checklist at the end.
 ```
 

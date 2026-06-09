@@ -1,11 +1,11 @@
 # Daily Operations Prompts
 
-These prompts cover the core daily workflow of a FedEx operations manager: shift briefs, handoffs, escalations, and after-action reviews. All prompts use scrubbed, non-sensitive data only.
+These prompts cover the core daily workflow of a FedEx FEC supervisor or manager: shift briefs, handoffs, escalations, and after-action reviews. All prompts use scrubbed, non-sensitive data only.
 
 ## Daily Manager Brief
 
 ```text
-Act as a FedEx operations manager preparing a concise daily brief for your station or hub.
+Act as a FedEx FEC supervisor or manager preparing a concise daily brief for your station or hub.
 
 Context (scrubbed — no real names, addresses, tracking numbers, or package counts):
 [Paste non-sensitive shift notes, volume ranges, staffing notes, weather summary,
@@ -28,7 +28,7 @@ Rules:
 ## Shift Handoff
 
 ```text
-Turn these non-sensitive notes into a shift handoff for the incoming FedEx operations manager.
+Turn these non-sensitive notes into a shift handoff for the incoming FedEx FEC supervisor or manager.
 
 Outgoing shift: [Day/Evening/Night]
 Incoming shift: [Day/Evening/Night]
@@ -110,7 +110,7 @@ Under 150 words. No real names, package counts, or facility security details.
 ## End-of-Shift Closeout Checklist
 
 ```text
-Create an end-of-shift closeout checklist for a FedEx operations manager.
+Create an end-of-shift closeout checklist for a FedEx FEC supervisor or manager.
 
 Shift: [Day/Evening/Night]
 Operation type: [Station / Sort Hub / P&D / Linehaul]
