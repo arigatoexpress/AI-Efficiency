@@ -266,7 +266,11 @@ Delivered from the review feedback:
 - efficiency depth — the TLH/SPH Efficiency Explorer decomposes each
   week-over-week efficiency change into exact throughput (SPH) and hours (TLH)
   effects, so the two productivity levers are first-class instead of hidden in
-  one composite number.
+  one composite number;
+- "FEC" expansion confirmed from public FedEx careers material: **Federal
+  Express Corporation**, the single operating company since June 1, 2024
+  (Express + Ground + Services; Freight separate) — glossary updated, TODO
+  resolved.
 
 Still ahead:
 
@@ -274,8 +278,7 @@ Still ahead:
   export during a pilot;
 - stand up the monthly CTO-team call as the decision forum;
 - support the possible NW-region survey rollout (senior leadership down to
-  frontline FEC supervisors and managers) when it is scoped;
-- confirm the official expansion of "FEC" for the glossary.
+  frontline FEC supervisors and managers) when it is scoped.
 
 Open question (decide in the monthly CTO call — do not act unilaterally):
 

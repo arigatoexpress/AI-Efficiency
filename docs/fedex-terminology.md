@@ -28,6 +28,7 @@ A plain-English glossary for AI Efficiency team members who work across Express,
 | **Indianapolis Hub** | Express's second national hub, being expanded and modernized. |
 | **Regional Hub** | Major sorting facilities in Fort Worth, Newark, Oakland, Greensboro. |
 | **1Network** | FedEx's initiative to combine Express and Ground operations into a single network. |
+| **Federal Express Corporation (FEC)** | The single FedEx operating company since June 1, 2024 — Express, Ground, and Services combined under it; FedEx Freight remains a separate entity. Job titles and postings use the "FEC" abbreviation. |
 | **Purple Promise** | FedEx's customer service commitment: "I will make every FedEx experience outstanding." |
 | **Safety Above All** | FedEx's #1 operating value. |
 
@@ -35,12 +36,15 @@ A plain-English glossary for AI Efficiency team members who work across Express,
 
 > **Audience note — the standard term for this repo:** when a document
 > addresses front-line operations leadership, use **"FEC supervisors and
-> managers"** (singular: "FEC supervisor or manager"). Post-1Network,
-> front-line leadership roles fall under FEC — drafted here as Front-line
-> Engagement and Coordination (**TODO: confirm the official expansion of
-> "FEC" before external use**). "Operations Manager" is the Legacy Express
-> form of the role; it appears in this glossary for reference but should not
-> be used as the default audience term in new documents.
+> managers"** (singular: "FEC supervisor or manager"). **FEC stands for
+> Federal Express Corporation** — the single FedEx operating company since
+> June 1, 2024, when FedEx Express, FedEx Ground, and FedEx Services were
+> consolidated into it (FedEx Freight remains separate). Public FedEx job
+> postings use the abbreviation directly, e.g. "Federal Express Corporation
+> (FEC) employees," and front-line titles like Operations Supervisor now sit
+> under FEC. "Operations Manager" is the Legacy Express form of the role; it
+> appears in this glossary for reference but should not be used as the
+> default audience term in new documents.
 
 | Term | What It Means |
 |------|--------------|
