@@ -4,7 +4,7 @@
 
 - Name: FedEx Logistics Intelligence System
 - Status: AI Studio and Cloud Run prototype
-- Audience: station and regional operations managers
+- Audience: station and regional FEC supervisors and managers
 - Current data class: public and synthetic only
 - Production status: not production, not approved for live operational use
 

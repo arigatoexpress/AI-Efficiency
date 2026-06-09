@@ -27,7 +27,7 @@ This folder contains guides, standards, and templates for the AI Efficiency Team
 
 | Document | Purpose | Audience |
 |----------|---------|----------|
-| [Gemini for ops managers](technology/gemini-for-ops-managers.md) | Using Gemini safely in operations. | Gemini users |
+| [Gemini for FEC supervisors and managers](technology/gemini-for-ops-managers.md) | Using Gemini safely in operations. | Gemini users |
 | [Google AI Studio guide](technology/google-ai-studio-guide.md) | Prototyping apps from prompts. | Technical builders |
 | [ChatGPT/Copilot workplace guide](technology/chatgpt-copilot-workplace-guide.md) | Using ChatGPT and Copilot at work. | Approved tool users |
 

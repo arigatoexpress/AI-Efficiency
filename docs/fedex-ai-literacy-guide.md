@@ -6,7 +6,7 @@ This guide aligns with FedEx's enterprise **AI Education and Literacy program** 
 
 ## Why AI Literacy Matters at FedEx
 
-FedEx handles millions of shipments daily across Express, Ground, and Freight networks. The company generates over **2 petabytes of data per day** from its physical network. AI is not replacing operations managers — it is becoming a tool that helps managers make faster, better-informed decisions with cleaner data and clearer communication.
+FedEx handles millions of shipments daily across Express, Ground, and Freight networks. The company generates over **2 petabytes of data per day** from its physical network. AI is not replacing FEC supervisors and managers — it is becoming a tool that helps managers make faster, better-informed decisions with cleaner data and clearer communication.
 
 > "The future of business is being shaped by data and AI more than ever before. As FedEx continues its evolution into an AI-powered enterprise, our people remain at the heart of everything we do."  
 > — Raj Subramaniam, President and CEO, FedEx Corporation
@@ -25,7 +25,7 @@ FedEx handles millions of shipments daily across Express, Ground, and Freight ne
 
 ## The FedEx AI Fluency Framework
 
-FedEx's program builds fluency across three levels. This guide focuses on the first two, which apply to most operations managers.
+FedEx's program builds fluency across three levels. This guide focuses on the first two, which apply to most FEC supervisors and managers.
 
 | Level | What You Learn | FedEx Example |
 |-------|---------------|---------------|

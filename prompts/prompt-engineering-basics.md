@@ -47,7 +47,7 @@ Why it is weak:
 
 ```text
 Goal: Summarize these scrubbed shift notes.
-Context: The audience is an incoming operations manager.
+Context: The audience is an incoming FEC supervisor or manager.
 Source: Use only the notes below.
 Rules: Do not invent facts. Put missing details under "Needs verification."
 Output: Return 5 bullets and then a table with Owner, Action, Due Date, Risk.
@@ -61,7 +61,7 @@ Notes:
 ### 1. Give A Role
 
 ```text
-Act as a practical operations manager.
+Act as a practical FEC supervisor or manager.
 ```
 
 ### 2. Give A Clear Task
@@ -130,7 +130,7 @@ details, or items that require human verification.
 ## Prompt Template For Managers
 
 ```text
-Act as a practical operations manager.
+Act as a practical FEC supervisor or manager.
 
 I need help with:
 [task]

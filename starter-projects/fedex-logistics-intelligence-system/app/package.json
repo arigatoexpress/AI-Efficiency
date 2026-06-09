@@ -1,7 +1,7 @@
 {
   "name": "fedex-logistics-intelligence-system",
   "version": "2.0.0",
-  "description": "Public-data decision-support prototype for station operations managers. Mountain-region logistics intelligence dashboard.",
+  "description": "Public-data decision-support prototype for station-level FEC supervisors and managers. Mountain-region logistics intelligence dashboard.",
   "type": "module",
   "scripts": {
     "dev": "tsx server.ts",

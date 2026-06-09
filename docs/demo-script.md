@@ -19,7 +19,7 @@ FedEx regional AI Efficiency group — mix of technical and non-technical operat
 
 ## Opening (1 minute)
 
-> "This repo is our operations-led AI efficiency hub. It is not a production FedEx system. It is a collection of prompts, guides, starter projects, and governance templates that any FedEx operations manager can use to get started with AI safely and productively."
+> "This repo is our operations-led AI efficiency hub. It is not a production FedEx system. It is a collection of prompts, guides, starter projects, and governance templates that any FedEx FEC supervisor or manager can use to get started with AI safely and productively."
 
 > "Everything here uses public or synthetic data until formal governance approval is in place. That is intentional — we want to show value first, then scale responsibly."
 
@@ -30,7 +30,7 @@ FedEx regional AI Efficiency group — mix of technical and non-technical operat
 **Show:** README.md
 
 **Say:**
-> "The README is written for a non-technical operations manager first. The 'Start Here' table tells them exactly where to click based on what they need."
+> "The README is written for a non-technical FEC supervisor or manager first. The 'Start Here' table tells them exactly where to click based on what they need."
 
 **Point out:**
 - The featured project section with the live screenshot
@@ -67,7 +67,7 @@ FedEx regional AI Efficiency group — mix of technical and non-technical operat
 **Show:** The running app
 
 **Say:**
-> "This is our most mature starter project — a public-data decision-support dashboard for station operations managers. It is built with React and Express, and it uses Gemini for AI-generated briefs."
+> "This is our most mature starter project — a public-data decision-support dashboard for station-level FEC supervisors and managers. It is built with React and Express, and it uses Gemini for AI-generated briefs."
 
 **Walk through each panel:**
 

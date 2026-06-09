@@ -1,7 +1,7 @@
 # Plain-English Documentation Standard
 
 Every README, user guide, starter project, and codebase document in this repo
-should be useful to a non-technical operations manager.
+should be useful to a non-technical FEC supervisor or manager.
 
 ## The Standard
 

@@ -1,6 +1,6 @@
 # FedEx Logistics Intelligence System — App
 
-A public-data decision-support prototype for station operations managers.
+A public-data decision-support prototype for station-level FEC supervisors and managers.
 
 ## What This Is
 

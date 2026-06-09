@@ -8,9 +8,9 @@
 
 ### 👉 Open the hub: [`index.html`](index.html)
 
-A single, offline front door that ties everything together — the four tools, the prompt library, the docs, and a diagram of how they connect. Open it in any browser, or [view it live](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/index.html).
+A single, offline front door that ties everything together — the five tools, the prompt library, the docs, and a diagram of how they connect. Open it in any browser, or [view it live](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/index.html).
 
-**Tech stack:** Static HTML hub · Markdown docs · Google AI Studio · Gemini · Cloud Run · React/Vite prototypes &middot; *[Agent collaborators: see [AGENTS.md](AGENTS.md)]*
+**Tech stack:** Static HTML hub · offline single-file tools · Markdown docs · Google AI Studio · Gemini · Cloud Run · React/Vite prototypes &middot; *[Agent collaborators: see [AGENTS.md](AGENTS.md)]*
 
 ---
 
@@ -26,7 +26,7 @@ FedEx moves millions of packages daily across Express, Ground, and Freight netwo
 
 ### How it all connects
 
-Ideas come in the front door and become projects. Daily **prompts** power managers' routine drafts. Before a shift, **Station Ops Intelligence** turns public risk signals into reviewed briefs; after the week, the **Dock Efficiency Signal Lab** turns dock KPIs into focus signals. **Governance** gates everything, and a shared data model is the future state. See the diagram on the [hub](index.html).
+Ideas come in the front door and become projects. Daily **prompts** power managers' routine drafts. Before a shift, **Station Ops Intelligence** turns public risk signals into reviewed briefs; after the week, the **Dock Efficiency Signal Lab** flags which dock-KPI moves are real and the **TLH/SPH Efficiency Explorer** shows which lever moved them. **Governance** gates everything, and a shared data model is the future state. See the diagram on the [hub](index.html).
 
 ---
 
@@ -38,9 +38,10 @@ Ideas come in the front door and become projects. Daily **prompts** power manage
 | [FedEx AI literacy guide](docs/fedex-ai-literacy-guide.md) | How this repo aligns with FedEx's enterprise AI Education program. | Everyone |
 | [Getting started](docs/getting-started.md) | The short first read for team members. | New team members |
 | [Prompt library](prompts/README.md) | Copyable prompts for daily operations, safety, peak season, linehaul, and customer communication. | Managers who want quick wins |
-| [Daily operations playbook](docs/daily-ops-playbook.md) | A printable, run-it-every-day playbook: phase-by-phase checklists plus ready-to-paste prompts for a full shift. | Operations managers running a daily shift |
+| [Daily operations playbook](docs/daily-ops-playbook.md) | A printable, run-it-every-day playbook: phase-by-phase checklists plus ready-to-paste prompts for a full shift. | FEC supervisors and managers running a daily shift |
 | [Prompting basics](prompts/prompt-engineering-basics.md) | How to write better prompts without technical language. | Anyone using ChatGPT or Gemini |
 | [Gemini guide](docs/technology/gemini-for-ops-managers.md) | How to use Gemini well and safely in an operations context. | Gemini users |
+| [Agentic AI for operations](docs/technology/agentic-ai-for-operations.md) | What "agentic" actually means — a four-rung agency ladder that tells you how much human review an AI output needs. | Everyone — managers first |
 | [Google Cloud + ADK integration](docs/technology/google-cloud-adk-integration.md) | The forward path from AI Studio + Gemini to Vertex AI, the Agent Development Kit, and Cloud Run — internal data kept governance-gated. | Engineers and technically-curious managers |
 | [Governance checklist](docs/governance/project-review-checklist.md) | Review steps before sharing, piloting, or production use. | Team leads and reviewers |
 | [Pilot template](docs/pilot-program-template.md) | Propose a small, measurable AI pilot with clear success criteria. | Managers ready to experiment |
@@ -49,7 +50,7 @@ Ideas come in the front door and become projects. Daily **prompts** power manage
 
 ## 🚀 Featured Project: Logistics Intelligence System
 
-Our most mature starter project is a live, public-data decision-support dashboard for station operations managers.
+Our most mature starter project is a live, public-data decision-support dashboard for station-level FEC supervisors and managers.
 
 <p align="center">
   <img src="assets/dashboard-screenshot.png" alt="Live dashboard screenshot showing Shift Readiness, Station Impact, Route Watch, and Manager Drafts panels" width="90%">
@@ -61,7 +62,7 @@ Our most mature starter project is a live, public-data decision-support dashboar
 - Labels every data point as public fact, forecast, or synthetic demo.
 - Never touches internal FedEx package, route, or customer data.
 
-**Tech details:** React 18 + Vite frontend, Express + TypeScript backend, optional Gemini AI drafts.
+**Tech details:** React 19 + Vite frontend, Express + TypeScript backend, optional Gemini AI drafts.
 
 **Live demo:** [https://fedex-logistics-intelligence-system-267358751314.us-east1.run.app](https://fedex-logistics-intelligence-system-267358751314.us-east1.run.app)  
 **Try it locally:** See the [starter project page](starter-projects/fedex-logistics-intelligence-system/README.md) for screenshots, architecture, and a quick-start guide.
@@ -70,7 +71,7 @@ Our most mature starter project is a live, public-data decision-support dashboar
 
 ## Prompt Library at a Glance
 
-**72 copy-paste prompts** across 11 categories, organized by what FedEx managers actually do:
+**51 copy-paste prompts** across 10 categories — plus a [prompt-engineering basics](prompts/prompt-engineering-basics.md) guide — organized by what FedEx managers actually do:
 
 | Category | Examples |
 |----------|----------|
@@ -82,6 +83,8 @@ Our most mature starter project is a live, public-data decision-support dashboar
 | **Linehaul & Routing** | Feeder delays, alternate routing, P&D density, yard management, cross-dock timing |
 | **Process Improvement** | Root cause analysis, improvement proposals, workflow documentation |
 | **Data & Reporting** | Metrics summaries, dashboard explanations, trend analysis |
+| **Bid & Opportunity Support** | Opportunity intake, capability summaries, risk assessments |
+| **Governance-Safe Use** | Is this use case safe? Documenting AI use, review prep |
 
 All prompts include the **Safe Prompt Rule**: remove sensitive data first, review output before sharing, and keep a human in charge of every decision.
 
@@ -111,6 +114,7 @@ Early examples the team can learn from, improve, and submit for review.
 | --- | --- | --- |
 | [FedEx Logistics Intelligence System](starter-projects/fedex-logistics-intelligence-system/README.md) | **Live prototype + source-owned rebuild** | Public-data station-ops console for weather, road, and regional risk briefings. |
 | [Dock Efficiency Signal Lab](starter-projects/dock-efficiency-signal-lab/README.md) | **Offline single-file app** | Process-control (SPC) + technical-analysis indicators + forecasting on weekly dock-efficiency KPIs; ranks top/bottom performers with $ impact and Scorecard focus. Fully offline — no data leaves the machine. |
+| [TLH/SPH Efficiency Explorer](starter-projects/tlh-sph-efficiency-explorer/README.md) | **Offline single-file app** | Splits each week-over-week efficiency change into its two real levers — throughput (SPH) and labor hours (TLH) — so an hours-cut gain is never mistaken for a productivity win. Companion to the Signal Lab; fully offline. |
 | [AI Idea Intake Agent](starter-projects/ai-idea-intake-agent/README.md) | Concept and governance starter | Safe Teams/Copilot or Gemini-channel flow for AI ideas, feedback, and use-case triage. |
 | [Delivery Markets Lab](starter-projects/fedex-delivery-markets/README.md) | Prototype reference | Synthetic-data, paper-only delivery-market concept demo. |
 
@@ -139,9 +143,16 @@ docs/
   daily-ops-playbook.md            ← Printable run-it-every-day playbook
   pilot-program-template.md        ← Propose a pilot
   demo-script.md                   ← Present this repo to leadership
+  data-source-catalog.md           ← Public-data sources, rights, caveats
+  foundry-integration-roadmap.md   ← Governance-gated Foundry export path
+  teams-telegram-agent-roadmap.md  ← Planned intake-agent track
+  fhe-zama-research.md             ← Privacy (FHE) research note
   governance/                      ← Checklists and policies
   technology/                      ← How-to guides for approved tools
     gemini-for-ops-managers.md
+    chatgpt-copilot-workplace-guide.md
+    google-ai-studio-guide.md
+    agentic-ai-for-operations.md   ← The agency ladder, plainly
     google-cloud-adk-integration.md ← Vertex AI + ADK forward path
 prompts/
   README.md                        ← Copy-paste prompts for daily work
@@ -159,6 +170,7 @@ starter-projects/
   README.md
   fedex-logistics-intelligence-system/  ← Full-stack app + docs
   dock-efficiency-signal-lab/           ← Offline SPC + forecasting app + docs
+  tlh-sph-efficiency-explorer/          ← Offline TLH/SPH decomposition app + docs
   ai-idea-intake-agent/
   fedex-delivery-markets/
 assets/
@@ -208,10 +220,11 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for the full process.
 This repo is ready for team documentation, prompt collection, public-data starter projects, and governance review. It is **not** a production FedEx system and should not be used with confidential or regulated data until the proper FedEx approvals are in place.
 
 **Current focus:**
-- Expanding the prompt library with real manager workflows
+- Implementing CTO-team review feedback: cohesive FEC-audience messaging, an agentic AI track, and deeper efficiency tooling (TLH/SPH decomposition)
+- Validating the TLH/SPH Efficiency Explorer against a real, locally-loaded weekly export during a pilot
 - Hardening the public data layer in the logistics intelligence app
 - Preparing Foundry-ready export paths for when internal data access is approved
-- Supporting regional AI Efficiency group presentations and pilot proposals
+- Supporting the monthly CTO-team call, regional presentations, and pilot proposals
 
 ---
 

@@ -1,7 +1,7 @@
 # Manager Workflows
 
-These are the workflows that make the app useful for non-technical station
-operations managers.
+These are the workflows that make the app useful for non-technical, station-level
+FEC supervisors and managers.
 
 Each workflow should end with a human-reviewed draft, checklist, or summary. The
 app should not make operational decisions by itself.
@@ -27,7 +27,7 @@ Output:
 Example prompt:
 
 ```text
-Create a morning readiness brief for a station operations manager.
+Create a morning readiness brief for an FEC supervisor or manager at the station.
 
 Use only public information and the synthetic station profile shown in the app.
 Separate confirmed public facts from assumptions. Do not make operational
@@ -94,7 +94,7 @@ Output:
 Example prompt:
 
 ```text
-Turn these scrubbed notes into a handoff for the incoming operations manager.
+Turn these scrubbed notes into a handoff for the incoming FEC supervisor or manager.
 Keep it under 250 words. Flag anything that needs confirmation.
 
 Notes:

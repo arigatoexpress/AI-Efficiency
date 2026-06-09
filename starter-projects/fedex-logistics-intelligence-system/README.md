@@ -8,7 +8,7 @@
 
 ## What This Is
 
-The **FedEx Logistics Intelligence System** is a public-data decision-support prototype for station operations managers. It gives managers one calm place to review public external risk signals before a shift — weather, road conditions, and regional disruption context — without touching any internal FedEx data.
+The **FedEx Logistics Intelligence System** is a public-data decision-support prototype for station-level FEC supervisors and managers. It gives them one calm place to review public external risk signals before a shift — weather, road conditions, and regional disruption context — without touching any internal FedEx data.
 
 This is **not** a production FedEx system. It is **not** connected to internal package, route, employee, customer, security, or facility systems.
 
@@ -47,10 +47,10 @@ This is **not** a production FedEx system. It is **not** connected to internal p
 
 This repository now includes a complete, reviewable source tree in the [`app/`](app/) folder:
 
-- **React 18 + Vite** frontend with 5 manager-friendly panels.
+- **React 19 + Vite** frontend with 5 manager-friendly panels.
 - **Express + TypeScript** backend with server-side Gemini integration.
 - **Graceful fallback** when Gemini is unavailable.
-- **Zero command-console language** — every label is written for busy operations managers.
+- **Zero command-console language** — every label is written for busy FEC supervisors and managers.
 - **Synthetic values clearly labeled** — no fake CCTV, parcel counts, or telemetry.
 - **No live-action buttons** — only draft and verification tools.
 

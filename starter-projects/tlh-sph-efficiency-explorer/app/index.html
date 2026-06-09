@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<!-- Defense-in-depth: the app makes no network calls; this CSP makes that physically enforceable
+     even if the file is later edited. connect-src 'none' blocks all fetch/XHR/websocket. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'none'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; base-uri 'none'; form-action 'none'" />
+<title>TLH / SPH Efficiency Explorer</title>
+<!--
+  TLH / SPH Efficiency Explorer
+  =============================
+  A single-file, fully OFFLINE, dependency-free companion to the Dock
+  Efficiency Signal Lab. The Signal Lab tracks ONE composite efficiency number
+  over time; this tool answers the question the composite hides:
+
+      WHICH LEVER MOVED — throughput (SPH) or labor hours (TLH)?
+
+  A facility can hit goal by lifting throughput (sustainable — replicate it)
+  OR by cutting hours below plan (check service/safety/volume first). Those
+  need opposite responses, so this tool decomposes each week-over-week SPH
+  change into an exact SPH effect + TLH effect (see Method & Caveats).
+
+  GOVERNANCE: This file makes NO network calls. Nothing you load leaves your
+  machine. Ships with synthetic demo data; load your own CSV locally to analyze
+  real numbers. Aggregate facility/shift data only — never individual employee
+  hours or performance. Do not commit real facility data to a shared repo.
+-->
+<style>
+  :root{
+    --purple:#4D148C; --orange:#FF6600; --blue:#1565c0; --ink:#1d1d22; --muted:#6b6b78;
+    --line:#e3e3ea; --bg:#f6f6f9; --card:#ffffff; --good:#1a8f4c;
+    --warn:#d98300; --bad:#c62828; --grid:#ececf2; --accent:#4D148C;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+       color:var(--ink);background:var(--bg);font-size:14px;line-height:1.45}
+  header{background:linear-gradient(100deg,var(--purple),#6a2bb0);color:#fff;
+         padding:14px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  header h1{font-size:18px;margin:0;font-weight:650;letter-spacing:.2px}
+  header .tag{background:var(--orange);color:#fff;font-size:11px;font-weight:700;
+              padding:3px 8px;border-radius:20px;text-transform:uppercase;letter-spacing:.5px}
+  header .gov{margin-left:auto;font-size:11.5px;opacity:.92;display:flex;align-items:center;gap:6px}
+  .dot{width:8px;height:8px;border-radius:50%;background:#46e08a;display:inline-block;box-shadow:0 0 0 3px rgba(70,224,138,.25)}
+  .wrap{max-width:1180px;margin:0 auto;padding:18px}
+  .controls{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end;background:var(--card);
+            border:1px solid #e7e7ee;border-radius:12px;padding:14px 16px;margin-bottom:14px}
+  .ctl{display:flex;flex-direction:column;gap:4px}
+  .ctl label{font-size:11px;font-weight:650;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+  select,input,button,textarea{font:inherit;padding:7px 10px;border:1px solid #d4d4de;border-radius:8px;background:#fff;color:var(--ink)}
+  button{cursor:pointer;background:var(--purple);color:#fff;border:none;font-weight:600}
+  button.ghost{background:#fff;color:var(--purple);border:1px solid var(--purple)}
+  button:hover{filter:brightness(1.06)}
+  .readbox{background:#f0f7f3;border:1px solid #cfe8db;border-left:4px solid var(--good);border-radius:9px;
+           padding:11px 14px;margin:0 0 14px;font-size:12.5px;color:#234}
+  .readbox b{color:#147a43}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin:8px 0 18px}
+  .signal{border:1px solid #e7e7ee;border-left-width:4px;border-radius:9px;padding:11px 13px;background:#fcfcfe}
+  .signal .k{font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);font-weight:650}
+  .signal .v{font-size:20px;font-weight:700;margin:2px 0}
+  .signal .d{font-size:12px;color:var(--muted)}
+  .signal.good{border-left-color:var(--good)} .signal.good .v{color:var(--good)}
+  .signal.warn{border-left-color:var(--warn)} .signal.warn .v{color:var(--warn)}
+  .signal.bad{border-left-color:var(--bad)} .signal.bad .v{color:var(--bad)}
+  .signal.neutral{border-left-color:var(--purple)}
+  .panelcard{background:var(--card);border:1px solid #e7e7ee;border-radius:12px;padding:18px;margin-bottom:14px}
+  h2{font-size:15px;margin:0 0 4px}
+  .sub{color:var(--muted);font-size:12.5px;margin:0 0 14px}
+  table{border-collapse:collapse;width:100%;font-size:12.5px;margin-top:8px}
+  th,td{border:1px solid #ececf2;padding:6px 9px;text-align:right;white-space:nowrap}
+  th:first-child,td:first-child,th:nth-child(2),td:nth-child(2){text-align:left}
+  th{background:#f4f2f9;color:var(--purple);font-weight:650}
+  td.pos{color:var(--good);font-weight:600} td.neg{color:var(--bad);font-weight:600}
+  .splitbar{display:inline-flex;width:120px;height:12px;border-radius:6px;overflow:hidden;background:#ececf2;vertical-align:middle}
+  .splitbar i{display:block;height:100%}
+  .splitbar .s{background:var(--purple)} .splitbar .t{background:var(--blue)}
+  .chip{display:inline-block;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:12px}
+  .chip.sph{background:#efe7fa;color:var(--purple)}
+  .chip.tlh{background:#e3edf9;color:var(--blue)}
+  .chip.mix{background:#ececf2;color:var(--muted)}
+  .legendrow{display:flex;gap:18px;flex-wrap:wrap;font-size:11.5px;color:var(--muted);margin:8px 0 0}
+  .legendrow i{display:inline-block;width:14px;height:10px;border-radius:3px;vertical-align:middle;margin-right:5px}
+  .note{background:#f6f2fb;border:1px solid #e6dcf5;border-radius:9px;padding:12px 14px;font-size:12.5px;color:#403a52;margin:10px 0}
+  .note b{color:var(--purple)}
+  details{margin:6px 0}
+  summary{cursor:pointer;font-weight:600;color:var(--purple)}
+  .method h3{font-size:13.5px;color:var(--purple);margin:16px 0 4px}
+  .method p,.method li{font-size:13px;color:#333}
+  .method code{background:#f1eef8;padding:1px 5px;border-radius:4px;font-size:12px}
+  textarea{width:100%;min-height:230px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;line-height:1.5}
+  footer{max-width:1180px;margin:8px auto 30px;padding:0 18px;color:var(--muted);font-size:11.5px}
+  .hide{display:none}
+</style>
+</head>
+<body>
+<header>
+  <h1>TLH / SPH Efficiency Explorer</h1>
+  <span class="tag">Offline</span>
+  <span class="tag" id="demoBadge" style="background:var(--warn)">⚠ Synthetic demo data</span>
+  <span class="gov"><span class="dot"></span> No network calls &middot; data stays on this machine</span>
+</header>
+
+<div class="wrap">
+  <div class="readbox">
+    <b>What this answers:</b> efficiency rides on SPH (volume ÷ hours), so the headline number moves for two very different reasons.
+    A <b>throughput (SPH-driven)</b> gain — more volume through the same hours — is the sustainable kind: go see what changed and replicate it.
+    An <b>hours (TLH-driven)</b> gain — same volume, fewer hours — can be real discipline <i>or</i> under-staffing: <b>verify service, safety, and volume held before calling it a win.</b>
+    This tool splits each facility's week-over-week change into exactly those two effects. Every flag is a nudge to go look, not a verdict.
+  </div>
+
+  <div class="controls">
+    <div class="ctl">
+      <label>Scope (region / district)</label>
+      <select id="scopeSel"></select>
+    </div>
+    <div class="ctl">
+      <label>$ / SPH-point / year</label>
+      <input id="ppInp" type="number" value="50000000" step="1000000" style="width:130px" />
+    </div>
+    <div class="ctl">
+      <label>Data source</label>
+      <div style="display:flex;gap:6px">
+        <button id="demoBtn" class="ghost" type="button">Demo data</button>
+        <button id="loadBtn" type="button">Load CSV&hellip;</button>
+        <input id="fileInp" type="file" accept=".csv,.txt" class="hide" />
+      </div>
+    </div>
+    <div class="ctl" style="flex:1;min-width:220px">
+      <label>Status</label>
+      <div id="status" style="font-size:12px;color:var(--muted);padding-top:6px">Loading demo data&hellip;</div>
+    </div>
+  </div>
+
+  <div class="cards" id="cards"></div>
+
+  <div class="panelcard">
+    <h2>Per-facility decomposition <span id="weekLabel" style="font-weight:400;color:var(--muted);font-size:12px"></span></h2>
+    <p class="sub">Week-over-week change in SPH, split into the throughput lever and the hours lever. The two effects sum exactly to the total change. Sorted by total ΔSPH.</p>
+    <div style="overflow-x:auto"><table id="facTable"></table></div>
+    <div class="legendrow">
+      <span><i style="background:var(--purple)"></i>from SPH (throughput lever)</span>
+      <span><i style="background:var(--blue)"></i>from TLH (hours lever)</span>
+      <span>Driver tag: ≥65% of the combined effect size → SPH-driven / TLH-driven, else Mixed</span>
+    </div>
+  </div>
+
+  <div class="panelcard">
+    <h2>Draft recap (local — no AI, no network)</h2>
+    <p class="sub">A review-ready plain-text summary of the current scope. Edit before sharing; abstract facility codes if it leaves a controlled environment.</p>
+    <button id="recapBtn" type="button">Draft recap</button>
+    <textarea id="recapOut" class="hide" spellcheck="false"></textarea>
+  </div>
+
+  <div class="panelcard method">
+    <details>
+      <summary>Method &amp; caveats</summary>
+      <h3>The identity</h3>
+      <p><code>Volume = TLH × SPH</code>, so <code>SPH = Volume / TLH</code>. Efficiency goals ride on SPH vs an engineered goal, so the question "did efficiency really improve?" is the question "which side of the division moved?"</p>
+      <h3>The exact decomposition</h3>
+      <p>With last week (<code>0</code>) and this week (<code>1</code>):</p>
+      <ul>
+        <li><b>SPH effect</b> (real throughput, hours held at base): <code>(vol1 − vol0) / tlh0</code></li>
+        <li><b>TLH effect</b> (hours lever, evaluated at current volume): <code>vol1/tlh1 − vol1/tlh0</code></li>
+      </ul>
+      <p>These two <b>sum exactly</b> to <code>sph1 − sph0</code> — no residual (a Laspeyres-style split: the throughput effect is weighted at base hours, the hours effect at current volume). The app verifies <code>|(sphE + tlhE) − ΔSPH| &lt; 1e-9</code> for every facility on every render and would flag a failure in the status line.</p>
+      <h3>Validation cases (run at startup)</h3>
+      <ul>
+        <li><b>Pure SPH:</b> hours flat, volume up → ~100% of the change is the SPH effect, TLH effect ≈ 0.</li>
+        <li><b>Pure TLH:</b> volume held, hours cut (SPH rises mechanically) → SPH effect ≈ 0, ~100% TLH effect.</li>
+        <li><b>Proportional:</b> volume and hours up by the same factor (SPH flat) → the two effects exactly offset; total ≈ 0.</li>
+      </ul>
+      <p>Note: a naive split that uses the raw SPH delta as the "SPH effect" assigns half of a pure hours-only move to throughput — that is wrong, and it is why this tool uses the formulas above.</p>
+      <h3>Driver tag</h3>
+      <p>With <code>aS = |SPH effect|</code>, <code>aT = |TLH effect|</code>: <b>SPH-driven</b> if <code>aS/(aS+aT) ≥ 0.65</code>, <b>TLH-driven</b> if <code>aT/(aS+aT) ≥ 0.65</code>, else <b>Mixed</b>.</p>
+      <h3>The dollar figure</h3>
+      <p>Weekly $ = effect × ($ per SPH-point per year) ÷ 52. It is a <b>planning translation</b> for sizing attention, not accounting — do not present it as realized savings.</p>
+      <h3>Caveats</h3>
+      <ul>
+        <li><b>Two weeks is a noisy window.</b> A single week-over-week split tells you where to look, not whether a trend is real. Pair it with the Dock Efficiency Signal Lab's SPC charts before escalating.</li>
+        <li><b>An hours-driven "gain" needs verification.</b> Confirm service, safety, and volume held before communicating it as a win — that is the single biggest misread this tool exists to prevent.</li>
+        <li><b>Volume drops depress SPH</b> even when the operation ran well (fixed sort minimums); a negative SPH effect can be a demand story, not a performance story.</li>
+        <li><b>Aggregate data only.</b> Facility/shift totals — never individual employee hours or performance.</li>
+      </ul>
+      <p id="selfTest" style="color:var(--muted)"></p>
+    </details>
+  </div>
+</div>
+
+<footer>
+  Prototype for decision support — not a production FedEx system. Synthetic demo data ships in the file; real numbers stay local (CSP blocks all network requests).
+  Aggregate facility/shift data only. A human reviews every output before it is shared or acted on.
+</footer>
+
+<script>
+"use strict";
+/* ---------- decomposition math (the verified core) ---------- */
+function decompose(tlh0, sph0, tlh1, sph1){
+  const vol0 = tlh0 * sph0, vol1 = tlh1 * sph1;
+  const totalDelta = sph1 - sph0;
+  const sphE = (vol1 - vol0) / tlh0;          // throughput effect, hours held at base
+  const tlhE = vol1 / tlh1 - vol1 / tlh0;     // hours effect, at current volume
+  return { vol0, vol1, totalDelta, sphE, tlhE, residual: Math.abs((sphE + tlhE) - totalDelta) };
+}
+function driverTag(sphE, tlhE){
+  const aS = Math.abs(sphE), aT = Math.abs(tlhE), tot = aS + aT;
+  if (tot === 0) return "Mixed";
+  if (aS / tot >= 0.65) return "SPH-driven";
+  if (aT / tot >= 0.65) return "TLH-driven";
+  return "Mixed";
+}
+
+/* ---------- startup self-test of the three validation cases ---------- */
+function selfTest(){
+  const out = [];
+  // pure SPH: hours flat, throughput up
+  let d = decompose(1000, 10, 1000, 11);
+  out.push(d.residual < 1e-9 && Math.abs(d.tlhE) < 1e-9 && Math.abs(d.sphE - 1) < 1e-9);
+  // pure TLH: volume held, hours cut so SPH rises mechanically
+  d = decompose(1000, 10, 900, 10000/900);
+  out.push(d.residual < 1e-9 && Math.abs(d.sphE) < 1e-9 && Math.abs(d.tlhE - d.totalDelta) < 1e-9);
+  // proportional volume+hours: SPH flat, effects offset
+  d = decompose(1000, 10, 1100, 10);
+  out.push(d.residual < 1e-9 && Math.abs(d.totalDelta) < 1e-12 && Math.abs(d.sphE + d.tlhE) < 1e-9);
+  const ok = out.every(Boolean);
+  document.getElementById("selfTest").textContent =
+    "Startup self-check: " + (ok ? "all 3 validation cases passed (exact split, zero residual)." : "FAILED — do not trust the split.");
+  return ok;
+}
+
+/* ---------- seeded synthetic demo data ---------- */
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function demoData(){
+  const rnd = mulberry32(42);
+  const noise = (amp)=> 1 + (rnd()*2 - 1) * amp;
+  const cfg = [ // [facility, region, district, baseVolume, baseSPH]
+    ["SYNTH-01","NORTHWEST","Pacific Northwest", 42000, 12.1],
+    ["SYNTH-02","NORTHWEST","Mountain",          30000, 10.4],
+    ["SYNTH-03","NORTHWEST","Columbia River",    36000, 11.2],
+    ["SYNTH-04","MID-AMERICA","Red River",       28000,  9.8],
+    ["SYNTH-05","NORTHWEST","Western Rockies",   24000, 10.9],
+    ["SYNTH-06","NORTHWEST","Northern California",52000, 13.0],
+    ["SYNTH-07","NORTHWEST","Pacific Northwest", 33000, 11.6],
+    ["SYNTH-08","NORTHWEST","Mountain",          21000,  9.5],
+    ["SYNTH-09","NORTHWEST","Columbia River",    27000, 10.1],
+    ["SYNTH-10","MID-AMERICA","Red River",       45000, 12.6],
+    ["SYNTH-11","NORTHWEST","Western Rockies",   19000,  9.2],
+    ["SYNTH-12","NORTHWEST","Northern California",38000, 11.8],
+  ];
+  // weekly labels ending 06/06/26
+  const weeks = []; const end = new Date(2026,5,6);
+  for(let i=7;i>=0;i--){const d=new Date(end); d.setDate(d.getDate()-7*i);
+    weeks.push((d.getMonth()+1+"").padStart(2,"0")+"/"+(d.getDate()+"").padStart(2,"0")+"/"+(d.getFullYear()%100));}
+  const rows = [];
+  cfg.forEach(([fac,region,district,baseVol,baseSph])=>{
+    // generate the NATURAL inputs (volume, hours) and derive SPH = volume/hours
+    let vols=[], tlhs=[];
+    for(let w=0; w<weeks.length; w++){
+      const vol = baseVol * noise(0.03);
+      const tlh = vol / (baseSph * noise(0.02));
+      vols.push(vol); tlhs.push(tlh);
+    }
+    // script the final week into clean, contrasting stories
+    const p = weeks.length-1, q = p-1;
+    if(fac==="SYNTH-01"){ vols[p]=vols[q]*1.10; tlhs[p]=tlhs[q]; }        // volume up 10%, hours flat  → SPH-driven gain
+    if(fac==="SYNTH-02"){ vols[p]=vols[q];      tlhs[p]=tlhs[q]*0.90; }  // same volume, hours cut 10% → TLH-driven gain
+    if(fac==="SYNTH-03"){ vols[p]=vols[q]*0.82; tlhs[p]=tlhs[q]; }        // volume down 18%, hours flat → efficiency falls
+    if(fac==="SYNTH-04"){ vols[p]=vols[q];      tlhs[p]=tlhs[q]*1.08; }  // flat volume, hours up 8%   → TLH-driven loss
+    for(let w=0; w<weeks.length; w++){
+      rows.push({facility:fac, region, district, week:weeks[w], tlh:tlhs[w], sph:vols[w]/tlhs[w]});
+    }
+  });
+  return rows;
+}
+
+/* ---------- CSV parsing (long format, header keyword auto-detect) ---------- */
+function parseCSV(text){
+  const lines = text.split(/\r?\n/).filter(l=>l.trim().length);
+  if(lines.length < 3) throw new Error("CSV looks empty — need a header plus at least two weeks per facility.");
+  const split = (l)=>l.split(",").map(s=>s.trim().replace(/^"|"$/g,""));
+  const hdr = split(lines[0]).map(h=>h.toLowerCase());
+  const find = (...keys)=> hdr.findIndex(h=> keys.some(k=> h.includes(k)));
+  const iFac = find("facility","location","station","series","name");
+  const iWeek = find("week","date","period");
+  const iTlh = find("tlh","hour");
+  const iSph = find("sph","per hour","perhour","stops","shipments");
+  const iReg = find("region"), iDis = find("district");
+  if(iTlh < 0 || iSph < 0)
+    throw new Error("CSV must include a TLH/hours column and an SPH column (long format: facility,week,tlh,sph). Found headers: " + hdr.join(", "));
+  if(iFac < 0 || iWeek < 0)
+    throw new Error("CSV must include facility and week columns (long format: facility,week,tlh,sph).");
+  const rows = [];
+  for(let i=1;i<lines.length;i++){
+    const c = split(lines[i]);
+    const tlh = parseFloat(c[iTlh]), sph = parseFloat(c[iSph]);
+    if(!c[iFac] || !isFinite(tlh) || !isFinite(sph) || tlh<=0 || sph<=0) continue;
+    rows.push({facility:c[iFac], region:iReg>=0?(c[iReg]||""):"", district:iDis>=0?(c[iDis]||""):"",
+               week:c[iWeek], tlh, sph});
+  }
+  if(!rows.length) throw new Error("No usable data rows found (need positive numeric tlh and sph).");
+  return rows;
+}
+
+/* ---------- state + derivation ---------- */
+let DATA = [];        // long rows
+let IS_DEMO = true;
+
+function facSeries(rows){
+  // group by facility, keep file/demo order of weeks; sort by date when every label parses
+  const map = new Map();
+  rows.forEach(r=>{
+    if(!map.has(r.facility)) map.set(r.facility,{facility:r.facility,region:r.region,district:r.district,weeks:[]});
+    map.get(r.facility).weeks.push(r);
+  });
+  map.forEach(s=>{
+    const parsed = s.weeks.map(w=>Date.parse(w.week));
+    if(parsed.every(t=>isFinite(t))) s.weeks.sort((a,b)=>Date.parse(a.week)-Date.parse(b.week));
+  });
+  return [...map.values()];
+}
+
+function computeScoped(){
+  const scope = document.getElementById("scopeSel").value;
+  const all = facSeries(DATA);
+  const dropped = all.filter(s=>s.weeks.length<2).length;
+  let series = all.filter(s=>s.weeks.length>=2);
+  if(scope.startsWith("r:")) series = series.filter(s=>s.region===scope.slice(2));
+  if(scope.startsWith("d:")) series = series.filter(s=>s.district===scope.slice(2));
+  const facs = series.map(s=>{
+    const w0 = s.weeks[s.weeks.length-2], w1 = s.weeks[s.weeks.length-1];
+    const d = decompose(w0.tlh, w0.sph, w1.tlh, w1.sph);
+    return {facility:s.facility, district:s.district||"—", region:s.region||"—",
+            w0, w1, ...d, tag:driverTag(d.sphE, d.tlhE)};
+  }).sort((a,b)=>b.totalDelta-a.totalDelta);
+  // aggregate: sum the natural inputs across the scope, decompose the scope-level SPH
+  let agg = null;
+  if(facs.length){
+    const T0 = facs.reduce((a,f)=>a+f.w0.tlh,0), T1 = facs.reduce((a,f)=>a+f.w1.tlh,0);
+    const V0 = facs.reduce((a,f)=>a+f.vol0,0),  V1 = facs.reduce((a,f)=>a+f.vol1,0);
+    const d = decompose(T0, V0/T0, T1, V1/T1);
+    agg = {...d, tag:driverTag(d.sphE,d.tlhE), w0label:facs[0].w0.week, w1label:facs[0].w1.week};
+  }
+  return {facs, agg, dropped};
+}
+
+/* ---------- formatting ---------- */
+const f2 = (x)=> (x>=0?"+":"") + x.toFixed(2);
+const n2 = (x)=> x.toFixed(2);
+const fInt = (x)=> Math.round(x).toLocaleString("en-US");
+function fDollar(x){
+  const s = x<0 ? "−$" : "$", a = Math.abs(x);
+  if(a>=1e6) return s+(a/1e6).toFixed(2)+"M";
+  if(a>=1e3) return s+(a/1e3).toFixed(0)+"K";
+  return s+a.toFixed(0);
+}
+const weeklyDollar = (effect)=> effect * (parseFloat(document.getElementById("ppInp").value)||0) / 52;
+const chipClass = (tag)=> tag==="SPH-driven"?"sph":(tag==="TLH-driven"?"tlh":"mix");
+
+/* ---------- render ---------- */
+function render(){
+  const {facs, agg, dropped} = computeScoped();
+  const status = document.getElementById("status");
+  document.getElementById("demoBadge").style.display = IS_DEMO ? "" : "none";
+  if(!facs.length){
+    document.getElementById("cards").innerHTML = "";
+    document.getElementById("facTable").innerHTML = "";
+    status.textContent = "No facilities with at least two weeks of data in this scope.";
+    return;
+  }
+  const maxResidual = Math.max(...facs.map(f=>f.residual), agg.residual);
+  const mathOK = maxResidual < 1e-9;
+  status.textContent = (IS_DEMO ? "Synthetic demo data — " : "Local CSV — ")
+    + facs.length + " facilities, weeks " + agg.w0label + " → " + agg.w1label
+    + (dropped ? " (" + dropped + " dropped: fewer than 2 weeks)" : "")
+    + (mathOK ? " · split check ✓ exact" : " · ⚠ SPLIT CHECK FAILED — do not trust these numbers");
+  document.getElementById("weekLabel").textContent = "— " + agg.w0label + " → " + agg.w1label;
+
+  // headline cards (scope-level)
+  const cls = (x)=> x>0.005 ? "good" : (x<-0.005 ? "bad" : "neutral");
+  document.getElementById("cards").innerHTML = `
+    <div class="signal ${cls(agg.totalDelta)}"><div class="k">Net efficiency move (SPH)</div>
+      <div class="v">${f2(agg.totalDelta)}</div>
+      <div class="d">scope SPH week over week · ≈ ${fDollar(weeklyDollar(agg.totalDelta))}/wk at the planning rate</div></div>
+    <div class="signal ${cls(agg.sphE)}"><div class="k">From SPH (throughput lever)</div>
+      <div class="v">${f2(agg.sphE)}</div>
+      <div class="d">volume moved, hours held · ≈ ${fDollar(weeklyDollar(agg.sphE))}/wk</div></div>
+    <div class="signal ${cls(agg.tlhE)}"><div class="k">From TLH (hours lever)</div>
+      <div class="v">${f2(agg.tlhE)}</div>
+      <div class="d">hours moved, at current volume · ≈ ${fDollar(weeklyDollar(agg.tlhE))}/wk</div></div>
+    <div class="signal neutral"><div class="k">Primary driver</div>
+      <div class="v"><span class="chip ${chipClass(agg.tag)}" style="font-size:13px">${agg.tag}</span></div>
+      <div class="d">${agg.tag==="SPH-driven" ? "throughput story — find it and replicate it"
+                    : agg.tag==="TLH-driven" ? "hours story — verify service & volume held"
+                    : "both levers moved — read the facility rows"}</div></div>`;
+
+  // per-facility table
+  let html = `<tr><th>Facility</th><th>District</th><th>SPH</th><th>ΔSPH</th><th>TLH</th>
+      <th title="Week-over-week SPH change as a % of last week's SPH">ΔEff (pts)</th>
+      <th>from SPH</th><th>from TLH</th><th>Split (purple=SPH · blue=TLH)</th><th>Driver</th></tr>`;
+  facs.forEach(f=>{
+    const aS=Math.abs(f.sphE), aT=Math.abs(f.tlhE), tot=(aS+aT)||1;
+    const pS=Math.round(aS/tot*100);
+    const dCls=(x)=> x>0.005?"pos":(x<-0.005?"neg":"");
+    html += `<tr>
+      <td>${f.facility}</td><td>${f.district}</td>
+      <td>${n2(f.w1.sph)}</td><td class="${dCls(f.totalDelta)}">${f2(f.totalDelta)}</td>
+      <td>${fInt(f.w1.tlh)}</td>
+      <td class="${dCls(f.totalDelta)}">${f2(f.totalDelta/f.w0.sph*100)}</td>
+      <td class="${dCls(f.sphE)}">${f2(f.sphE)}</td><td class="${dCls(f.tlhE)}">${f2(f.tlhE)}</td>
+      <td><span class="splitbar"><i class="s" style="width:${pS}%"></i><i class="t" style="width:${100-pS}%"></i></span></td>
+      <td><span class="chip ${chipClass(f.tag)}">${f.tag}</span></td></tr>`;
+  });
+  document.getElementById("facTable").innerHTML = html;
+}
+
+/* ---------- scope dropdown ---------- */
+function buildScope(){
+  const sel = document.getElementById("scopeSel");
+  const regions = [...new Set(DATA.map(r=>r.region).filter(Boolean))].sort();
+  const districts = [...new Set(DATA.map(r=>r.district).filter(Boolean))].sort();
+  let html = `<option value="all">All facilities</option>`;
+  regions.forEach(r=> html += `<option value="r:${r}">Region: ${r}</option>`);
+  districts.forEach(d=> html += `<option value="d:${d}">${d} (district)</option>`);
+  sel.innerHTML = html;
+}
+
+/* ---------- recap ---------- */
+function draftRecap(){
+  const {facs, agg} = computeScoped();
+  if(!facs.length) return;
+  const scopeSel = document.getElementById("scopeSel");
+  const scopeName = scopeSel.options[scopeSel.selectedIndex].textContent;
+  const list = (arr)=> arr.map(f=>`  - ${f.facility} (${f.district}): ΔSPH ${f2(f.totalDelta)} = ${f2(f.sphE)} throughput ${f.sphE>=0?"gain":"drag"} + ${f2(f.tlhE)} hours effect · ≈ ${fDollar(weeklyDollar(f.totalDelta))}/wk`).join("\n") || "  - none this week";
+  const sphGain = facs.filter(f=>f.totalDelta>0.005 && f.tag==="SPH-driven");
+  const tlhGain = facs.filter(f=>f.totalDelta>0.005 && f.tag==="TLH-driven");
+  const losses  = facs.filter(f=>f.totalDelta<-0.005);
+  const txt =
+`TLH/SPH EFFICIENCY RECAP — ${scopeName}
+Weeks compared: ${agg.w0label} → ${agg.w1label}${IS_DEMO ? "   [SYNTHETIC DEMO DATA]" : ""}
+
+NET: scope SPH moved ${f2(agg.totalDelta)} week over week (≈ ${fDollar(weeklyDollar(agg.totalDelta))}/wk at the planning rate).
+SPLIT: ${f2(agg.sphE)} from throughput (SPH lever) + ${f2(agg.tlhE)} from hours (TLH lever) → ${agg.tag}.
+(The two effects sum exactly to the net move — no residual.)
+
+REPLICATE — SPH-driven gains (volume through held hours; find what changed and spread it):
+${list(sphGain)}
+
+VERIFY FIRST — TLH-driven gains (hours fell while volume held; confirm service, safety, and demand held BEFORE calling this a win):
+${list(tlhGain)}
+
+INVESTIGATE — declines (check whether the driver is demand, hours creep, or throughput):
+${list(losses)}
+
+METHOD: Volume = TLH × SPH. ΔSPH is split exactly into a throughput effect ((vol1−vol0)/tlh0)
+and an hours effect (vol1/tlh1 − vol1/tlh0). Dollars use $/SPH-point/year ÷ 52 — a planning
+translation, not accounting. A two-week window is noisy: pair with the Dock Efficiency Signal
+Lab's SPC trend before escalating.
+
+Needs manager verification before any operational action or external communication.`;
+  const out = document.getElementById("recapOut");
+  out.value = txt; out.classList.remove("hide");
+}
+
+/* ---------- wiring ---------- */
+function loadDemo(){
+  DATA = demoData(); IS_DEMO = true;
+  buildScope(); render();
+}
+document.getElementById("demoBtn").addEventListener("click", loadDemo);
+document.getElementById("loadBtn").addEventListener("click", ()=>document.getElementById("fileInp").click());
+document.getElementById("fileInp").addEventListener("change", (e)=>{
+  const file = e.target.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ()=>{
+    try{
+      DATA = parseCSV(reader.result); IS_DEMO = false;
+      buildScope(); render();
+    }catch(err){
+      document.getElementById("status").textContent = "CSV rejected: " + err.message;
+    }
+    e.target.value = "";
+  };
+  reader.readAsText(file);
+});
+document.getElementById("scopeSel").addEventListener("change", render);
+document.getElementById("ppInp").addEventListener("input", render);
+
+selfTest();
+loadDemo();
+</script>
+</body>
+</html>

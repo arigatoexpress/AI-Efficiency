@@ -5,7 +5,7 @@ Last reviewed: 2026-06-02
 This guide explains the forward path for the logistics intelligence app: how it
 moves from a quick Gemini prototype toward a governed, agent-based system on
 Google Cloud. It is written for two audiences. The first sections are for
-operations managers. The later sections are for engineers.
+FEC supervisors and managers. The later sections are for engineers.
 
 This is **not** approval to use confidential FedEx data. Everything here stays on
 public, synthetic, or derived-public data, with a human reviewing every output,

@@ -1,4 +1,4 @@
-# Gemini For Operations Managers
+# Gemini For FEC Supervisors And Managers
 
 Last reviewed: 2026-05-22
 
@@ -88,7 +88,7 @@ Do not use public web grounding as a replacement for internal source systems.
 Use Google AI Studio for synthetic-data prototypes:
 
 ```text
-Build a simple app that helps an operations manager turn a synthetic opportunity
+Build a simple app that helps an FEC supervisor or manager turn a synthetic opportunity
 description into a review checklist. Use no real customer data.
 ```
 
@@ -115,7 +115,7 @@ list risks separately, and flag anything that needs confirmation.
 Give the model a role:
 
 ```text
-Act as a practical operations manager who values safety, clarity, and concise
+Act as a practical FEC supervisor or manager who values safety, clarity, and concise
 handoffs.
 ```
 

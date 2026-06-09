@@ -1,0 +1,23 @@
+# ==========================================================================
+# NEVER commit real facility data into the public repo.
+# Only the synthetic sample-*.csv files are allowed; real exports stay local.
+# Rules are name- and location-agnostic (survive renames / moved subfolders).
+# ==========================================================================
+
+# Real per-facility / per-region / per-district exports (any folder)
+*-region.csv
+**/*-region.csv
+*-districts.csv
+**/*-districts.csv
+*-real.csv
+real-*.csv
+*tlh*.csv
+**/*tlh*.csv
+
+# Raw source workbooks / decks (never belong in the repo)
+*.xlsm
+*.xlsx
+*.pptx
+
+# ...but always allow the synthetic sample that ships with the demo
+!sample-data.csv

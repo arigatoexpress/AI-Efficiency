@@ -1,6 +1,6 @@
 # Prompt Library
 
-This folder contains copyable prompts for operations managers who are new to AI. Every prompt is designed for **FedEx operations contexts** — stations, sort hubs, P&D, linehaul, and peak season — while keeping sensitive data out.
+This folder contains copyable prompts for FEC supervisors and managers who are new to AI. Every prompt is designed for **FedEx operations contexts** — stations, sort hubs, P&D, linehaul, and peak season — while keeping sensitive data out.
 
 ## How To Use A Prompt
 
@@ -15,7 +15,7 @@ This folder contains copyable prompts for operations managers who are new to AI.
 | Category | Best For | File |
 |----------|----------|------|
 | [Prompt engineering basics](prompt-engineering-basics.md) | Writing better prompts from scratch | Beginners |
-| [Daily operations](daily-operations.md) | Shift briefs, handoffs, escalations, after-action reviews | Any operations manager |
+| [Daily operations](daily-operations.md) | Shift briefs, handoffs, escalations, after-action reviews | Any FEC supervisor or manager |
 | [Safety and compliance](safety-and-compliance.md) | Safety huddles, near-miss reports, seasonal alerts, safety meeting agendas | Managers with safety responsibilities |
 | [Peak season and surge](peak-season-and-surge.md) | Pre-peak planning, surge checklists, post-peak reviews, contractor coordination | Peak planners, sort managers |
 | [Meeting and communication](meeting-and-communication.md) | Agendas, action items, emails, executive updates | All managers |

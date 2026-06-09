@@ -1,9 +1,10 @@
 # Daily Operations Playbook
 
-A printable, run-it-every-day playbook for a FedEx station, sort hub, P&D, or
-linehaul operations manager. It walks through a full shift — pre-shift, mid-shift,
-peak/surge, handoff, end of shift — plus a weekly cadence. Each phase gives you a
-quick human checklist and one or two ready-to-paste prompts for Gemini or ChatGPT.
+A printable, run-it-every-day playbook for a FedEx FEC supervisor or manager
+running a station, sort hub, P&D, or linehaul operation. It walks through a full
+shift — pre-shift, mid-shift, peak/surge, handoff, end of shift — plus a weekly
+cadence. Each phase gives you a quick human checklist and one or two
+ready-to-paste prompts for Gemini or ChatGPT.
 
 This is **not** an official FedEx system. It does not connect to any FedEx system,
 and it does not make decisions. It helps you think, draft, and communicate faster.
@@ -11,7 +12,7 @@ A human manager owns every decision.
 
 ## Who It Helps
 
-- New and experienced operations managers who run a daily shift.
+- New and experienced FEC supervisors and managers who run a daily shift.
 - P&D, sort, and linehaul managers who coordinate people, flow, and exceptions.
 - Anyone who wants a calm, repeatable routine instead of firefighting from memory.
 
@@ -97,7 +98,7 @@ Open the building, read public risk signals, and set the huddle.
 ### Prompt — Morning readiness brief
 
 ```text
-Act as a practical FedEx operations manager preparing a pre-shift readiness brief.
+Act as a practical FedEx FEC supervisor or manager preparing a pre-shift readiness brief.
 
 Use only public information and the scrubbed context below. Do not make
 operational decisions. Separate confirmed public facts from assumptions.
@@ -196,7 +197,7 @@ Use neutral language. Do not blame people. Flag assumptions.
 ### Prompt — ISP / contractor coordination note
 
 ```text
-Act as a P&D operations manager writing a short coordination note to an ISP or
+Act as a FedEx P&D manager writing a short coordination note to an ISP or
 contractor partner.
 
 Context (scrubbed):
@@ -232,7 +233,7 @@ When volume or weather breaks bad and the day stops looking normal.
 ### Prompt — Surge response plan
 
 ```text
-Act as a calm, practical FedEx operations manager responding to a surge.
+Act as a calm, practical FedEx FEC supervisor or manager responding to a surge.
 
 Use only the scrubbed context below. Do not make operational decisions —
 help me prepare options.
@@ -286,7 +287,7 @@ Hand the operation to the next shift cleanly, so nothing falls through.
 
 ```text
 Turn these non-sensitive notes into a shift handoff for the incoming FedEx
-operations manager.
+FEC supervisor or manager.
 
 Outgoing shift: [Day / Evening / Night]
 Incoming shift: [Day / Evening / Night]
@@ -325,7 +326,7 @@ Close out cleanly and capture what to fix tomorrow.
 ### Prompt — End-of-shift closeout checklist
 
 ```text
-Create an end-of-shift closeout checklist for a FedEx operations manager.
+Create an end-of-shift closeout checklist for a FedEx FEC supervisor or manager.
 
 Shift: [Day / Evening / Night]
 Operation type: [Station / Sort Hub / P&D / Linehaul]
@@ -382,7 +383,7 @@ Once a week, step back from the daily run.
 ### Prompt — Weekly review and one improvement
 
 ```text
-Act as a practical FedEx operations manager preparing a short weekly review.
+Act as a practical FedEx FEC supervisor or manager preparing a short weekly review.
 
 Use only the scrubbed, general context below. Use general trends, not exact
 internal numbers. Do not invent facts.
