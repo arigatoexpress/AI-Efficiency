@@ -1,6 +1,8 @@
 # Contributing
 
-This repo is meant to be easy for FEC supervisors and managers to use. Contributions do
+This repo is meant to be easy for FEC supervisors and managers to use.
+Before submitting changes, run the verification commands listed in
+[AGENTS.md](AGENTS.md) (CI runs the same checks on every pull request). Contributions do
 not need to be complicated, but they do need to be clear and safe.
 
 ## Good Contributions

@@ -1,6 +1,6 @@
 # Dock Efficiency Signal Lab
 
-> **Part of the [FedEx AI Efficiency Hub](../../index.html).** Public + synthetic data only · human review required.
+> **Part of the [FedEx AI Efficiency Hub](../../README.md).** Public + synthetic data only · human review required.
 
 A single-file, fully **offline** dashboard that applies trading-style **technical-analysis (TA)** indicators, rigorous **Statistical Process Control (SPC)**, and lightweight **forecasting** to weekly operations KPIs — built for the dock-efficiency / TLH-%-of-goal reporting workflow.
 
@@ -86,6 +86,6 @@ It is not a trading system, and ops KPIs are not tradeable prices — there is n
 
 ---
 ### Part of the AI Efficiency platform
-- **Hub / all tools:** [../../index.html](../../index.html)
+- **Hub / all tools:** [repo README](../../README.md) · [interactive hub page](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/index.html)
 - **Related:** [Station Ops Intelligence](../fedex-logistics-intelligence-system/README.md) (the pre-shift, external-risk half) · [Prompts that narrate KPIs: Data & reporting](../../prompts/data-and-reporting.md)
 - **Governance:** [Project review checklist](../../docs/governance/project-review-checklist.md)

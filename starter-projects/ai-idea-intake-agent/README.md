@@ -1,6 +1,6 @@
 # AI Idea Intake Agent
 
-> **Part of the [FedEx AI Efficiency Hub](../../index.html).** Public + synthetic data only · human review required.
+> **Part of the [FedEx AI Efficiency Hub](../../README.md).** Public + synthetic data only · human review required.
 
 ## What This Is
 
@@ -143,6 +143,6 @@ pull request for review.
 
 ---
 ### Part of the AI Efficiency platform
-- **Hub / all tools:** [../../index.html](../../index.html)
+- **Hub / all tools:** [repo README](../../README.md) · [interactive hub page](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/index.html)
 - **Related:** [Issue templates](https://github.com/arigatoexpress/AI-Efficiency/tree/main/.github/ISSUE_TEMPLATE) (where ideas land) · [Pilot program template](../../docs/pilot-program-template.md) (where approved ideas go next)
 - **Governance:** [Project review checklist](../../docs/governance/project-review-checklist.md)
