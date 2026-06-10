@@ -164,9 +164,15 @@ Verification:
 
 ## Phase 5 - Predictive Load Approximation
 
-Status: research — license review complete (see
-[docs/forecasting-model-license-review.md](docs/forecasting-model-license-review.md));
-reproducibility benchmark pending
+Status: research — license review complete
+([docs/forecasting-model-license-review.md](docs/forecasting-model-license-review.md))
+and the beat-the-baseline benchmark executed
+([starter-projects/forecast-foundation-model-spike/](starter-projects/forecast-foundation-model-spike/README.md)):
+on synthetic fixtures the Signal Lab's tuned, momentum-gated ensemble beat
+Chronos-Bolt zero-shot overall and at horizons 1-3 (walk-forward MASE 0.845 vs
+0.895 overall; h=4 effectively tied, Chronos narrowly lower), so **simple
+baselines remain the path**; re-test only on a real local series or if a
+4+ week horizon need emerges (Chronos's best showing).
 
 Goal: build clearly labeled estimates that help managers ask better questions,
 not pretend to know real FedEx load.
@@ -227,7 +233,8 @@ Verification:
 
 ## Phase 7 - FHE And Privacy Research
 
-Status: research
+Status: spike complete — benchmark and recommendation in
+[starter-projects/fhe-private-scoring-spike/](starter-projects/fhe-private-scoring-spike/README.md)
 
 Goal: test whether fully homomorphic encryption can protect sensitive manager
 signals for narrow scoring or aggregation workflows.
@@ -247,9 +254,11 @@ Not a good first fit:
 
 Verification:
 
-- working local benchmark;
-- documented latency and accuracy tradeoffs;
-- security review before any production recommendation.
+- working local benchmark; **done 2026-06-09** — encrypted logistic-regression
+  scoring at 5.3 ms/sample with a 0.5-point accuracy cost vs clear (synthetic
+  data, seed 42, CPU only);
+- documented latency and accuracy tradeoffs; **done** — see the spike README;
+- security review before any production recommendation. **Still required.**
 
 ## Phase 8 - CTO Team Alignment And Rollout
 

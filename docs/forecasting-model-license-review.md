@@ -72,6 +72,13 @@ reproducible by a second person. Concretely:
   zero-shot, one-line inference API) against the Signal Lab fixtures — a
   one-day experiment when Phase 5 moves from research to active.
 
+> **Update 2026-06-10 — that spike has been run.** See
+> [starter-projects/forecast-foundation-model-spike/](../starter-projects/forecast-foundation-model-spike/README.md):
+> a faithful port of the Signal Lab's tuned, momentum-gated ensemble beat
+> Chronos-Bolt-small zero-shot on walk-forward MASE (0.845 vs 0.895 overall,
+> ahead at horizons 1–3; h=4 effectively tied with Chronos narrowly lower).
+> The gate held: simple baselines remain the path.
+
 ## Sources
 
 - [google/timesfm-2.5-200m-pytorch — Hugging Face model card](https://huggingface.co/google/timesfm-2.5-200m-pytorch) (license metadata: apache-2.0)
