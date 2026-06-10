@@ -8,8 +8,10 @@ walk-forward (rolling-origin) MASE on seeded synthetic weekly fixtures.
 
 Models compared per facility, per origin, horizons 1-4 weeks:
   naive      last observed value (also the MASE scaling reference)
-  ensemble   mean of SES, damped Holt, and linear trend — a faithful
-             Python port of the Signal Lab's simple forecast blend
+  ensemble   a faithful port of the Signal Lab's ensembleForecast:
+             grid-tuned SES + grid-tuned damped Holt + OLS trend, with the
+             momentum gate that down-weights the trend models to 0.4 when
+             the EMA(3)/EMA(8) crossover disagrees with ROC(4)
   chronos    amazon/chronos-bolt-small, zero-shot, median quantile
 
 Run:  python3 benchmark.py
