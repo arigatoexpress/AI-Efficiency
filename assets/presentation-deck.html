@@ -79,7 +79,7 @@
 </head>
 <body>
 <div class="progress" id="progress"></div>
-<div class="slide-num" id="slideNum">1 / 13</div>
+<div class="slide-num" id="slideNum">1 / 15</div>
 
 <div id="deck">
 
@@ -184,10 +184,10 @@
     <p class="meta">Every prompt includes the Safe Prompt Rule: remove sensitive data first, review output before sharing, keep a human in charge.</p>
   </div>
 
-  <!-- Slide 6: Daily Ops Playbook (NEW this week) -->
+  <!-- Slide 6: Daily Ops Playbook -->
   <div class="slide">
     <div class="accent-bar"></div>
-    <span class="badge">New This Week</span>
+    <span class="badge">Daily Habit</span>
     <h2 style="margin-top:12px;">The Daily Ops Playbook</h2>
     <p class="lead">A single printable page that turns the prompt library into a daily habit &mdash; copy, paste, edit, done.</p>
     <div class="grid-2" style="margin-top:18px;">
@@ -247,7 +247,45 @@
     <div class="url-box">https://fedex-logistics-intelligence-system-267358751314.us-east1.run.app</div>
   </div>
 
-  <!-- Slide 9: Forward Path — Google Cloud + ADK (NEW this week) -->
+  <!-- Slide 9: The Efficiency Toolkit — two offline tools -->
+  <div class="slide">
+    <div class="accent-bar"></div>
+    <span class="badge">Built &middot; Offline</span>
+    <h2 style="margin-top:12px;">The Efficiency Toolkit: Two Offline Tools</h2>
+    <p class="lead">After the week closes, two single-file apps answer the two questions every efficiency review asks. Both run entirely in the browser &mdash; no install, no internet, real numbers never leave the machine.</p>
+    <div class="grid-2" style="margin-top:18px;">
+      <div class="card">
+        <h4>Dock Efficiency Signal Lab &mdash; "Is the move real?"</h4>
+        <p>Statistical process control + trend indicators + forecasting on weekly dock KPIs. Flags which moves are signal vs noise, ranks top/bottom facilities, and translates gaps to goal into dollars.</p>
+      </div>
+      <div class="card">
+        <h4>TLH/SPH Explorer &mdash; "Which lever moved?"</h4>
+        <p>Splits each week-over-week efficiency change into its exact throughput (SPH) and labor-hours (TLH) effects &mdash; so an hours-cut gain is never mistaken for a productivity win.</p>
+      </div>
+    </div>
+    <p class="meta" style="margin-top:16px;">Demo with synthetic data today; load a real weekly CSV locally during a pilot. Both ship with demo scripts and governance reviews.</p>
+  </div>
+
+  <!-- Slide 10: Benchmark discipline -->
+  <div class="slide">
+    <div class="accent-bar"></div>
+    <span class="badge">Evidence First</span>
+    <h2 style="margin-top:12px;">We Benchmark Before We Adopt</h2>
+    <p class="lead">Before upgrading any tool to a fancier model, the challenger has to beat the simple, explainable incumbent in an honest walk-forward test.</p>
+    <div class="grid-2" style="margin-top:18px;">
+      <div class="card">
+        <h4>The first challenge: a forecasting foundation model</h4>
+        <p>Amazon's Chronos-Bolt (zero-shot) vs the Signal Lab's simple ensemble, on synthetic weekly fixtures. <strong>The simple ensemble won</strong> &mdash; better accuracy overall and at three of four horizons &mdash; so the explainable baseline stays and no pilot was earned.</p>
+      </div>
+      <div class="card">
+        <h4>Why this matters</h4>
+        <p>The gate works in both directions: it stops hype from displacing tools that work, and it gives any future upgrade a clear, measured bar to clear. Documented re-test triggers say exactly when we look again.</p>
+      </div>
+    </div>
+    <p class="meta" style="margin-top:16px;">Also measured as background research: privacy-preserving (encrypted) scoring &mdash; feasible, kept on the research track pending security review.</p>
+  </div>
+
+  <!-- Slide 11: Forward Path — Google Cloud + ADK -->
   <div class="slide">
     <div class="accent-bar"></div>
     <span class="badge">Forward Path</span>
@@ -270,7 +308,7 @@
     <p class="meta" style="margin-top:12px;">Internal-data access through Foundry stays behind governance review &mdash; we earn it with evidence from small pilots, not assumptions.</p>
   </div>
 
-  <!-- Slide 10: Safety Framing -->
+  <!-- Slide 12: Safety Framing -->
   <div class="slide">
     <div class="accent-bar"></div>
     <h2>Safety &amp; Governance Built In</h2>
@@ -297,7 +335,7 @@
     <div class="quote">This is a public-data decision-support prototype. It helps managers notice and explain regional risk faster, but it does not make operational decisions and it does not use FedEx internal data.</div>
   </div>
 
-  <!-- Slide 11: Pilot Template -->
+  <!-- Slide 13: Pilot Template -->
   <div class="slide">
     <div class="accent-bar"></div>
     <h2>From Prototype to Pilot</h2>
@@ -319,7 +357,7 @@
     <p class="meta" style="margin-top:16px;">The template includes demo readiness checklists, failure criteria, and governance review steps.</p>
   </div>
 
-  <!-- Slide 12: Call to Action -->
+  <!-- Slide 14: Call to Action -->
   <div class="slide">
     <div class="accent-bar"></div>
     <h2>How to Engage</h2>
@@ -327,7 +365,7 @@
       <div>
         <h3>If you are a manager</h3>
         <ul>
-          <li>Print the new <strong>Daily Ops Playbook</strong></li>
+          <li>Print the <strong>Daily Ops Playbook</strong></li>
           <li>Try the daily operations and safety prompts</li>
           <li>Share feedback and improvements</li>
         </ul>
@@ -359,7 +397,7 @@
     </div>
   </div>
 
-  <!-- Slide 13: Q&A -->
+  <!-- Slide 15: Q&A -->
   <div class="slide">
     <div class="accent-bar"></div>
     <h1>Questions?</h1>
@@ -372,7 +410,7 @@
 
 <div class="nav">
   <button id="prevBtn" onclick="prevSlide()">◀ Previous</button>
-  <span id="navNum" style="font-size:13px;color:var(--muted);font-weight:600;">1 / 13</span>
+  <span id="navNum" style="font-size:13px;color:var(--muted);font-weight:600;">1 / 15</span>
   <button id="nextBtn" onclick="nextSlide()">Next ▶</button>
 </div>
 

@@ -43,6 +43,8 @@ Ideas come in the front door and become projects. Daily **prompts** power manage
 | Get oriented in this repo | [Getting started](docs/getting-started.md) | New team members |
 | Save time on today's work | [Prompt library](prompts/README.md) | Managers who want quick wins |
 | Run a whole shift with AI support | [Daily operations playbook](docs/daily-ops-playbook.md) | FEC supervisors and managers running a daily shift |
+| Check if a weekly KPI move is real | [Dock Efficiency Signal Lab](starter-projects/dock-efficiency-signal-lab/README.md) | Anyone who owns a weekly dock-efficiency number |
+| See which lever moved efficiency | [TLH/SPH Efficiency Explorer](starter-projects/tlh-sph-efficiency-explorer/README.md) | Anyone explaining a week-over-week change |
 | Write better prompts | [Prompting basics](prompts/prompt-engineering-basics.md) | Anyone using ChatGPT or Gemini |
 | Use Gemini well at work | [Gemini guide](docs/technology/gemini-for-ops-managers.md) | Gemini users |
 | Understand "AI agents" | [Agentic AI for operations](docs/technology/agentic-ai-for-operations.md) | Everyone — managers first |
@@ -121,8 +123,8 @@ Early examples the team can learn from, improve, and submit for review.
 | [TLH/SPH Efficiency Explorer](starter-projects/tlh-sph-efficiency-explorer/README.md) | **Offline single-file app** | Splits each week-over-week efficiency change into its two real levers — throughput (SPH) and labor hours (TLH) — so an hours-cut gain is never mistaken for a productivity win. Companion to the Signal Lab; fully offline. |
 | [AI Idea Intake Agent](starter-projects/ai-idea-intake-agent/README.md) | Concept and governance starter | Safe Teams/Copilot or Gemini-channel flow for AI ideas, feedback, and use-case triage. |
 | [Delivery Markets Lab](starter-projects/fedex-delivery-markets/README.md) | Prototype reference | Synthetic-data, paper-only delivery-market concept demo. |
-| [FHE Private Scoring Spike](starter-projects/fhe-private-scoring-spike/README.md) | Research spike (complete) | Measured benchmark of privacy-preserving (encrypted) idea-scoring with Zama Concrete ML — synthetic data, local only. |
-| [Forecast Foundation-Model Spike](starter-projects/forecast-foundation-model-spike/README.md) | Research spike (complete) | Chronos-Bolt vs the Signal Lab's simple ensemble (walk-forward MASE, synthetic fixtures) — the simple ensemble won. |
+| [Forecast Foundation-Model Spike](starter-projects/forecast-foundation-model-spike/README.md) | Research spike (complete) | Chronos-Bolt vs the Signal Lab's simple ensemble (walk-forward MASE, synthetic fixtures) — the simple ensemble won, so the explainable baseline stays. |
+| [FHE Private Scoring Spike](starter-projects/fhe-private-scoring-spike/README.md) | Research spike (complete) | Background research: measured benchmark of privacy-preserving (encrypted) idea-scoring — synthetic data, local only, research track. |
 
 **To run the two offline tools** (Signal Lab and TLH/SPH Explorer): try them online first — [Signal Lab](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/starter-projects/dock-efficiency-signal-lab/app/index.html) · [TLH/SPH Explorer](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/starter-projects/tlh-sph-efficiency-explorer/app/index.html) — both load with synthetic demo data. To analyze real numbers, download the repo (green **Code** button → **Download ZIP**), unzip it, and double-click the tool's `app/index.html`: it runs entirely in your browser with no internet connection, so your data never leaves your machine.
 
@@ -182,8 +184,8 @@ starter-projects/
   fedex-logistics-intelligence-system/  ← Full-stack app + docs
   dock-efficiency-signal-lab/           ← Offline SPC + forecasting app + docs
   tlh-sph-efficiency-explorer/          ← Offline TLH/SPH decomposition app + docs
-  fhe-private-scoring-spike/            ← FHE research benchmark (complete)
   forecast-foundation-model-spike/      ← Chronos vs baseline benchmark (complete)
+  fhe-private-scoring-spike/            ← FHE research benchmark (complete)
   ai-idea-intake-agent/
   fedex-delivery-markets/
 assets/
@@ -233,8 +235,9 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for the full process.
 This repo is ready for team documentation, prompt collection, public-data starter projects, and governance review. It is **not** a production FedEx system and should not be used with confidential or regulated data until the proper FedEx approvals are in place.
 
 **Current focus:**
-- Implementing CTO-team review feedback: cohesive FEC-audience messaging, an agentic AI track, and deeper efficiency tooling (TLH/SPH decomposition)
-- Validating the TLH/SPH Efficiency Explorer against a real, locally-loaded weekly export during a pilot
+- CTO-team review feedback: **implemented** — cohesive FEC-audience messaging, the agentic AI track, and TLH/SPH efficiency decomposition are all live in the repo
+- Validating the TLH/SPH Efficiency Explorer and Signal Lab against a real, locally-loaded weekly export during a pilot
+- Evidence before adoption: forecasting upgrades must beat the simple, explainable ensemble in a walk-forward benchmark before earning a pilot (the first challenger didn't)
 - Hardening the public data layer in the logistics intelligence app
 - Preparing Foundry-ready export paths for when internal data access is approved
 - Supporting the monthly CTO-team call, regional presentations, and pilot proposals
