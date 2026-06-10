@@ -40,6 +40,7 @@ This folder contains guides, standards, and templates for the AI Efficiency Team
 |----------|---------|----------|
 | [Data source catalog](data-source-catalog.md) | Public data sources, rights, and provenance. | Technical builders |
 | [Documentation standard](documentation-standard.md) | How to write docs for this repo. | Contributors |
+| [Forecasting model license review](forecasting-model-license-review.md) | License + reproducibility gate for TimesFM/Chronos (Phase 5). | Technical builders, reviewers |
 | [Foundry integration roadmap](foundry-integration-roadmap.md) | Path to Palantir Foundry export. | Technical architects |
 | [Teams/Telegram intake agent roadmap](teams-telegram-agent-roadmap.md) | The planned, governance-gated idea-intake agent. | Team leads, governance reviewers |
 | [FHE/Zama research](fhe-zama-research.md) | Privacy-preserving encryption research. | Security researchers |

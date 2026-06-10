@@ -1,6 +1,11 @@
 # Public Data Source Catalog
 
-Last reviewed: 2026-05-23
+Last reviewed: 2026-06-09
+
+Link health last verified 2026-06-09: all sources respond. Two caveats —
+`bts.gov/faf` blocks automated clients (HTTP 403 to scripts; loads in a
+browser), and OpenSky returned a transient 503 during the check. Both links
+are the official URLs and remain correct.
 
 This catalog lists sources that could support the logistics intelligence app and
 Foundry-ready exports. It is not permission to scrape everything listed here.

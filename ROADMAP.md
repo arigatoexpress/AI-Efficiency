@@ -164,7 +164,9 @@ Verification:
 
 ## Phase 5 - Predictive Load Approximation
 
-Status: research
+Status: research — license review complete (see
+[docs/forecasting-model-license-review.md](docs/forecasting-model-license-review.md));
+reproducibility benchmark pending
 
 Goal: build clearly labeled estimates that help managers ask better questions,
 not pretend to know real FedEx load.
@@ -183,7 +185,9 @@ Possible models:
 - simple seasonal baselines first;
 - gradient boosted or generalized additive models for explainable pilots;
 - time-series foundation models such as TimesFM or Chronos only after license
-  and reproducibility review.
+  and reproducibility review — license half passed 2026-06-09 (all candidates
+  Apache-2.0); the reproducibility checklist and beat-the-baseline benchmark
+  remain the gate.
 
 Verification:
 

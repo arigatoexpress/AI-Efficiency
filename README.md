@@ -152,6 +152,7 @@ docs/
   pilot-program-template.md        ← Propose a pilot
   demo-script.md                   ← Present this repo to leadership
   data-source-catalog.md           ← Public-data sources, rights, caveats
+  forecasting-model-license-review.md ← Phase 5 model license/repro gate
   foundry-integration-roadmap.md   ← Governance-gated Foundry export path
   teams-telegram-agent-roadmap.md  ← Planned intake-agent track
   fhe-zama-research.md             ← Privacy (FHE) research note
