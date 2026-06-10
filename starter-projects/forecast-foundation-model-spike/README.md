@@ -29,9 +29,9 @@ Environment: Python 3.11 · chronos-forecasting (torch 2.3.1, CPU) · `amazon/ch
 
 ## What This Means
 
-- **Keep the Signal Lab's ensemble.** On ~25-point weekly operations series, the tuned, explainable three-model blend beat a 48M-parameter foundation model at every horizon — and it's auditable by a reviewer in an afternoon.
-- **The 4-week horizon is a statistical tie** (0.791 vs 0.787 — well within noise at this sample size). If a future need emerges for 4+ week outlooks, that's still the most promising re-test for Chronos — but it's no longer even a clear win.
-- **The gate worked.** ROADMAP Phase 5 requires a foundation model to *earn* a pilot by beating the baseline by a margin that survives the caveats. It didn't, at any horizon. No pilot.
+- **Keep the Signal Lab's ensemble.** On ~25-point weekly operations series, the tuned, explainable three-model blend won overall and at horizons 1–3 against a 48M-parameter foundation model — and it's auditable by a reviewer in an afternoon.
+- **The 4-week horizon is effectively a tie, with Chronos narrowly lower** (0.787 vs 0.791 — well within noise at this sample size). If a future need emerges for 4+ week outlooks, that's the most promising re-test for Chronos.
+- **The gate worked.** ROADMAP Phase 5 requires a foundation model to *earn* a pilot by beating the baseline by a margin that survives the caveats. It didn't. No pilot.
 
 ## Honest Caveats
 

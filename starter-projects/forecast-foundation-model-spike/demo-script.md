@@ -6,7 +6,7 @@
 *"Our roadmap has a rule: a fancy forecasting model has to* earn *a pilot by beating the explainable ensemble our Signal Lab already uses — measured properly, walk-forward, on fixtures. We ran that match: Amazon's Chronos-Bolt foundation model, zero-shot, against a faithful port of the lab's tuned, momentum-gated ensemble."*
 
 ## 2. The result (45 sec)
-- *"The ensemble won: MASE 0.845 versus 0.895 overall, ahead at every horizon — the four-week mark was a statistical tie. Both comfortably beat naive."*
+- *"The ensemble won: MASE 0.845 versus 0.895 overall, ahead at one through three weeks — the four-week mark was effectively a tie, with Chronos a hair lower. Both comfortably beat naive."*
 - *"And note what didn't matter: speed. About fifty milliseconds per forecast on a plain CPU. If we ever switch, it won't be performance holding us back."*
 
 ## 3. The point (30 sec)
