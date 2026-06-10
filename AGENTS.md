@@ -25,6 +25,7 @@ The repo turns operational friction into reusable AI assets: prompts for manager
 | `starter-projects/dock-efficiency-signal-lab/` | Offline SPC + TA + forecasting on weekly dock KPIs (is the move real?) |
 | `starter-projects/tlh-sph-efficiency-explorer/` | Offline TLH/SPH decomposition (which lever moved?) — companion to the Signal Lab |
 | `starter-projects/fhe-private-scoring-spike/` | Executed Phase 7 research benchmark: encrypted scoring with Concrete ML (synthetic, local) |
+| `starter-projects/forecast-foundation-model-spike/` | Executed Phase 5 benchmark: Chronos-Bolt vs the Signal Lab ensemble (ensemble won) |
 | `assets/` | Banners, screenshots, and architecture diagrams |
 | `.github/ISSUE_TEMPLATE/` | Issue templates for governance review |
 | `CONTRIBUTING.md` | Full contribution process |

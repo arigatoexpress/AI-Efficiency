@@ -122,6 +122,7 @@ Early examples the team can learn from, improve, and submit for review.
 | [AI Idea Intake Agent](starter-projects/ai-idea-intake-agent/README.md) | Concept and governance starter | Safe Teams/Copilot or Gemini-channel flow for AI ideas, feedback, and use-case triage. |
 | [Delivery Markets Lab](starter-projects/fedex-delivery-markets/README.md) | Prototype reference | Synthetic-data, paper-only delivery-market concept demo. |
 | [FHE Private Scoring Spike](starter-projects/fhe-private-scoring-spike/README.md) | Research spike (complete) | Measured benchmark of privacy-preserving (encrypted) idea-scoring with Zama Concrete ML — synthetic data, local only. |
+| [Forecast Foundation-Model Spike](starter-projects/forecast-foundation-model-spike/README.md) | Research spike (complete) | Chronos-Bolt vs the Signal Lab's simple ensemble (walk-forward MASE, synthetic fixtures) — the simple ensemble won. |
 
 **To run the two offline tools** (Signal Lab and TLH/SPH Explorer): try them online first — [Signal Lab](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/starter-projects/dock-efficiency-signal-lab/app/index.html) · [TLH/SPH Explorer](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/starter-projects/tlh-sph-efficiency-explorer/app/index.html) — both load with synthetic demo data. To analyze real numbers, download the repo (green **Code** button → **Download ZIP**), unzip it, and double-click the tool's `app/index.html`: it runs entirely in your browser with no internet connection, so your data never leaves your machine.
 
@@ -182,6 +183,7 @@ starter-projects/
   dock-efficiency-signal-lab/           ← Offline SPC + forecasting app + docs
   tlh-sph-efficiency-explorer/          ← Offline TLH/SPH decomposition app + docs
   fhe-private-scoring-spike/            ← FHE research benchmark (complete)
+  forecast-foundation-model-spike/      ← Chronos vs baseline benchmark (complete)
   ai-idea-intake-agent/
   fedex-delivery-markets/
 assets/
