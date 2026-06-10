@@ -23,8 +23,8 @@ for every starter project.
 | [AI Idea Intake Agent](ai-idea-intake-agent/README.md) | Concept and governance starter | Safe Teams/Copilot or Gemini-channel flow for AI ideas, feedback, and use-case triage. |
 | [FedEx Logistics Intelligence System](fedex-logistics-intelligence-system/README.md) | AI Studio and Cloud Run prototype | Public-data station-ops console concept for weather, road, and regional risk briefings. |
 | [Delivery Markets Lab](fedex-delivery-markets/README.md) | Prototype reference | Synthetic-data, paper-only app already exists locally. AI Studio link requires sign-in. |
-| [FHE Private Scoring Spike](fhe-private-scoring-spike/README.md) | Research spike (complete) | Measured benchmark of encrypted idea-scoring with Zama Concrete ML — synthetic data, local only, with a one-page recommendation. |
 | [Forecast Foundation-Model Spike](forecast-foundation-model-spike/README.md) | Research spike (complete) | Chronos-Bolt zero-shot vs the Signal Lab's simple ensemble, walk-forward MASE on synthetic fixtures — the ensemble won; baselines stay. |
+| [FHE Private Scoring Spike](fhe-private-scoring-spike/README.md) | Research spike (complete) | Background research: measured benchmark of encrypted idea-scoring with Zama Concrete ML — synthetic data, local only, with a one-page recommendation. |
 
 ## Add A Starter
 
