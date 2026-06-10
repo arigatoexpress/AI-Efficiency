@@ -227,7 +227,8 @@ Verification:
 
 ## Phase 7 - FHE And Privacy Research
 
-Status: research
+Status: spike complete — benchmark and recommendation in
+[starter-projects/fhe-private-scoring-spike/](starter-projects/fhe-private-scoring-spike/README.md)
 
 Goal: test whether fully homomorphic encryption can protect sensitive manager
 signals for narrow scoring or aggregation workflows.
@@ -247,9 +248,11 @@ Not a good first fit:
 
 Verification:
 
-- working local benchmark;
-- documented latency and accuracy tradeoffs;
-- security review before any production recommendation.
+- working local benchmark; **done 2026-06-09** — encrypted logistic-regression
+  scoring at 5.3 ms/sample with a 0.5-point accuracy cost vs clear (synthetic
+  data, seed 42, CPU only);
+- documented latency and accuracy tradeoffs; **done** — see the spike README;
+- security review before any production recommendation. **Still required.**
 
 ## Phase 8 - CTO Team Alignment And Rollout
 

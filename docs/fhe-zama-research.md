@@ -1,6 +1,12 @@
 # FHE And Zama Research Note
 
-Last reviewed: 2026-05-23
+Last reviewed: 2026-06-09
+
+> **Update:** the research spike below has been executed — see
+> [starter-projects/fhe-private-scoring-spike/](../starter-projects/fhe-private-scoring-spike/README.md)
+> for the benchmark and measured results (85.6% encrypted accuracy vs 86.1%
+> clear; 5.3 ms per encrypted sample on CPU). The recommendation at the end of
+> this note stands.
 
 Fully homomorphic encryption is worth researching, but it should be presented
 carefully. It may help with narrow privacy-preserving scoring or aggregation. It
