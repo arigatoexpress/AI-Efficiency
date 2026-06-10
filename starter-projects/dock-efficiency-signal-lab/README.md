@@ -10,10 +10,10 @@ A single-file, fully **offline** dashboard that applies trading-style **technica
 
 Each week the team rebuilds rankings and explanation-of-change narratives by hand. This dashboard turns the same weekly productivity series into:
 
-- **Trend & Signals** — SMA(4) month + SMA(13) quarter baselines, a Bollinger(8, 2σ) envelope, and 4/13 crossover ("golden/death cross" analog), with plain-language callouts.
-- **Process Control (SPC)** — I-MR individuals chart with 3σ limits (σ̂ = MR̄/1.128), Nelson rules 1/3/5/6 (outlier, trend, emerging shift), EWMA(λ=0.2) drift detection, and tabular CUSUM (k=0.5σ, h=5σ).
-- **Momentum (TA)** — ROC (legible MoM/QoQ change) plus MACD and RSI labeled *indicative only*.
-- **Forecast** — ensemble of SES + damped-Holt(φ=0.9) + linear trend, momentum-gated, with an 80% prediction band that widens with horizon, and a walk-forward (rolling-origin) MASE backtest that auto-selects the best model with a simplicity prior.
+- **Trend & Signals** — simple-moving-average (SMA) baselines for the month (4-week) and quarter (13-week), a Bollinger(8, 2σ) envelope, and 4/13 crossover ("golden/death cross" analog), with plain-language callouts.
+- **Process Control (SPC)** — I-MR (individuals & moving-range) chart with 3σ limits (σ̂ = MR̄/1.128), Nelson rules 1/3/5/6 (outlier, trend, emerging shift), EWMA (exponentially weighted moving average, λ=0.2) drift detection, and tabular CUSUM (cumulative sum; k=0.5σ, h=5σ).
+- **Momentum (TA)** — ROC (rate of change — legible month-over-month/quarter-over-quarter movement) plus MACD (moving-average convergence/divergence) and RSI (relative strength index) labeled *indicative only*.
+- **Forecast** — ensemble of SES (simple exponential smoothing) + damped-Holt(φ=0.9) + linear trend, momentum-gated, with an 80% prediction band that widens with horizon, and a walk-forward (rolling-origin) backtest on MASE (mean absolute scaled error) that auto-selects the best model with a simplicity prior.
 - **Rankings & $ Impact** — top/bottom performers across all loaded series, each with its trend regime, process state, and the dollar value of its gap to goal. Uses the recap's CFO-legible translation (`$/point ÷ 52 weeks`): set the goal to the engineered goal (e.g. 68.8) and `$/point/year` to $50M to reproduce the weekly "≈ −$5.2M vs plan" figure. Each weak facility is heuristically mapped to a Scorecard section (Planning / Scheduling / Execution).
 - **Region / District filter** — when the data carries `region`/`district` tags, a scope dropdown lets you focus everything (facility list, rankings, recap) on the whole focus area or drill into one region/district. The demo mirrors the **focus area** — the six districts **Pacific Northwest, Mountain, Western Rockies, Columbia River, Northern California** (NORTHWEST) and **Red River** (MID-AMERICA) — defaulting to "All" with per-district drill-down. The goal line auto-calibrates to the data's scale (≈100 for "% of goal", ≈68.8 for raw efficiency).
 
@@ -87,5 +87,5 @@ It is not a trading system, and ops KPIs are not tradeable prices — there is n
 ---
 ### Part of the AI Efficiency platform
 - **Hub / all tools:** [repo README](../../README.md) · [interactive hub page](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/index.html)
-- **Related:** [Station Ops Intelligence](../fedex-logistics-intelligence-system/README.md) (the pre-shift, external-risk half) · [Prompts that narrate KPIs: Data & reporting](../../prompts/data-and-reporting.md)
+- **Related:** [Station Ops Intelligence](../fedex-logistics-intelligence-system/README.md) (the pre-shift, external-risk half) · [TLH/SPH Efficiency Explorer](../tlh-sph-efficiency-explorer/README.md) (companion — which lever moved?) · [Forecast Foundation-Model Spike](../forecast-foundation-model-spike/README.md) (benchmark — this lab's ensemble vs Chronos-Bolt) · [Prompts that narrate KPIs: Data & reporting](../../prompts/data-and-reporting.md)
 - **Governance:** [Project review checklist](../../docs/governance/project-review-checklist.md)
