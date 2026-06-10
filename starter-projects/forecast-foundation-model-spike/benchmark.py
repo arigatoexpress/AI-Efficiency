@@ -48,22 +48,55 @@ def synthetic_weekly_series():
     return series
 
 
-# --- the Signal Lab's simple models, ported ---
-def ses(y, alpha=0.3):
-    s = y[0]
+# --- the Signal Lab's ensemble, ported faithfully from
+# starter-projects/dock-efficiency-signal-lab/app/index.html (lines ~428-553):
+# grid-tuned SES and damped Holt, OLS trend, and the momentum gate that
+# down-weights the trend models (w=0.4) when EMA(3)/EMA(8) crossover
+# direction disagrees with ROC(4).
+
+def ses_fit(y, alpha):
+    lvl = y[0]
+    fitted = [lvl]
     for v in y[1:]:
-        s = alpha * v + (1 - alpha) * s
-    return s
+        fitted.append(lvl)
+        lvl = alpha * v + (1 - alpha) * lvl
+    return lvl, fitted
 
 
-def damped_holt(y, alpha=0.4, beta=0.2, phi=0.9, h=1):
-    lvl, tr = y[0], y[1] - y[0] if len(y) > 1 else 0.0
+def fit_ses_alpha(y):
+    best_alpha, best_sse = 0.2, np.inf
+    for alpha in np.arange(0.05, 0.5001, 0.05):
+        _, fitted = ses_fit(y, alpha)
+        sse = sum((y[t] - fitted[t]) ** 2 for t in range(1, len(y)))
+        if sse < best_sse:
+            best_sse, best_alpha = sse, alpha
+    return best_alpha
+
+
+def holt_fit(y, alpha, beta, phi=0.9):
+    lvl, tr = y[0], y[1] - y[0]
+    fitted = [lvl]
     for v in y[1:]:
+        fitted.append(lvl + phi * tr)
         prev = lvl
-        lvl = alpha * v + (1 - alpha) * (lvl + phi * tr)
+        lvl = alpha * v + (1 - alpha) * (prev + phi * tr)
         tr = beta * (lvl - prev) + (1 - beta) * phi * tr
-    damp = sum(phi ** i for i in range(1, h + 1))
-    return lvl + damp * tr
+    def forecast(h):
+        damp = sum(phi ** i for i in range(1, h + 1))
+        return lvl + damp * tr
+    return forecast, fitted
+
+
+def fit_holt_params(y):
+    best, best_sse = (0.2, 0.05), np.inf
+    for alpha in np.arange(0.1, 0.5001, 0.1):
+        for beta in np.arange(0.01, 0.1001, 0.03):
+            _, fitted = holt_fit(y, alpha, beta)
+            sse = sum((y[t] - fitted[t]) ** 2 for t in range(1, len(y)))
+            if sse < best_sse:
+                best_sse, best = sse, (alpha, beta)
+    return best
+
 
 def linear_trend(y, h=1):
     x = np.arange(len(y))
@@ -71,8 +104,32 @@ def linear_trend(y, h=1):
     return a + b * (len(y) - 1 + h)
 
 
+def ema_last(y, n):
+    a = 2 / (n + 1)
+    e = y[0]
+    for v in y[1:]:
+        e = a * v + (1 - a) * e
+    return e
+
+
+def roc_last(y, n=4):
+    if len(y) <= n or y[-1 - n] == 0:
+        return None
+    return 100 * (y[-1] - y[-1 - n]) / y[-1 - n]
+
+
 def ensemble(y, h):
-    return float(np.mean([ses(y), damped_holt(y, h=h), linear_trend(y, h)]))
+    """The lab's ensembleForecast: tuned SES + tuned damped Holt + OLS trend,
+    trend models down-weighted to 0.4 when momentum disagrees."""
+    ses_level, _ = ses_fit(y, fit_ses_alpha(y))
+    holt_forecast, _ = holt_fit(y, *fit_holt_params(y))
+    r = roc_last(y, 4)
+    agree = (r is not None and r != 0
+             and np.sign(ema_last(y, 3) - ema_last(y, 8)) == np.sign(r))
+    tw = 1.0 if agree else 0.4
+    weights = np.array([1.0, tw, tw])
+    forecasts = np.array([ses_level, holt_forecast(h), linear_trend(y, h)])
+    return float((weights * forecasts).sum() / weights.sum())
 
 
 def main():

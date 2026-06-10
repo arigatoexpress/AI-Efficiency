@@ -168,10 +168,10 @@ Status: research — license review complete
 ([docs/forecasting-model-license-review.md](docs/forecasting-model-license-review.md))
 and the beat-the-baseline benchmark executed
 ([starter-projects/forecast-foundation-model-spike/](starter-projects/forecast-foundation-model-spike/README.md)):
-on synthetic fixtures the Signal Lab-style simple ensemble beat Chronos-Bolt
-zero-shot (walk-forward MASE 0.876 vs 0.895), so **simple baselines remain the
-path**; re-test only if a 4+ week horizon need emerges or on a real local
-series.
+on synthetic fixtures the Signal Lab's tuned, momentum-gated ensemble beat
+Chronos-Bolt zero-shot at every horizon (walk-forward MASE 0.845 vs 0.895), so
+**simple baselines remain the path**; re-test only on a real local series or
+if a 4+ week horizon need emerges (the closest margin).
 
 Goal: build clearly labeled estimates that help managers ask better questions,
 not pretend to know real FedEx load.

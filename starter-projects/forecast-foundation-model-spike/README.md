@@ -13,18 +13,25 @@ Walk-forward (rolling-origin) MASE over 8 synthetic facilities × 8 origins, hor
 | Model | Overall | h=1 | h=2 | h=3 | h=4 |
 | --- | --- | --- | --- | --- | --- |
 | Naive (last value) | 1.151 | 1.151 | 1.096 | 1.219 | 1.137 |
-| **Signal Lab-style ensemble** (SES + damped Holt + linear trend) | **0.876** | **0.865** | 0.886 | **0.904** | 0.847 |
-| Chronos-Bolt-small (zero-shot) | 0.895 | 0.928 | **0.876** | 0.990 | **0.787** |
+| **Signal Lab ensemble** (faithful port: grid-tuned SES + tuned damped Holt + OLS trend, momentum-gated) | **0.845** | **0.848** | **0.866** | **0.872** | 0.791 |
+| Chronos-Bolt-small (zero-shot) | 0.895 | 0.928 | 0.876 | 0.990 | **0.787** |
 
-Cost side: Chronos-Bolt-small loads in 0.6 s and produces a 4-week forecast in **12.9 ms on a 4-vCPU CPU** — performance is not the obstacle.
+Cost side: Chronos-Bolt-small loads in 0.6 s and produces a 4-week forecast in **~50 ms on a 4-vCPU CPU** — performance is not the obstacle.
+
+> The baseline is a line-for-line Python port of the Signal Lab's actual
+> `ensembleForecast` (grid-fit SES α, grid-fit Holt α/β with φ=0.9, OLS trend,
+> and the EMA(3)/EMA(8)-vs-ROC(4) momentum gate that down-weights the trend
+> models to 0.4 when momentum disagrees) — not a simplified stand-in. An
+> earlier draft used fixed parameters and an equal mean and scored 0.876;
+> the real ensemble is stronger still.
 
 Environment: Python 3.11 · chronos-forecasting (torch 2.3.1, CPU) · `amazon/chronos-bolt-small` (Apache-2.0).
 
 ## What This Means
 
-- **Keep the Signal Lab's ensemble.** On ~25-point weekly operations series, three simple, explainable models beat a 48M-parameter foundation model overall — and they're auditable by a reviewer in an afternoon.
-- **The one real signal for Chronos: longer horizons.** It clearly won at h=4 (0.787 vs 0.847). If a future need emerges for 4+ week outlooks, that's the re-test to run — not a reason to switch today.
-- **The gate worked.** ROADMAP Phase 5 requires a foundation model to *earn* a pilot by beating the baseline by a margin that survives the caveats. It didn't. No pilot.
+- **Keep the Signal Lab's ensemble.** On ~25-point weekly operations series, the tuned, explainable three-model blend beat a 48M-parameter foundation model at every horizon — and it's auditable by a reviewer in an afternoon.
+- **The 4-week horizon is a statistical tie** (0.791 vs 0.787 — well within noise at this sample size). If a future need emerges for 4+ week outlooks, that's still the most promising re-test for Chronos — but it's no longer even a clear win.
+- **The gate worked.** ROADMAP Phase 5 requires a foundation model to *earn* a pilot by beating the baseline by a margin that survives the caveats. It didn't, at any horizon. No pilot.
 
 ## Honest Caveats
 
