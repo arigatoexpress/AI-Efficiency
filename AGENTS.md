@@ -6,6 +6,11 @@ This repository is a public-safe documentation and starter-project hub for an op
 
 The repo turns operational friction into reusable AI assets: prompts for managers, starter projects for developers, and checklists for governance reviewers. Everything is designed for non-technical readers first, with technical depth available in the starter projects.
 
+## Scope & Evals (Verification)
+- **Repo Nature:** A documentation hub with one React/Vite/Express application under `starter-projects/fedex-logistics-intelligence-system/app`.
+- **Evals & Build:** Run `npm run build` inside `starter-projects/fedex-logistics-intelligence-system/app` to verify type safety and compilation.
+- **Constraints:** No CI/CD workflows exist for this repo at this time. Avoid introducing root-level Node packages, scripts, or lockfiles. Keep changes highly surgical.
+
 ## Key directories and files
 
 | Path | Purpose |
