@@ -18,6 +18,7 @@ One week, sixteen merged pull requests — every CTO-review item closed, two new
 - **The platform is one hub** — unified [interactive hub page](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/index.html), refreshed [presentation deck](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/assets/presentation-deck.html) (15 slides, current as of today), and the printable [Daily Ops Playbook](docs/daily-ops-playbook.md).
 - **Gemini Enterprise prep started** — access requested from the org team; the [day-one readiness plan](docs/technology/gemini-enterprise-readiness.md) and the first registrable agent — the [ADK shift-brief agent starter kit](starter-projects/adk-shift-brief-agent/README.md) (read-only tools, synthetic signals, CI-enforced guardrails, tested offline) — are ready and waiting.
 - **The prompt library became programmable** — the new [Prompt Explorer](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/prompts/explorer.html) (search, fill in the brackets, copy — offline) plus a machine-readable [`prompts.json`](prompts/prompts.json) index generated from the markdown and kept in sync by CI, so scripts, agents, and enterprise tools can consume the same 51 prompts as people do.
+- **Research-driven Microsoft alignment** — three deep-research passes (Copilot/Teams landscape, public FedEx role ladder, prompt methodology) produced the [Copilot + Teams playbook](docs/technology/copilot-teams-playbook.md) (which Copilot you have, Microsoft's four prompt elements, role-by-role guidance from handler to managing director, the skills ladder) and explorer upgrades: a ⭐ Day 1 starter pack, per-category audience labels, and an Expectations builder that adds Microsoft's most-skipped prompt element with three dropdowns.
 
 *In review (deliberately deferred): four major-version dependency updates from Dependabot — they get tested properly after the meeting, not rushed before it.*
 
@@ -65,6 +66,7 @@ Ideas come in the front door and become projects. Daily **prompts** power manage
 | See which lever moved efficiency | [TLH/SPH Efficiency Explorer](starter-projects/tlh-sph-efficiency-explorer/README.md) | Anyone explaining a week-over-week change |
 | Write better prompts | [Prompting basics](prompts/prompt-engineering-basics.md) | Anyone using ChatGPT or Gemini |
 | Use Gemini well at work | [Gemini guide](docs/technology/gemini-for-ops-managers.md) | Gemini users |
+| Use Copilot and Teams well | [Copilot + Teams playbook](docs/technology/copilot-teams-playbook.md) | Our Microsoft-first org — every level |
 | Understand "AI agents" | [Agentic AI for operations](docs/technology/agentic-ai-for-operations.md) | Everyone — managers first |
 | See the engineering forward path | [Google Cloud + ADK integration](docs/technology/google-cloud-adk-integration.md) | Engineers and technically-curious managers |
 | Get ready for Gemini Enterprise | [Day-one readiness plan](docs/technology/gemini-enterprise-readiness.md) | Everyone — access request is pending |

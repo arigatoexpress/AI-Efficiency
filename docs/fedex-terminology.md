@@ -28,7 +28,7 @@ A plain-English glossary for AI Efficiency team members who work across Express,
 | **Indianapolis Hub** | Express's second national hub, being expanded and modernized. |
 | **Regional Hub** | Major sorting facilities in Fort Worth, Newark, Oakland, Greensboro. |
 | **1Network** | FedEx's initiative to combine Express and Ground operations into a single network. |
-| **Federal Express Corporation (FEC)** | The single FedEx operating company since June 1, 2024 — Express, Ground, and Services combined under it; FedEx Freight remains a separate entity. Job titles and postings use the "FEC" abbreviation. |
+| **Federal Express Corporation (FEC)** | The single FedEx operating company since June 1, 2024 — Express, Ground, and Services combined under it; FedEx Freight completed its spin-off into an independent public company (NYSE: FDXF) on June 1, 2026. Job titles and postings use the "FEC" abbreviation. |
 | **Purple Promise** | FedEx's customer service commitment: "I will make every FedEx experience outstanding." |
 | **Safety Above All** | FedEx's #1 operating value. |
 
@@ -39,7 +39,8 @@ A plain-English glossary for AI Efficiency team members who work across Express,
 > managers"** (singular: "FEC supervisor or manager"). **FEC stands for
 > Federal Express Corporation** — the single FedEx operating company since
 > June 1, 2024, when FedEx Express, FedEx Ground, and FedEx Services were
-> consolidated into it (FedEx Freight remains separate). Public FedEx job
+> consolidated into it (FedEx Freight, always separate, completed its
+> spin-off into an independent public company on June 1, 2026). Public FedEx job
 > postings use the abbreviation directly, e.g. "Federal Express Corporation
 > (FEC) employees," and front-line titles like Operations Supervisor now sit
 > under FEC. "Operations Manager" is the Legacy Express form of the role; it

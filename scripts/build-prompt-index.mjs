@@ -22,6 +22,32 @@ const SKIP = new Set(["README.md", "prompt-engineering-basics.md"]);
 
 const slug = (s) => s.toLowerCase().replace(/&/g, "and").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
+// Who each category serves (mirrors the prompts/README table; role research
+// in docs/technology/copilot-teams-playbook.md).
+const AUDIENCE = {
+  "daily-operations": "Any FEC supervisor or manager",
+  "safety-and-compliance": "Managers with safety responsibilities",
+  "peak-season-and-surge-planning": "Peak planners and sort managers",
+  "meeting-and-communication": "All levels",
+  "customer-and-contractor-communication": "P&D managers and customer-facing roles",
+  "linehaul-and-routing": "Linehaul managers and dispatch",
+  "process-improvement": "Continuous improvement leads",
+  "data-and-reporting": "Ops admins, analysts, and managers",
+  "bid-and-opportunity-support": "Business development",
+  "governance-safe-use": "Everyone, before sharing",
+};
+
+// The "Day 1" starter pack: the six most universally useful prompts, surfaced
+// first in the explorer for someone brand new to AI.
+const STARTERS = new Set([
+  "daily-operations/daily-manager-brief",
+  "daily-operations/shift-handoff",
+  "safety-and-compliance/pre-shift-safety-huddle-brief",
+  "meeting-and-communication/meeting-notes-to-action-items",
+  "meeting-and-communication/professional-email-draft",
+  "data-and-reporting/report-summary",
+]);
+
 const categories = [];
 const prompts = [];
 for (const f of fs.readdirSync(promptDir).sort()) {
@@ -31,14 +57,23 @@ for (const f of fs.readdirSync(promptDir).sort()) {
   const name = h1.replace(/\s+Prompts$/i, "");
   const description = (txt.split(/^# .+$/m)[1] || "").trim().split(/\n\s*\n/)[0].replace(/\s+/g, " ").trim();
   const catId = slug(name);
-  categories.push({ id: catId, name, file: `prompts/${f}`, description });
+  categories.push({ id: catId, name, file: `prompts/${f}`, description, audience: AUDIENCE[catId] || "" });
 
   // Each "## Title" followed by a ```text fenced block is one prompt
   // (the same definition scripts/check-docs.mjs counts).
   for (const m of txt.matchAll(/^## (.+)\n+```text\n([\s\S]*?)\n```/gm)) {
     const [, title, body] = m;
     const placeholders = [...new Set([...body.matchAll(/\[[^\[\]]+\]/g)].map((p) => p[0]))];
-    prompts.push({ id: `${catId}/${slug(title)}`, title: title.trim(), category: catId, text: body, placeholders });
+    const id = `${catId}/${slug(title)}`;
+    prompts.push({ id, title: title.trim(), category: catId, starter: STARTERS.has(id), text: body, placeholders });
+  }
+}
+
+const ids = new Set(prompts.map((p) => p.id));
+for (const s of STARTERS) {
+  if (!ids.has(s)) {
+    console.error(`FAIL  starter id no longer exists in the markdown: ${s}`);
+    process.exit(1);
   }
 }
 
