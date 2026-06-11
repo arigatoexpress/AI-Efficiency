@@ -39,6 +39,7 @@ rebuild:
 | Asset | Status | Day-one use |
 | --- | --- | --- |
 | [51-prompt library](../../prompts/README.md) | Ready | Works as-is in the Gemini Enterprise chat — same prompts, now under company management. |
+| [Machine-readable prompt index](../../prompts/prompts.json) | Generated + CI-checked | One JSON file for bulk import or automation — ids, categories, full text, and placeholders for all 51 prompts, model-agnostic by design. |
 | [Daily Ops Playbook](../daily-ops-playbook.md) | Ready | The daily routine, unchanged — just run inside the approved tool. |
 | [ADK shift-brief agent starter kit](../../starter-projects/adk-shift-brief-agent/README.md) | Built + tested offline | Our first registrable custom agent: ADK-built agents can be registered into Gemini Enterprise by an admin. |
 | [Agency-ladder guide](agentic-ai-for-operations.md) | Ready | The shared language for deciding how much autonomy any agent gets. |

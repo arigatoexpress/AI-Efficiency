@@ -17,6 +17,7 @@ One week, sixteen merged pull requests — every CTO-review item closed, two new
 - **Engineering hygiene** — CI now runs docs/link/claim checks and the full app build on every PR; GitHub Actions are SHA-pinned with Dependabot enabled; the [operating charter](AGENTS.md) keeps changes small, verified, and reversible; model licenses for the forecasting track all confirmed Apache-2.0.
 - **The platform is one hub** — unified [interactive hub page](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/index.html), refreshed [presentation deck](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/assets/presentation-deck.html) (15 slides, current as of today), and the printable [Daily Ops Playbook](docs/daily-ops-playbook.md).
 - **Gemini Enterprise prep started** — access requested from the org team; the [day-one readiness plan](docs/technology/gemini-enterprise-readiness.md) and the first registrable agent — the [ADK shift-brief agent starter kit](starter-projects/adk-shift-brief-agent/README.md) (read-only tools, synthetic signals, CI-enforced guardrails, tested offline) — are ready and waiting.
+- **The prompt library became programmable** — the new [Prompt Explorer](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/prompts/explorer.html) (search, fill in the brackets, copy — offline) plus a machine-readable [`prompts.json`](prompts/prompts.json) index generated from the markdown and kept in sync by CI, so scripts, agents, and enterprise tools can consume the same 51 prompts as people do.
 
 *In review (deliberately deferred): four major-version dependency updates from Dependabot — they get tested properly after the meeting, not rushed before it.*
 
@@ -95,7 +96,9 @@ Our most mature starter project is a live, public-data decision-support dashboar
 
 ## Prompt Library at a Glance
 
-**51 copy-paste prompts** across 10 categories — plus a [prompt-engineering basics](prompts/prompt-engineering-basics.md) guide — organized by what FedEx managers actually do:
+**51 copy-paste prompts** across 10 categories — plus a [prompt-engineering basics](prompts/prompt-engineering-basics.md) guide — organized by what FedEx managers actually do.
+
+**Easiest way in: the [Prompt Explorer](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/prompts/explorer.html)** — search the whole library, fill in the brackets on screen, and copy the finished prompt. Fully offline like the other tools, works in any browser on any machine, and the prompts are plain text that works with any model (Gemini, Copilot, ChatGPT, Claude). Programs and agents can read the same library from [`prompts/prompts.json`](prompts/prompts.json).
 
 | Category | Examples |
 |----------|----------|
@@ -189,6 +192,8 @@ docs/
     gemini-enterprise-readiness.md ← Day-one plan for pending enterprise access
 prompts/
   README.md                        ← Copy-paste prompts for daily work
+  explorer.html                    ← Offline search-and-fill Prompt Explorer
+  prompts.json                     ← Machine-readable index (generated)
   daily-operations.md
   safety-and-compliance.md
   peak-season-and-surge.md

@@ -52,6 +52,7 @@ const pages = [
   "assets/presentation-deck.html",
   "starter-projects/dock-efficiency-signal-lab/app/index.html",
   "starter-projects/tlh-sph-efficiency-explorer/app/index.html",
+  "prompts/explorer.html",
 ];
 const offlineApps = pages.slice(2).concat(["index.html"]);
 for (const p of pages) {

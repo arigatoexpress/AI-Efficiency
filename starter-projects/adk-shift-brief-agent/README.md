@@ -57,6 +57,12 @@ Try: *"Draft a pre-shift huddle for MEM."* The first **live** run should happen
 under the enterprise account once access lands — not a personal key. See the
 [Gemini Enterprise readiness page](../../docs/technology/gemini-enterprise-readiness.md).
 
+**Model-agnostic by design:** the model is one string, overridable without a
+code change (`SHIFT_BRIEF_MODEL` in `.env`). ADK also supports non-Gemini
+models through its LiteLLM integration, so the same agent, tools, and
+guardrail tests survive a model swap. Everything else is standard library —
+the kit runs the same on any OS and hardware that runs Python 3.
+
 ## Files
 
 | File | Purpose |

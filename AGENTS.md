@@ -20,6 +20,8 @@ The repo turns operational friction into reusable AI assets: prompts for manager
 | `docs/documentation-standard.md` | Style guide for all repo docs and starter projects |
 | `prompts/` | Copy-paste prompt library organized by operational area |
 | `prompts/README.md` | Index of 51 prompts across 10 categories |
+| `prompts/explorer.html` | Offline search-and-fill Prompt Explorer (data injected by the build script) |
+| `prompts/prompts.json` | Machine-readable prompt index — generated; edit the markdown, then run `scripts/build-prompt-index.mjs` |
 | `starter-projects/` | Runnable prototypes (React/Vite, AI Studio, Cloud Run) |
 | `starter-projects/fedex-logistics-intelligence-system/` | Most mature prototype — public-data ops dashboard with multi-station scenarios |
 | `starter-projects/dock-efficiency-signal-lab/` | Offline SPC + TA + forecasting on weekly dock KPIs (is the move real?) |
@@ -46,6 +48,7 @@ This repo is primarily documentation; there is no unified dev server.
 - `node scripts/check-docs.mjs` — relative links, raw.githack paths, prompt-count claims, HTML balance, offline CSP.
 - `node starter-projects/tlh-sph-efficiency-explorer/test/run-checks.mjs` — the explorer's exact-decomposition identity, validation cases, demo stories, CSV intake, offline guarantees.
 - `python3 starter-projects/adk-shift-brief-agent/test/run_checks.py` — the ADK kit's tools, safety gate, offline guarantee, and (if google-adk is installed) agent wiring.
+- `node scripts/build-prompt-index.mjs --check` — prompts.json and the Prompt Explorer's embedded data match the prompt markdown (regenerate without `--check` after editing prompts).
 - In `starter-projects/fedex-logistics-intelligence-system/app`: `npm ci && npx tsc --noEmit && npm run build`.
 
 ## Safety boundaries
