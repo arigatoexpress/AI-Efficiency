@@ -81,6 +81,12 @@ duplicated:
   forward path from direct Gemini calls to a first ADK agent ("draft a shift
   brief from public signals") with read-only, public-data tools, served via
   Vertex AI and hosted on Agent Engine.
+- **[ADK shift-brief agent starter kit](../../starter-projects/adk-shift-brief-agent/README.md)**
+  — that first agent, now built and tested offline: five read-only tools,
+  synthetic signals, CI-enforced guardrails, ready to register when enterprise
+  access lands.
+- **[Gemini Enterprise readiness](gemini-enterprise-readiness.md)** — what we
+  prepare while the access request is pending, and the day-one checklist.
 - **[Teams/Telegram intake agent roadmap](../teams-telegram-agent-roadmap.md)**
   — the first real, governed rung-3 agent: idea intake with PII warnings, a
   human review queue, and no automatic external sends.

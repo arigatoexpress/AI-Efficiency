@@ -283,9 +283,18 @@ Delivered from the review feedback:
 - "FEC" expansion confirmed from public FedEx careers material: **Federal
   Express Corporation**, the single operating company since June 1, 2024
   (Express + Ground + Services; Freight separate) — glossary updated, TODO
-  resolved.
+  resolved;
+- the ADK forward path is now runnable — the
+  [shift-brief agent starter kit](starter-projects/adk-shift-brief-agent/README.md)
+  (offline-tested, CI-checked, read-only tools) plus a
+  [Gemini Enterprise day-one readiness plan](docs/technology/gemini-enterprise-readiness.md)
+  prepared while the org access request is pending.
 
 Still ahead:
+
+- when Gemini Enterprise access is granted: run the day-one checklist, first
+  live agent run under the enterprise account, and start the governance review
+  for registering the shift-brief agent;
 
 - validate the TLH/SPH decomposition against one real, locally-loaded weekly
   export during a pilot;
