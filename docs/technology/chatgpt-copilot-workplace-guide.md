@@ -5,6 +5,11 @@ Last reviewed: 2026-05-22
 This guide explains how to use ChatGPT and Microsoft 365 Copilot at work in a
 simple, safe way. It is written for FEC supervisors and managers, not engineers.
 
+> Our org works mostly in Microsoft tools — for the operations deep-dive
+> (which Copilot you have, Microsoft's four prompt elements, role-by-role
+> guidance, Frontline Agent, the skills ladder), see the
+> **[Copilot + Teams playbook](copilot-teams-playbook.md)**.
+
 ## Simple Difference
 
 ChatGPT is best for flexible drafting, analysis, reusable project workspaces,

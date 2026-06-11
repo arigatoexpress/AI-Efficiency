@@ -30,6 +30,7 @@ The repo turns operational friction into reusable AI assets: prompts for manager
 | `starter-projects/forecast-foundation-model-spike/` | Executed Phase 5 benchmark: Chronos-Bolt vs the Signal Lab ensemble (ensemble won) |
 | `starter-projects/adk-shift-brief-agent/` | First ADK agent (offline-tested starter kit) — read-only tools, synthetic signals, Gemini Enterprise-ready |
 | `docs/technology/gemini-enterprise-readiness.md` | Day-one plan for the pending Gemini Enterprise access request |
+| `docs/technology/copilot-teams-playbook.md` | Microsoft-first ops playbook: Copilot tiers, four prompt elements, role-by-role guidance, skills ladder |
 | `assets/` | Banners, screenshots, and architecture diagrams |
 | `.github/ISSUE_TEMPLATE/` | Issue templates for governance review |
 | `CONTRIBUTING.md` | Full contribution process |
