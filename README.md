@@ -6,6 +6,22 @@
 
 > **One platform for safe, useful AI in operations.** Operations-led tools, prompts, and guides that turn real operational friction into reusable, governance-ready AI — built by ops people, for ops people. No coding required to use it.
 
+## What's New Since the June 4 Meeting
+
+One week, sixteen merged pull requests — every CTO-review item closed, two new tools shipped, and two research questions answered with measurements instead of opinions:
+
+- **Dock Efficiency Signal Lab shipped** ([open it](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/starter-projects/dock-efficiency-signal-lab/app/index.html)) — offline statistical process control + trend indicators + forecasting on weekly dock KPIs, with a region/district scope filter for the six Western focus districts. No data leaves the machine.
+- **TLH/SPH Efficiency Explorer shipped** ([open it](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/starter-projects/tlh-sph-efficiency-explorer/app/index.html)) — splits every week-over-week efficiency change into its exact throughput (SPH) and hours (TLH) effects, so an hours-cut gain is never mistaken for a productivity win.
+- **All CTO review feedback implemented** — the "FEC supervisors and managers" audience standard repo-wide (glossary as source of truth, FEC = Federal Express Corporation confirmed), the [agentic AI agency-ladder guide](docs/technology/agentic-ai-for-operations.md), and the efficiency-decomposition tooling above.
+- **We benchmarked before adopting** — a zero-shot forecasting foundation model (Chronos-Bolt) was tested against the Signal Lab's simple, explainable ensemble in a walk-forward benchmark: [the ensemble won](starter-projects/forecast-foundation-model-spike/README.md), so the baseline stays and no pilot was spent. Privacy-preserving (encrypted) scoring was also measured as [background research](starter-projects/fhe-private-scoring-spike/README.md).
+- **Engineering hygiene** — CI now runs docs/link/claim checks and the full app build on every PR; GitHub Actions are SHA-pinned with Dependabot enabled; the [operating charter](AGENTS.md) keeps changes small, verified, and reversible; model licenses for the forecasting track all confirmed Apache-2.0.
+- **The platform is one hub** — unified [interactive hub page](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/index.html), refreshed [presentation deck](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/assets/presentation-deck.html) (15 slides, current as of today), and the printable [Daily Ops Playbook](docs/daily-ops-playbook.md).
+
+*In review (deliberately deferred): four major-version dependency updates from Dependabot — they get tested properly after the meeting, not rushed before it.*
+
+---
+
+
 ## New Here? Three Ways To Get Value In Five Minutes
 
 No setup, no installs, no technical background:
