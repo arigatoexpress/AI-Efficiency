@@ -1,0 +1,587 @@
+{
+  "_note": "Generated from prompts/*.md by scripts/build-prompt-index.mjs — edit the markdown, then regenerate. Model-agnostic: plain text for any chat AI (Gemini, Copilot, ChatGPT, Claude) or any program.",
+  "safe_prompt_rule": "Remove sensitive data first, review output before sharing, and keep a human in charge of every decision.",
+  "count": 51,
+  "categories": [
+    {
+      "id": "bid-and-opportunity-support",
+      "name": "Bid And Opportunity Support",
+      "file": "prompts/bid-and-opportunity-support.md",
+      "description": "These prompts are for early, non-sensitive bid or opportunity support. They are not a substitute for official pricing, procurement, legal, sales, or customer commitments."
+    },
+    {
+      "id": "customer-and-contractor-communication",
+      "name": "Customer and Contractor Communication",
+      "file": "prompts/customer-and-contractor-comms.md",
+      "description": "These prompts help draft professional, empathetic communication for customers and contractors. **Never include real customer names, tracking numbers, addresses, or delivery photos.**"
+    },
+    {
+      "id": "daily-operations",
+      "name": "Daily Operations",
+      "file": "prompts/daily-operations.md",
+      "description": "These prompts cover the core daily workflow of a FedEx FEC supervisor or manager: shift briefs, handoffs, escalations, and after-action reviews. All prompts use scrubbed, non-sensitive data only."
+    },
+    {
+      "id": "data-and-reporting",
+      "name": "Data And Reporting",
+      "file": "prompts/data-and-reporting.md",
+      "description": "## Report Summary"
+    },
+    {
+      "id": "governance-safe-use",
+      "name": "Governance-Safe Use",
+      "file": "prompts/governance-safe-use.md",
+      "description": "## Use Case Intake"
+    },
+    {
+      "id": "linehaul-and-routing",
+      "name": "Linehaul and Routing",
+      "file": "prompts/linehaul-and-routing.md",
+      "description": "Linehaul (long-distance transport between hubs and stations) and P&D routing are core FedEx operations. These prompts help managers plan, communicate, and problem-solve without exposing real route manifests, carrier contracts, or facility security details."
+    },
+    {
+      "id": "meeting-and-communication",
+      "name": "Meeting And Communication",
+      "file": "prompts/meeting-and-communication.md",
+      "description": "## Meeting Agenda"
+    },
+    {
+      "id": "peak-season-and-surge-planning",
+      "name": "Peak Season and Surge Planning",
+      "file": "prompts/peak-season-and-surge.md",
+      "description": "Peak season (roughly October through January) is the highest-stakes period for FedEx operations. These prompts help managers plan, communicate, and debrief without exposing real volume forecasts, staffing numbers, or customer data."
+    },
+    {
+      "id": "process-improvement",
+      "name": "Process Improvement",
+      "file": "prompts/process-improvement.md",
+      "description": "## Process Map From Notes"
+    },
+    {
+      "id": "safety-and-compliance",
+      "name": "Safety and Compliance",
+      "file": "prompts/safety-and-compliance.md",
+      "description": "FedEx's first value is **Safety Above All**. These prompts help managers draft safety-related communication without ever including real employee names, incident locations, or injury details in unapproved AI tools."
+    }
+  ],
+  "prompts": [
+    {
+      "id": "bid-and-opportunity-support/opportunity-intake",
+      "title": "Opportunity Intake",
+      "category": "bid-and-opportunity-support",
+      "text": "Act as an FEC supervisor or manager helping organize a possible opportunity.\n\nOpportunity summary:\n[Paste non-sensitive summary.]\n\nReturn:\n- What the opportunity appears to be\n- Who should review it\n- Information needed before a go/no-go decision\n- Operational constraints to check\n- Customer or legal commitments to avoid making too early\n- Recommended next step\n\nDo not invent pricing, capacity, service commitments, or approval status.",
+      "placeholders": [
+        "[Paste non-sensitive summary.]"
+      ]
+    },
+    {
+      "id": "bid-and-opportunity-support/bid-readiness-checklist",
+      "title": "Bid Readiness Checklist",
+      "category": "bid-and-opportunity-support",
+      "text": "Create a bid readiness checklist from this non-sensitive description.\n\nDescription:\n[Paste description.]\n\nReturn a checklist grouped by:\n- Business fit\n- Operational capacity\n- Staffing\n- Service-level risk\n- Data needed\n- Legal/compliance review\n- Customer communication\n\nFlag anything that needs official approval.",
+      "placeholders": [
+        "[Paste description.]"
+      ]
+    },
+    {
+      "id": "bid-and-opportunity-support/go-no-go-brief",
+      "title": "Go / No-Go Brief",
+      "category": "bid-and-opportunity-support",
+      "text": "Create a draft go/no-go brief.\n\nContext:\n[Paste non-sensitive context.]\n\nReturn:\n- Recommendation: Go, No-go, or Needs more information\n- Reasons supporting the recommendation\n- Biggest risks\n- Missing data\n- Reviewers needed\n- Next action\n\nDo not make the final decision. This is a draft for human review.",
+      "placeholders": [
+        "[Paste non-sensitive context.]"
+      ]
+    },
+    {
+      "id": "bid-and-opportunity-support/customer-facing-language-check",
+      "title": "Customer-Facing Language Check",
+      "category": "bid-and-opportunity-support",
+      "text": "Review this draft for risky customer-facing language.\n\nDraft:\n[Paste draft.]\n\nReturn:\n- Commitments that may be too strong\n- Claims that need verification\n- Legal/compliance review triggers\n- Safer wording\n- Questions to ask before sending",
+      "placeholders": [
+        "[Paste draft.]"
+      ]
+    },
+    {
+      "id": "customer-and-contractor-communication/service-alert-draft-generic",
+      "title": "Service Alert Draft (Generic)",
+      "category": "customer-and-contractor-communication",
+      "text": "Draft a generic service alert for customers in a affected area.\n\nArea: [General region, e.g., \"Denver metro area\"]\nIssue: [General description, e.g., \"severe weather may cause delays\"]\nExpected impact: [General timeframe, e.g., \"1–2 business days\"]\n\nReturn:\n- Brief, honest explanation (2 sentences)\n- What customers should expect\n- How to get updates (generic: \"Track your shipment at fedex.com\")\n- Purple Promise tone: empathetic, professional, solution-oriented\n- No specific delivery commitments or guarantees\n\nUnder 150 words. Do not include real tracking numbers, names, or addresses.",
+      "placeholders": [
+        "[General region, e.g., \"Denver metro area\"]",
+        "[General description, e.g., \"severe weather may cause delays\"]",
+        "[General timeframe, e.g., \"1–2 business days\"]"
+      ]
+    },
+    {
+      "id": "customer-and-contractor-communication/customer-escalation-response-draft",
+      "title": "Customer Escalation Response Draft",
+      "category": "customer-and-contractor-communication",
+      "text": "Help me draft a response to a customer escalation. No real names, addresses, tracking numbers, or employee details.\n\nIssue type: [e.g., missed delivery window, damaged package, incorrect address]\nCustomer sentiment: [e.g., frustrated, concerned, understanding]\nResolution offered: [General type, e.g., redelivery, claim process, manager callback]\n\nReturn:\n- Acknowledgment of their concern\n- Brief explanation (without blaming)\n- Specific next step\n- Timeline for follow-up\n- Contact method for urgent updates\n\nTone: professional, empathetic, accountable. Under 200 words. Never reference real package details.",
+      "placeholders": [
+        "[e.g., missed delivery window, damaged package, incorrect address]",
+        "[e.g., frustrated, concerned, understanding]",
+        "[General type, e.g., redelivery, claim process, manager callback]"
+      ]
+    },
+    {
+      "id": "customer-and-contractor-communication/contractor-performance-conversation-notes",
+      "title": "Contractor Performance Conversation Notes",
+      "category": "customer-and-contractor-communication",
+      "text": "Help me prepare notes for a performance conversation with an ISP or contractor. No real names or specific route details.\n\nTopic: [e.g., on-time performance, safety observation, vehicle condition]\nGeneral context: [e.g., recent trend, customer feedback theme, inspection result]\nGoal of conversation: [e.g., clarify expectations, offer support, document agreement]\n\nReturn:\n- 2–3 objective observations (general terms)\n- 1 specific expectation going forward\n- 1 offer of support or resource\n- 1 follow-up action and timeline\n- Reminder: this is a draft for the manager to review and personalize\n\nTone: direct, supportive, fair. No real names, dates, or identifying details.",
+      "placeholders": [
+        "[e.g., on-time performance, safety observation, vehicle condition]",
+        "[e.g., recent trend, customer feedback theme, inspection result]",
+        "[e.g., clarify expectations, offer support, document agreement]"
+      ]
+    },
+    {
+      "id": "customer-and-contractor-communication/team-recognition-draft",
+      "title": "Team Recognition Draft",
+      "category": "customer-and-contractor-communication",
+      "text": "Draft a team recognition message for an operations group.\n\nAchievement: [General description, e.g., \"strong safety record this quarter\", \"successful peak launch\"]\nTeam: [General group, e.g., \"sort team\", \"P&D crew\", \"linehaul drivers\"]\n\nReturn:\n- Specific acknowledgment of the effort\n- Impact on the operation (general terms)\n- Thank-you that feels genuine, not corporate-generic\n- Encouragement to keep the standard\n\nUnder 150 words. No real names unless this is for an approved internal channel where naming is permitted.",
+      "placeholders": [
+        "[General description, e.g., \"strong safety record this quarter\", \"successful peak launch\"]",
+        "[General group, e.g., \"sort team\", \"P&D crew\", \"linehaul drivers\"]"
+      ]
+    },
+    {
+      "id": "customer-and-contractor-communication/internal-stakeholder-update-delay-notification",
+      "title": "Internal Stakeholder Update (Delay Notification)",
+      "category": "customer-and-contractor-communication",
+      "text": "Draft an internal update about an operational delay for stakeholder awareness.\n\nIssue: [General description, e.g., \"linehaul delay due to road closure\"]\nAffected flow: [General, e.g., \"westbound feeder schedule\"]\nExpected resolution: [General timeframe]\n\nReturn:\n- Situation in 2 sentences\n- Impact on downstream operations (general)\n- Actions being taken (3 items)\n- What stakeholders should do (if anything)\n- Who to contact for updates (role, not name)\n\nUnder 200 words. No real customer data, no specific route manifests, no employee names.",
+      "placeholders": [
+        "[General description, e.g., \"linehaul delay due to road closure\"]",
+        "[General, e.g., \"westbound feeder schedule\"]",
+        "[General timeframe]"
+      ]
+    },
+    {
+      "id": "customer-and-contractor-communication/delivery-exception-communication",
+      "title": "Delivery Exception Communication",
+      "category": "customer-and-contractor-communication",
+      "text": "Draft a communication about a delivery exception for customer service reference.\n\nException type: [e.g., address correction needed, access issue, weather hold, recipient not available]\nGeneral area: [Region]\n\nReturn:\n- What happened (1 sentence)\n- Why it happened (1 sentence, no blame)\n- Next step for resolution\n- Timeline for next attempt or update\n- How customer can help (if applicable)\n\nUnder 120 words. No real names, addresses, or tracking numbers.",
+      "placeholders": [
+        "[e.g., address correction needed, access issue, weather hold, recipient not available]",
+        "[Region]"
+      ]
+    },
+    {
+      "id": "daily-operations/daily-manager-brief",
+      "title": "Daily Manager Brief",
+      "category": "daily-operations",
+      "text": "Act as a FedEx FEC supervisor or manager preparing a concise daily brief for your station or hub.\n\nContext (scrubbed — no real names, addresses, tracking numbers, or package counts):\n[Paste non-sensitive shift notes, volume ranges, staffing notes, weather summary,\nequipment notes, and known constraints.]\n\nCreate a daily brief with:\n- Top 5 priorities for this shift\n- Risks to watch (weather, road, equipment, staffing)\n- Sort hub / P&D / linehaul coordination notes\n- Decisions needed and who should make them\n- Owner and next step for each item\n\nRules:\n- Do not invent facts.\n- Put unclear items under \"Needs verification.\"\n- Keep it under 300 words.\n- Include a safety reminder.",
+      "placeholders": [
+        "[Paste non-sensitive shift notes, volume ranges, staffing notes, weather summary,\nequipment notes, and known constraints.]"
+      ]
+    },
+    {
+      "id": "daily-operations/shift-handoff",
+      "title": "Shift Handoff",
+      "category": "daily-operations",
+      "text": "Turn these non-sensitive notes into a shift handoff for the incoming FedEx FEC supervisor or manager.\n\nOutgoing shift: [Day/Evening/Night]\nIncoming shift: [Day/Evening/Night]\nTone: direct, calm, and action-oriented\n\nNotes (scrubbed):\n[Paste notes. Remove all real names, addresses, tracking numbers, and package details.]\n\nReturn:\n1. What changed since the last handoff\n2. What is still open\n3. High-risk items (safety, customer, linehaul)\n4. Who owns each next step (roles, not names)\n5. What to check first in the next shift\n6. One safety reminder",
+      "placeholders": [
+        "[Day/Evening/Night]",
+        "[Paste notes. Remove all real names, addresses, tracking numbers, and package details.]"
+      ]
+    },
+    {
+      "id": "daily-operations/escalation-summary",
+      "title": "Escalation Summary",
+      "category": "daily-operations",
+      "text": "Summarize this issue for an escalation to senior management or a support team.\n\nIssue notes (scrubbed):\n[Paste scrubbed notes. No real customer names, addresses, tracking numbers, or employee details.]\n\nReturn:\n- Situation in 2 sentences\n- Operational impact on station/hub flow\n- Timeline\n- Actions already taken\n- Decision or help needed\n- What information is missing\n\nUse neutral language. Do not blame people. Flag assumptions.",
+      "placeholders": [
+        "[Paste scrubbed notes. No real customer names, addresses, tracking numbers, or employee details.]"
+      ]
+    },
+    {
+      "id": "daily-operations/after-action-review",
+      "title": "After-Action Review",
+      "category": "daily-operations",
+      "text": "Create an after-action review from these non-sensitive notes.\n\nEvent:\n[Describe the event in general terms.]\n\nNotes (scrubbed):\n[Paste notes.]\n\nReturn:\n- What happened (confirmed facts only)\n- What went well\n- What slowed us down\n- Root causes to investigate\n- Corrective actions with owners\n- Follow-up date\n\nSeparate confirmed facts from theories. No real employee names or incident IDs.",
+      "placeholders": [
+        "[Describe the event in general terms.]",
+        "[Paste notes.]"
+      ]
+    },
+    {
+      "id": "daily-operations/pre-sort-stand-up-brief",
+      "title": "Pre-Sort Stand-Up Brief",
+      "category": "daily-operations",
+      "text": "Draft a 2-minute stand-up brief for a sort hub team before the sort starts.\n\nShift: [Twilight / Night / Day]\nGeneral volume context: [e.g., \"typical Tuesday\", \"post-holiday\", \"peak surge\"]\nEquipment status (general): [e.g., all belts operational, chute 3 down for repair]\nKnown constraints: [e.g., late feeder arrival expected, overflow lot in use]\n\nReturn:\n- 1 safety focus for this sort\n- 1 throughput goal or expectation (general)\n- 1 coordination note (P&D, linehaul, or QA)\n- 1 \"watch for\" item\n- Closing: \"Safety Above All. Questions?\"\n\nUnder 150 words. No real names, package counts, or facility security details.",
+      "placeholders": [
+        "[Twilight / Night / Day]",
+        "[e.g., \"typical Tuesday\", \"post-holiday\", \"peak surge\"]",
+        "[e.g., all belts operational, chute 3 down for repair]",
+        "[e.g., late feeder arrival expected, overflow lot in use]"
+      ]
+    },
+    {
+      "id": "daily-operations/end-of-shift-closeout-checklist",
+      "title": "End-of-Shift Closeout Checklist",
+      "category": "daily-operations",
+      "text": "Create an end-of-shift closeout checklist for a FedEx FEC supervisor or manager.\n\nShift: [Day/Evening/Night]\nOperation type: [Station / Sort Hub / P&D / Linehaul]\n\nReturn a checklist with:\n- Package holds and exceptions (general process check)\n- Misload or damage reporting status\n- Equipment inspection and handoff notes\n- Communication to next shift (what they need to know)\n- Safety incident or near-miss documentation\n- Facility security check (general reminders)\n\nEach item should have a checkbox and a notes line.\nInclude footer: \"Verify all items with internal systems. This checklist is a draft template.\"",
+      "placeholders": [
+        "[Day/Evening/Night]",
+        "[Station / Sort Hub / P&D / Linehaul]"
+      ]
+    },
+    {
+      "id": "daily-operations/volume-anomaly-quick-check",
+      "title": "Volume Anomaly Quick Check",
+      "category": "daily-operations",
+      "text": "Help me think through a volume anomaly at my station or hub.\n\nGeneral context: [e.g., \"higher than typical Tuesday\", \"unexpected drop in outbound\"]\nPossible factors: [e.g., weather, local event, system issue, carrier delay]\n\nReturn:\n- 3 most likely causes to investigate\n- 2 quick checks (what to verify first)\n- 1 communication needed (who to notify, in general terms)\n- 1 safety implication\n- End with: \"This is an analysis draft. Confirm all facts with internal systems.\"\n\nNo real package counts, customer names, or route details.",
+      "placeholders": [
+        "[e.g., \"higher than typical Tuesday\", \"unexpected drop in outbound\"]",
+        "[e.g., weather, local event, system issue, carrier delay]"
+      ]
+    },
+    {
+      "id": "data-and-reporting/report-summary",
+      "title": "Report Summary",
+      "category": "data-and-reporting",
+      "text": "Summarize this report for an FEC supervisor or manager.\n\nReport text or non-sensitive extract:\n[Paste text.]\n\nReturn:\n- 5 key takeaways\n- What changed from the prior period, if known\n- Risks\n- Recommended actions\n- Questions to ask the data owner\n\nDo not invent trends that are not visible in the data.",
+      "placeholders": [
+        "[Paste text.]"
+      ]
+    },
+    {
+      "id": "data-and-reporting/metrics-interpretation",
+      "title": "Metrics Interpretation",
+      "category": "data-and-reporting",
+      "text": "Help interpret these metrics.\n\nMetrics:\n[Paste non-sensitive metric names and values.]\n\nContext:\n[Describe time period and operation.]\n\nReturn:\n- What looks normal\n- What looks unusual\n- Possible explanations\n- Follow-up data needed\n- Actions that are safe now\n- Actions that should wait for confirmation",
+      "placeholders": [
+        "[Paste non-sensitive metric names and values.]",
+        "[Describe time period and operation.]"
+      ]
+    },
+    {
+      "id": "data-and-reporting/data-request-draft",
+      "title": "Data Request Draft",
+      "category": "data-and-reporting",
+      "text": "Draft a clear data request.\n\nBusiness question:\n[What are we trying to answer?]\n\nDecision it supports:\n[What decision depends on this?]\n\nReturn:\n- Requested fields\n- Time period\n- Filters\n- Granularity\n- Privacy concerns\n- Why each field is needed\n- Suggested summary output",
+      "placeholders": [
+        "[What are we trying to answer?]",
+        "[What decision depends on this?]"
+      ]
+    },
+    {
+      "id": "data-and-reporting/dashboard-feedback",
+      "title": "Dashboard Feedback",
+      "category": "data-and-reporting",
+      "text": "Review this dashboard description for manager usefulness.\n\nDashboard description:\n[Paste description or field list.]\n\nReturn:\n- What decisions it supports\n- What is confusing\n- Missing filters or context\n- Metrics that need definitions\n- Suggested layout improvements\n- Risks of misinterpretation",
+      "placeholders": [
+        "[Paste description or field list.]"
+      ]
+    },
+    {
+      "id": "governance-safe-use/use-case-intake",
+      "title": "Use Case Intake",
+      "category": "governance-safe-use",
+      "text": "Help me turn this AI idea into a governance-ready use case.\n\nIdea:\n[Describe idea.]\n\nUsers:\n[Describe roles.]\n\nData:\n[Describe data category. Do not paste sensitive data.]\n\nReturn:\n- Problem statement\n- Proposed AI assistance\n- Human review step\n- Data classification questions\n- Risks\n- Success metrics\n- Approval needed before pilot\n- Smallest safe first test",
+      "placeholders": [
+        "[Describe idea.]",
+        "[Describe roles.]",
+        "[Describe data category. Do not paste sensitive data.]"
+      ]
+    },
+    {
+      "id": "governance-safe-use/privacy-review-preparation",
+      "title": "Privacy Review Preparation",
+      "category": "governance-safe-use",
+      "text": "Prepare privacy review notes for this AI workflow.\n\nWorkflow:\n[Describe workflow.]\n\nData categories:\n[List categories, not real values.]\n\nReturn:\n- Data collected\n- Data not needed and should be excluded\n- Storage location questions\n- Access-control questions\n- Retention questions\n- User consent or notice questions\n- Recommended safer design",
+      "placeholders": [
+        "[Describe workflow.]",
+        "[List categories, not real values.]"
+      ]
+    },
+    {
+      "id": "governance-safe-use/accuracy-review",
+      "title": "Accuracy Review",
+      "category": "governance-safe-use",
+      "text": "Review this AI-generated draft for accuracy risk.\n\nDraft:\n[Paste draft.]\n\nSource notes:\n[Paste source notes.]\n\nReturn:\n- Claims supported by source\n- Claims not supported by source\n- Numbers, dates, or names to verify\n- Missing context\n- Safer revised wording",
+      "placeholders": [
+        "[Paste draft.]",
+        "[Paste source notes.]"
+      ]
+    },
+    {
+      "id": "governance-safe-use/external-sharing-check",
+      "title": "External Sharing Check",
+      "category": "governance-safe-use",
+      "text": "Review this material before external sharing.\n\nMaterial:\n[Paste text.]\n\nCheck for:\n- Confidential or proprietary information\n- Customer or employee data\n- Unapproved claims\n- Overstated AI capability\n- Missing disclaimers\n- Tone and professionalism\n\nReturn a risk rating: Low, Medium, or High. Explain why.",
+      "placeholders": [
+        "[Paste text.]"
+      ]
+    },
+    {
+      "id": "linehaul-and-routing/feeder-delay-communication",
+      "title": "Feeder Delay Communication",
+      "category": "linehaul-and-routing",
+      "text": "Draft a communication about a feeder/linehaul delay for station awareness.\n\nGeneral route: [e.g., \"eastbound mountain corridor\"]\nCause: [General, e.g., \"road closure\", \"weather hold\", \"mechanical\"]\nEstimated impact: [General timeframe]\n\nReturn:\n- What is delayed (general lane description)\n- Why (1 sentence, no blame)\n- Expected recovery window\n- Impact on sort schedule (general)\n- Actions for station team (2 items)\n- Who to contact for updates (role)\n\nUnder 200 words. No real driver names, trailer numbers, or carrier details.",
+      "placeholders": [
+        "[e.g., \"eastbound mountain corridor\"]",
+        "[General, e.g., \"road closure\", \"weather hold\", \"mechanical\"]",
+        "[General timeframe]"
+      ]
+    },
+    {
+      "id": "linehaul-and-routing/alternate-routing-recommendation",
+      "title": "Alternate Routing Recommendation",
+      "category": "linehaul-and-routing",
+      "text": "Help me evaluate alternate routing options for a disrupted linehaul lane.\n\nPrimary lane: [General description, e.g., \"I-70 westbound through Vail Pass\"]\nDisruption: [General, e.g., \"winter storm closure\", \"construction delay\"]\nAlternate options to consider: [List general routes]\n\nReturn:\n- Pros and cons of each alternate (distance, time, risk, capacity)\n- Recommended alternate with reasoning\n- Trigger points for switching back to primary\n- Communication needed (roles, not names)\n- Safety considerations\n\nLabel all times and distances as estimates. Add: \"Verify routes with carrier dispatch and official road sources.\"",
+      "placeholders": [
+        "[General description, e.g., \"I-70 westbound through Vail Pass\"]",
+        "[General, e.g., \"winter storm closure\", \"construction delay\"]",
+        "[List general routes]"
+      ]
+    },
+    {
+      "id": "linehaul-and-routing/pandd-route-density-brief",
+      "title": "P&D Route Density Brief",
+      "category": "linehaul-and-routing",
+      "text": "Draft a route density brief for P&D planning. Use only synthetic or public data.\n\nArea type: [e.g., urban residential, suburban commercial, rural]\nDay of week: [e.g., Tuesday, Saturday]\nSeasonal factor: [e.g., peak, back-to-school, normal]\n\nReturn:\n- Expected density profile (general description, not real numbers)\n- 2 common bottleneck areas for this area type\n- 1 efficiency opportunity\n- 1 safety reminder for the area type\n- Suggestion for ISP/contractor communication (if Ground)\n\nAll numbers are synthetic estimates. Verify with internal route planning systems.",
+      "placeholders": [
+        "[e.g., urban residential, suburban commercial, rural]",
+        "[e.g., Tuesday, Saturday]",
+        "[e.g., peak, back-to-school, normal]"
+      ]
+    },
+    {
+      "id": "linehaul-and-routing/sort-hub-throughput-quick-check",
+      "title": "Sort Hub Throughput Quick Check",
+      "category": "linehaul-and-routing",
+      "text": "Help me prepare a sort hub throughput quick-check brief.\n\nShift: [Day/Evening/Twilight/Night]\nGeneral volume context: [e.g., \"typical Tuesday\", \"post-holiday return volume\", \"peak surge\"]\nEquipment status (general): [e.g., all belts operational, one chute down for maintenance]\n\nReturn:\n- 3 things that typically slow throughput\n- 2 early-warning signs to watch\n- 1 staffing flexibility option\n- 1 communication trigger (when to escalate)\n- End with safety reminder\n\nUse general operational knowledge. No real facility-specific details or employee names.",
+      "placeholders": [
+        "[Day/Evening/Twilight/Night]",
+        "[e.g., \"typical Tuesday\", \"post-holiday return volume\", \"peak surge\"]",
+        "[e.g., all belts operational, one chute down for maintenance]"
+      ]
+    },
+    {
+      "id": "linehaul-and-routing/yard-and-trailer-management-reminder",
+      "title": "Yard and Trailer Management Reminder",
+      "category": "linehaul-and-routing",
+      "text": "Draft a yard and trailer management reminder for a sort hub or station.\n\nContext: [e.g., peak volume, new trailer pool, contractor pickup window change]\n\nReturn:\n- 3 yard safety rules\n- 2 trailer check-in/check-out best practices\n- 1 reminder about seal integrity\n- 1 communication protocol for late or missing trailers\n- Where to report issues (role-based, not specific contact)\n\nUnder 200 words. No real trailer numbers, seal numbers, or yard layouts.",
+      "placeholders": [
+        "[e.g., peak volume, new trailer pool, contractor pickup window change]"
+      ]
+    },
+    {
+      "id": "linehaul-and-routing/cross-dock-timing-coordination",
+      "title": "Cross-Dock Timing Coordination",
+      "category": "linehaul-and-routing",
+      "text": "Draft a cross-dock timing coordination note for a hub operation.\n\nInbound windows: [General, e.g., \"morning feeder from east\", \"afternoon feeder from west\"]\nOutbound windows: [General, e.g., \"P&D dispatch\", \"evening linehaul departures\"]\nKnown constraint: [General, e.g., \"shorter sort window today\", \"equipment maintenance\"]\n\nReturn:\n- Inbound-to-outbound timeline (general time ranges)\n- Critical handoff points\n- 2 risks if inbound is delayed\n- 1 mitigation for each risk\n- Who needs to know (roles)\n\nLabel all times as estimates. Verify with internal scheduling systems.",
+      "placeholders": [
+        "[General, e.g., \"morning feeder from east\", \"afternoon feeder from west\"]",
+        "[General, e.g., \"P&D dispatch\", \"evening linehaul departures\"]",
+        "[General, e.g., \"shorter sort window today\", \"equipment maintenance\"]"
+      ]
+    },
+    {
+      "id": "meeting-and-communication/meeting-agenda",
+      "title": "Meeting Agenda",
+      "category": "meeting-and-communication",
+      "text": "Create a focused meeting agenda.\n\nMeeting purpose:\n[State purpose.]\n\nAudience:\n[List roles, not names if sensitive.]\n\nContext:\n[Paste non-sensitive background.]\n\nReturn:\n- Objective\n- Pre-read needed\n- Agenda with time boxes\n- Decisions needed\n- Follow-up owner template",
+      "placeholders": [
+        "[State purpose.]",
+        "[List roles, not names if sensitive.]",
+        "[Paste non-sensitive background.]"
+      ]
+    },
+    {
+      "id": "meeting-and-communication/meeting-notes-to-action-items",
+      "title": "Meeting Notes To Action Items",
+      "category": "meeting-and-communication",
+      "text": "Convert these meeting notes into action items.\n\nNotes:\n[Paste non-sensitive notes.]\n\nReturn a table:\nOwner | Action | Due date | Dependency | Risk if missed\n\nIf owner or due date is missing, write \"Needs assignment\" or \"Needs date.\"",
+      "placeholders": [
+        "[Paste non-sensitive notes.]"
+      ]
+    },
+    {
+      "id": "meeting-and-communication/professional-email-draft",
+      "title": "Professional Email Draft",
+      "category": "meeting-and-communication",
+      "text": "Draft a professional email from these notes.\n\nAudience:\n[Who is receiving it?]\n\nPurpose:\n[What should happen after they read it?]\n\nNotes:\n[Paste non-sensitive notes.]\n\nTone:\nClear, respectful, direct.\n\nRules:\n- Keep it under 200 words unless more detail is necessary.\n- Do not add commitments that are not in the notes.\n- End with a clear ask or next step.",
+      "placeholders": [
+        "[Who is receiving it?]",
+        "[What should happen after they read it?]",
+        "[Paste non-sensitive notes.]"
+      ]
+    },
+    {
+      "id": "meeting-and-communication/executive-update",
+      "title": "Executive Update",
+      "category": "meeting-and-communication",
+      "text": "Create an executive-ready update.\n\nContext:\n[Paste scrubbed context.]\n\nReturn:\n- Headline\n- Why it matters\n- Current status\n- Risks\n- Decisions needed\n- Next 7 days\n\nKeep it brief and avoid operational jargon unless necessary.",
+      "placeholders": [
+        "[Paste scrubbed context.]"
+      ]
+    },
+    {
+      "id": "peak-season-and-surge-planning/pre-peak-contingency-brief",
+      "title": "Pre-Peak Contingency Brief",
+      "category": "peak-season-and-surge-planning",
+      "text": "Act as an FEC supervisor or manager preparing for peak season volume surge.\n\nStation/Region: [General region name]\nHistorical context (scrubbed): [e.g., last year we saw volume increase in this general range]\nKnown constraints (non-sensitive): [e.g., parking lot repaving, new scanner rollout, contractor availability]\n\nReturn a pre-peak brief with:\n- 3 likely pressure points (sort capacity, P&D routes, linehaul timing)\n- 2 early-warning signals to watch\n- 2 contingency options for each pressure point\n- 1 staffing flexibility idea\n- Communication plan for contractors/ISPs (if applicable)\n- End with: \"This is a planning draft. Confirm all numbers with internal systems.\"\n\nKeep under 400 words. Use placeholders for any specific numbers.",
+      "placeholders": [
+        "[General region name]",
+        "[e.g., last year we saw volume increase in this general range]",
+        "[e.g., parking lot repaving, new scanner rollout, contractor availability]"
+      ]
+    },
+    {
+      "id": "peak-season-and-surge-planning/daily-surge-checklist",
+      "title": "Daily Surge Checklist",
+      "category": "peak-season-and-surge-planning",
+      "text": "Create a daily surge-readiness checklist for an FEC supervisor or manager.\n\nReturn as a printable checklist with:\n- Sort hub / station readiness (equipment, staffing plan, overflow space)\n- P&D capacity (vehicle status, route density estimate, ISP communication)\n- Linehaul / feeder window (pickup times, trailer availability, alternate routing)\n- Customer communication (known delays, service alerts, Purple Promise reminders)\n- End-of-shift closeout (package holds, misloads, damage reporting)\n\nEach item should be a yes/no/needs attention checkbox with a notes line.\nInclude a footer: \"Verify all numbers with internal systems. This checklist is a draft template.\"",
+      "placeholders": []
+    },
+    {
+      "id": "peak-season-and-surge-planning/post-peak-after-action-review",
+      "title": "Post-Peak After-Action Review",
+      "category": "peak-season-and-surge-planning",
+      "text": "Draft a post-peak after-action review from scrubbed notes.\n\nRegion/General area: [Name]\nPeak period: [General timeframe]\nKey themes from notes: [e.g., sort capacity held well, P&D had weather delays, linehaul was tight on Tuesdays]\n\nReturn:\n- What went well (3 items)\n- What slowed us down (3 items)\n- Root causes to investigate (2 items)\n- 3 recommendations for next peak\n- 1 metric to track year-over-year\n- Owners and follow-up dates\n\nUse general terms. No real customer names, package counts, or employee performance details.",
+      "placeholders": [
+        "[Name]",
+        "[General timeframe]",
+        "[e.g., sort capacity held well, P&D had weather delays, linehaul was tight on Tuesdays]"
+      ]
+    },
+    {
+      "id": "peak-season-and-surge-planning/contractor-isp-coordination-brief-ground",
+      "title": "Contractor / ISP Coordination Brief (Ground)",
+      "category": "peak-season-and-surge-planning",
+      "text": "Draft a coordination brief for independent service providers (ISPs) before a surge period.\n\nGeneral area: [Region]\nExpected change: [e.g., higher package density, extended delivery window, Sunday coverage]\nSupport available: [e.g., extra trailer drops, later pickup window, temporary overflow lot]\n\nReturn:\n- What is changing and why (2 sentences)\n- What ISPs should prepare (3 items)\n- What support the station is providing (2 items)\n- How to communicate issues (channel and response time)\n- Reminder about safety and vehicle inspection priorities\n\nTone: partnership, not command. Under 250 words. No real contractor names or specific route details.",
+      "placeholders": [
+        "[Region]",
+        "[e.g., higher package density, extended delivery window, Sunday coverage]",
+        "[e.g., extra trailer drops, later pickup window, temporary overflow lot]"
+      ]
+    },
+    {
+      "id": "peak-season-and-surge-planning/sort-hub-staffing-scenario-planner",
+      "title": "Sort Hub Staffing Scenario Planner",
+      "category": "peak-season-and-surge-planning",
+      "text": "Help me think through sort hub staffing scenarios for a high-volume day.\n\nShift: [Day/Evening/Twilight/Night]\nKnown factors (scrubbed): [e.g., typical package range, equipment status, training level of available team]\nConstraints: [e.g., break coverage, mandatory rotation, safety observer requirement]\n\nReturn 3 scenarios:\n- Best case: everything goes smoothly\n- Most likely: minor delays, one equipment issue\n- Challenging: significant delay, staffing shortfall, or weather impact\n\nFor each scenario:\n- Staffing arrangement (general roles, not names)\n- Key risk points\n- Trigger for escalating to next scenario\n- Communication needed\n\nLabel all numbers as estimates. Add: \"Verify staffing plans with HR and scheduling systems.\"",
+      "placeholders": [
+        "[Day/Evening/Twilight/Night]",
+        "[e.g., typical package range, equipment status, training level of available team]",
+        "[e.g., break coverage, mandatory rotation, safety observer requirement]"
+      ]
+    },
+    {
+      "id": "peak-season-and-surge-planning/weather-contingency-for-peak-volume",
+      "title": "Weather Contingency for Peak Volume",
+      "category": "peak-season-and-surge-planning",
+      "text": "Draft a weather contingency plan for peak-season operations.\n\nGeneral area: [Region]\nWeather risk: [e.g., snow, ice, high wind, flooding]\nOperational exposure: [e.g., mountain passes on linehaul routes, residential P&D on hills]\n\nReturn:\n- Weather monitoring sources (public sources only: NWS, Open-Meteo, COtrip)\n- Decision points and who makes them (roles, not names)\n- 3 operational adjustments to consider\n- Customer communication template (generic, no real names or tracking numbers)\n- Recovery sequence when weather clears\n- Safety reminder\n\nKeep it practical. Under 350 words. All data sources must be public.",
+      "placeholders": [
+        "[Region]",
+        "[e.g., snow, ice, high wind, flooding]",
+        "[e.g., mountain passes on linehaul routes, residential P&D on hills]"
+      ]
+    },
+    {
+      "id": "process-improvement/process-map-from-notes",
+      "title": "Process Map From Notes",
+      "category": "process-improvement",
+      "text": "Act as a process improvement facilitator.\n\nCurrent process notes:\n[Paste non-sensitive notes.]\n\nCreate:\n- Current process steps\n- Pain points\n- Duplicate work\n- Wait states\n- Failure points\n- Suggested improvements\n- Metrics to track\n\nDo not assume missing steps. Mark them as questions.",
+      "placeholders": [
+        "[Paste non-sensitive notes.]"
+      ]
+    },
+    {
+      "id": "process-improvement/root-cause-brainstorm",
+      "title": "Root Cause Brainstorm",
+      "category": "process-improvement",
+      "text": "Help me think through root causes.\n\nProblem:\n[Describe problem without sensitive data.]\n\nObserved facts:\n[List facts.]\n\nReturn:\n- Likely causes\n- Evidence needed for each cause\n- Quick checks\n- Longer-term fixes\n- Risks of acting too soon\n\nDo not pick one root cause unless the facts clearly support it.",
+      "placeholders": [
+        "[Describe problem without sensitive data.]",
+        "[List facts.]"
+      ]
+    },
+    {
+      "id": "process-improvement/pilot-design",
+      "title": "Pilot Design",
+      "category": "process-improvement",
+      "text": "Design a small AI pilot for this operations problem.\n\nProblem:\n[Describe problem.]\n\nUsers:\n[Describe roles.]\n\nData available:\n[Describe data type, not sensitive values.]\n\nReturn:\n- Pilot goal\n- Users\n- Inputs\n- Output\n- Human review step\n- Success metrics\n- Data risks\n- What governance should review\n- 2-week test plan",
+      "placeholders": [
+        "[Describe problem.]",
+        "[Describe roles.]",
+        "[Describe data type, not sensitive values.]"
+      ]
+    },
+    {
+      "id": "process-improvement/standard-work-draft",
+      "title": "Standard Work Draft",
+      "category": "process-improvement",
+      "text": "Turn these process notes into a standard work draft.\n\nNotes:\n[Paste scrubbed notes.]\n\nReturn:\n- Purpose\n- Scope\n- Step-by-step procedure\n- Quality checks\n- Escalation triggers\n- Common mistakes\n- Training notes\n\nKeep language simple enough for a new manager to use.",
+      "placeholders": [
+        "[Paste scrubbed notes.]"
+      ]
+    },
+    {
+      "id": "safety-and-compliance/pre-shift-safety-huddle-brief",
+      "title": "Pre-Shift Safety Huddle Brief",
+      "category": "safety-and-compliance",
+      "text": "Act as a safety-focused FEC supervisor or manager preparing a 2-minute huddle brief.\n\nStation: [Station name or code]\nShift: [Day/Evening/Night]\nSeason/Conditions: [e.g., winter ice, summer heat, rain]\nKnown equipment status: [e.g., all scanners functional, 2 dollies out for repair]\n\nReturn:\n- 1 safety focus for this shift (e.g., slip hazards, heat awareness, lifting posture)\n- 1 quick check everyone should do before starting\n- 1 reminder about PPE or equipment inspection\n- 1 \"see something, say something\" prompt\n- End with: \"Safety Above All. Questions before we start?\"\n\nKeep it under 150 words. Use direct, respectful language. Do not include real employee names or past incident details.",
+      "placeholders": [
+        "[Station name or code]",
+        "[Day/Evening/Night]",
+        "[e.g., winter ice, summer heat, rain]",
+        "[e.g., all scanners functional, 2 dollies out for repair]"
+      ]
+    },
+    {
+      "id": "safety-and-compliance/near-miss-report-draft",
+      "title": "Near-Miss Report Draft",
+      "category": "safety-and-compliance",
+      "text": "Help me draft a near-miss report from scrubbed notes. No real names, no exact dates if identifiable, no injury details.\n\nWhat happened (scrubbed):\n[Describe the near-miss in general terms]\n\nImmediate action taken:\n[General description]\n\nReturn a draft with:\n- Category (slip/trip/fall, equipment contact, vehicle incident, ergonomic, other)\n- General description of what occurred\n- Contributing factors to consider\n- Corrective actions to recommend\n- Follow-up owner and timeline\n- Note: \"This is a draft for review. Official reporting must follow FedEx safety procedures.\"\n\nUse neutral, blame-free language. Flag anything that needs verification.",
+      "placeholders": [
+        "[Describe the near-miss in general terms]",
+        "[General description]"
+      ]
+    },
+    {
+      "id": "safety-and-compliance/safety-meeting-agenda",
+      "title": "Safety Meeting Agenda",
+      "category": "safety-and-compliance",
+      "text": "Create a safety meeting agenda for an operations team.\n\nStation/Hub: [Name]\nFrequency: [Weekly / Monthly / Post-incident review]\nRecent themes (scrubbed): [e.g., loading dock awareness, scanner strap usage]\n\nReturn:\n- Meeting objective (1 sentence)\n- 3 discussion topics (5 minutes each)\n- 1 interactive element (quiz, scenario, or demonstration)\n- Action item template with owner and due date\n- Closing reminder about reporting channels\n\nKeep total meeting time under 30 minutes.",
+      "placeholders": [
+        "[Name]",
+        "[Weekly / Monthly / Post-incident review]",
+        "[e.g., loading dock awareness, scanner strap usage]"
+      ]
+    },
+    {
+      "id": "safety-and-compliance/seasonal-safety-alert-draft",
+      "title": "Seasonal Safety Alert Draft",
+      "category": "safety-and-compliance",
+      "text": "Draft a seasonal safety alert for operations team members.\n\nSeason/Hazard: [e.g., winter ice, summer heat index, high wind]\nAffected areas: [General region, not specific facility details]\nDuration: [General timeframe]\n\nReturn:\n- Hazard summary (2 sentences)\n- 3 specific precautions\n- 1 \"red flag\" symptom or condition to watch for\n- What to do if conditions worsen\n- Where to find official FedEx safety updates (remind them to check internal sources, not rely on this draft)\n\nTone: calm, authoritative, caring. Under 200 words.",
+      "placeholders": [
+        "[e.g., winter ice, summer heat index, high wind]",
+        "[General region, not specific facility details]",
+        "[General timeframe]"
+      ]
+    },
+    {
+      "id": "safety-and-compliance/post-incident-communication-draft-manager-to-team",
+      "title": "Post-Incident Communication Draft (Manager-to-Team)",
+      "category": "safety-and-compliance",
+      "text": "Draft a brief team communication after a safety incident. No real names, no exact times, no medical details.\n\nGeneral context: [e.g., loading dock, P&D vehicle, sort aisle]\nKey reminder: [e.g., stay alert near moving equipment, use three points of contact]\n\nReturn:\n- Acknowledgment that safety is the top priority\n- General reminder about the relevant procedure\n- Encouragement to report hazards immediately\n- Reference to official safety resources (internal)\n- Closing that reinforces team care\n\nKeep it human, not corporate-robot. Under 150 words.",
+      "placeholders": [
+        "[e.g., loading dock, P&D vehicle, sort aisle]",
+        "[e.g., stay alert near moving equipment, use three points of contact]"
+      ]
+    },
+    {
+      "id": "safety-and-compliance/safety-data-review-summary",
+      "title": "Safety Data Review Summary",
+      "category": "safety-and-compliance",
+      "text": "Summarize safety metrics for an operations review. Use only synthetic or public data. No real employee names or incident IDs.\n\nPeriod: [Month/Quarter]\nGeneral trends: [e.g., slip incidents up slightly, vehicle incidents stable]\nFocus areas: [e.g., dock operations, P&D backing procedures]\n\nReturn:\n- 3 trends in plain English\n- 1 area showing improvement\n- 1 area needing attention\n- 2 concrete actions with owners\n- 1 metric to track next month\n\nSeparate confirmed facts from estimates. Flag anything needing verification.",
+      "placeholders": [
+        "[Month/Quarter]",
+        "[e.g., slip incidents up slightly, vehicle incidents stable]",
+        "[e.g., dock operations, P&D backing procedures]"
+      ]
+    }
+  ]
+}

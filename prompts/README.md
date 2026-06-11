@@ -2,6 +2,12 @@
 
 This folder contains copyable prompts for FEC supervisors and managers who are new to AI. Every prompt is designed for **FedEx operations contexts** — stations, sort hubs, P&D, linehaul, and peak season — while keeping sensitive data out.
 
+The library is **model-agnostic and programmable** — the same prompts, three ways:
+
+1. **Browse and fill:** the [**Prompt Explorer**](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/prompts/explorer.html) — search all prompts, type into the bracket fields, and copy the finished prompt. Fully offline (it's this folder's `explorer.html`; with the repo downloaded it opens in any browser on any machine — nothing you type leaves the page).
+2. **Read the markdown:** the category files below — the single source of truth.
+3. **Use them from code:** [`prompts.json`](prompts.json) is a machine-readable index (id, title, category, full text, `[bracket]` placeholders) for scripts, agents, and enterprise imports — plain text that works with any model: Gemini, Copilot, ChatGPT, Claude, or an [ADK agent](../starter-projects/adk-shift-brief-agent/README.md). Edit the markdown, then regenerate with `node scripts/build-prompt-index.mjs` (CI fails if they drift).
+
 ## How To Use A Prompt
 
 1. Copy a prompt.

@@ -22,6 +22,8 @@ jobs:
           node-version: 22
       - name: Check docs (links, prompt-count claims, HTML balance, CSP)
         run: node scripts/check-docs.mjs
+      - name: Prompt index in sync (prompts.json + explorer match the markdown)
+        run: node scripts/build-prompt-index.mjs --check
       - name: TLH/SPH Efficiency Explorer checks (math identity, demo, CSV, offline)
         run: node starter-projects/tlh-sph-efficiency-explorer/test/run-checks.mjs
       - name: ADK shift-brief agent checks (tools, safety gate, offline guarantee)
