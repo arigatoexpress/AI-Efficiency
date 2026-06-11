@@ -24,6 +24,8 @@ jobs:
         run: node scripts/check-docs.mjs
       - name: TLH/SPH Efficiency Explorer checks (math identity, demo, CSV, offline)
         run: node starter-projects/tlh-sph-efficiency-explorer/test/run-checks.mjs
+      - name: ADK shift-brief agent checks (tools, safety gate, offline guarantee)
+        run: python3 starter-projects/adk-shift-brief-agent/test/run_checks.py
 
   app:
     name: Logistics app — install, typecheck, build

@@ -16,6 +16,7 @@ One week, sixteen merged pull requests — every CTO-review item closed, two new
 - **We benchmarked before adopting** — a zero-shot forecasting foundation model (Chronos-Bolt) was tested against the Signal Lab's simple, explainable ensemble in a walk-forward benchmark: [the ensemble won](starter-projects/forecast-foundation-model-spike/README.md), so the baseline stays and no pilot was spent. Privacy-preserving (encrypted) scoring was also measured as [background research](starter-projects/fhe-private-scoring-spike/README.md).
 - **Engineering hygiene** — CI now runs docs/link/claim checks and the full app build on every PR; GitHub Actions are SHA-pinned with Dependabot enabled; the [operating charter](AGENTS.md) keeps changes small, verified, and reversible; model licenses for the forecasting track all confirmed Apache-2.0.
 - **The platform is one hub** — unified [interactive hub page](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/index.html), refreshed [presentation deck](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/assets/presentation-deck.html) (15 slides, current as of today), and the printable [Daily Ops Playbook](docs/daily-ops-playbook.md).
+- **Gemini Enterprise prep started** — access requested from the org team; the [day-one readiness plan](docs/technology/gemini-enterprise-readiness.md) and the first registrable agent — the [ADK shift-brief agent starter kit](starter-projects/adk-shift-brief-agent/README.md) (read-only tools, synthetic signals, CI-enforced guardrails, tested offline) — are ready and waiting.
 
 *In review (deliberately deferred): four major-version dependency updates from Dependabot — they get tested properly after the meeting, not rushed before it.*
 
@@ -65,6 +66,7 @@ Ideas come in the front door and become projects. Daily **prompts** power manage
 | Use Gemini well at work | [Gemini guide](docs/technology/gemini-for-ops-managers.md) | Gemini users |
 | Understand "AI agents" | [Agentic AI for operations](docs/technology/agentic-ai-for-operations.md) | Everyone — managers first |
 | See the engineering forward path | [Google Cloud + ADK integration](docs/technology/google-cloud-adk-integration.md) | Engineers and technically-curious managers |
+| Get ready for Gemini Enterprise | [Day-one readiness plan](docs/technology/gemini-enterprise-readiness.md) | Everyone — access request is pending |
 | Review a project before sharing | [Governance checklist](docs/governance/project-review-checklist.md) | Team leads and reviewers |
 | Propose a small experiment | [Pilot template](docs/pilot-program-template.md) | Managers ready to experiment |
 
@@ -137,6 +139,7 @@ Early examples the team can learn from, improve, and submit for review.
 | [FedEx Logistics Intelligence System](starter-projects/fedex-logistics-intelligence-system/README.md) | **Live prototype + source-owned rebuild** | Public-data station-ops console for weather, road, and regional risk briefings. |
 | [Dock Efficiency Signal Lab](starter-projects/dock-efficiency-signal-lab/README.md) | **Offline single-file app** | Process-control (SPC) + technical-analysis indicators + forecasting on weekly dock-efficiency KPIs; ranks top/bottom performers with $ impact and Scorecard focus. Fully offline — no data leaves the machine. |
 | [TLH/SPH Efficiency Explorer](starter-projects/tlh-sph-efficiency-explorer/README.md) | **Offline single-file app** | Splits each week-over-week efficiency change into its two real levers — throughput (SPH) and labor hours (TLH) — so an hours-cut gain is never mistaken for a productivity win. Companion to the Signal Lab; fully offline. |
+| [ADK Shift-Brief Agent](starter-projects/adk-shift-brief-agent/README.md) | **Runnable starter kit (offline-tested)** | The forward path's first agent, built with Google's ADK: drafts shift briefs from labeled synthetic signals through read-only tools, with CI-enforced guardrails. Ready to register into Gemini Enterprise when access lands. |
 | [AI Idea Intake Agent](starter-projects/ai-idea-intake-agent/README.md) | Concept and governance starter | Safe Teams/Copilot or Gemini-channel flow for AI ideas, feedback, and use-case triage. |
 | [Delivery Markets Lab](starter-projects/fedex-delivery-markets/README.md) | Prototype reference | Synthetic-data, paper-only delivery-market concept demo. |
 | [Forecast Foundation-Model Spike](starter-projects/forecast-foundation-model-spike/README.md) | Research spike (complete) | Chronos-Bolt vs the Signal Lab's simple ensemble (walk-forward MASE, synthetic fixtures) — the simple ensemble won, so the explainable baseline stays. |
@@ -183,6 +186,7 @@ docs/
     google-ai-studio-guide.md
     agentic-ai-for-operations.md   ← The agency ladder, plainly
     google-cloud-adk-integration.md ← Vertex AI + ADK forward path
+    gemini-enterprise-readiness.md ← Day-one plan for pending enterprise access
 prompts/
   README.md                        ← Copy-paste prompts for daily work
   daily-operations.md
@@ -202,6 +206,7 @@ starter-projects/
   tlh-sph-efficiency-explorer/          ← Offline TLH/SPH decomposition app + docs
   forecast-foundation-model-spike/      ← Chronos vs baseline benchmark (complete)
   fhe-private-scoring-spike/            ← FHE research benchmark (complete)
+  adk-shift-brief-agent/                ← First ADK agent, offline-tested starter kit
   ai-idea-intake-agent/
   fedex-delivery-markets/
 assets/

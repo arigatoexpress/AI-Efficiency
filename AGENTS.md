@@ -26,6 +26,8 @@ The repo turns operational friction into reusable AI assets: prompts for manager
 | `starter-projects/tlh-sph-efficiency-explorer/` | Offline TLH/SPH decomposition (which lever moved?) — companion to the Signal Lab |
 | `starter-projects/fhe-private-scoring-spike/` | Executed Phase 7 research benchmark: encrypted scoring with Concrete ML (synthetic, local) |
 | `starter-projects/forecast-foundation-model-spike/` | Executed Phase 5 benchmark: Chronos-Bolt vs the Signal Lab ensemble (ensemble won) |
+| `starter-projects/adk-shift-brief-agent/` | First ADK agent (offline-tested starter kit) — read-only tools, synthetic signals, Gemini Enterprise-ready |
+| `docs/technology/gemini-enterprise-readiness.md` | Day-one plan for the pending Gemini Enterprise access request |
 | `assets/` | Banners, screenshots, and architecture diagrams |
 | `.github/ISSUE_TEMPLATE/` | Issue templates for governance review |
 | `CONTRIBUTING.md` | Full contribution process |
@@ -43,6 +45,7 @@ This repo is primarily documentation; there is no unified dev server.
 
 - `node scripts/check-docs.mjs` — relative links, raw.githack paths, prompt-count claims, HTML balance, offline CSP.
 - `node starter-projects/tlh-sph-efficiency-explorer/test/run-checks.mjs` — the explorer's exact-decomposition identity, validation cases, demo stories, CSV intake, offline guarantees.
+- `python3 starter-projects/adk-shift-brief-agent/test/run_checks.py` — the ADK kit's tools, safety gate, offline guarantee, and (if google-adk is installed) agent wiring.
 - In `starter-projects/fedex-logistics-intelligence-system/app`: `npm ci && npx tsc --noEmit && npm run build`.
 
 ## Safety boundaries

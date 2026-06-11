@@ -1,0 +1,2 @@
+# Tested with this version; newer versions likely work but re-run test/run_checks.py.
+google-adk==2.2.0

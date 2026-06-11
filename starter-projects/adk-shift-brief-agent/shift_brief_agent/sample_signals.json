@@ -1,0 +1,46 @@
+{
+  "_label": "SYNTHETIC DEMO DATA — invented for demonstration. Not real weather, road, or station information.",
+  "stations": {
+    "GUC": {
+      "name": "Gunnison, CO (mountain station)",
+      "weather": [
+        {"signal": "Winter storm watch — 6-10 in snow possible overnight", "label": "SYNTHETIC DEMO (would be: public NWS forecast)"},
+        {"signal": "Morning low -4F; afternoon high 18F", "label": "SYNTHETIC DEMO (would be: public NWS forecast)"}
+      ],
+      "road": [
+        {"signal": "Chain law likely on Monarch Pass after 8 PM", "label": "SYNTHETIC DEMO (would be: public CDOT advisory)"},
+        {"signal": "I-70 westbound: rolling closures possible at Vail Pass", "label": "SYNTHETIC DEMO (would be: public CDOT advisory)"}
+      ]
+    },
+    "MEM": {
+      "name": "Memphis, TN (World Hub area)",
+      "weather": [
+        {"signal": "Severe thunderstorm risk 2-6 PM; gusts to 45 mph", "label": "SYNTHETIC DEMO (would be: public NWS forecast)"},
+        {"signal": "Heat index near 102F mid-afternoon", "label": "SYNTHETIC DEMO (would be: public NWS forecast)"}
+      ],
+      "road": [
+        {"signal": "Lane closures on I-240 near the airport corridor", "label": "SYNTHETIC DEMO (would be: public TDOT notice)"},
+        {"signal": "Crash cleanup on I-55 bridge approach, delays ~20 min", "label": "SYNTHETIC DEMO (would be: public TDOT notice)"}
+      ]
+    },
+    "IND": {
+      "name": "Indianapolis, IN (secondary hub)",
+      "weather": [
+        {"signal": "Wind advisory: sustained 25 mph, gusts 40 mph through evening", "label": "SYNTHETIC DEMO (would be: public NWS advisory)"}
+      ],
+      "road": [
+        {"signal": "Multi-vehicle accident on I-465 NE quadrant, right two lanes blocked", "label": "SYNTHETIC DEMO (would be: public INDOT feed)"}
+      ]
+    },
+    "PHX": {
+      "name": "Phoenix, AZ (desert station)",
+      "weather": [
+        {"signal": "Excessive heat warning: 114F peak; hydration protocol conditions", "label": "SYNTHETIC DEMO (would be: public NWS warning)"},
+        {"signal": "Blowing dust possible on the I-10 corridor after 4 PM", "label": "SYNTHETIC DEMO (would be: public NWS outlook)"}
+      ],
+      "road": [
+        {"signal": "I-10 westbound resurfacing, nightly closures 9 PM - 5 AM", "label": "SYNTHETIC DEMO (would be: public ADOT notice)"}
+      ]
+    }
+  }
+}
