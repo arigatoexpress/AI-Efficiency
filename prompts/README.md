@@ -18,7 +18,7 @@ The library is **model-agnostic and programmable** — the same prompts, three w
 
 ## Prompt Categories
 
-| Category | Best For | File |
+| Category | Use it for | Who it's for |
 |----------|----------|------|
 | [Prompt engineering basics](prompt-engineering-basics.md) | Writing better prompts from scratch | Beginners |
 | [Daily operations](daily-operations.md) | Shift briefs, handoffs, escalations, after-action reviews | Any FEC supervisor or manager |
