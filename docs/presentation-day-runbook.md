@@ -38,6 +38,8 @@ Intelligence System prototype to operations leaders.
   prompt.
 - [ ] Open `docs/governance/project-review-checklist.md` and
   `docs/pilot-program-template.md`.
+- [ ] Keep `docs/presentation-proof-points.md` ready for Q&A about official
+  FedEx alignment.
 - [ ] Close or move any internal FedEx tools, email, chat, or private files away
   from the shared screen.
 
@@ -49,6 +51,29 @@ Intelligence System prototype to operations leaders.
    manager draft.
 4. Governance: show the project checklist and pilot template.
 5. Close: ask for feedback, new prompt ideas, and one small pilot candidate.
+
+## Q&A Anchors
+
+**Is this official FedEx software?**
+
+No. It is a regional enablement repo and prototype hub. It aligns with public
+FedEx AI direction, but it is not a production product or policy.
+
+**Can we use real FedEx data?**
+
+Not from this repo. Use public or synthetic data until a specific pilot has
+approved tools, approved data handling, named owners, and governance signoff.
+
+**Why does this matter now?**
+
+FedEx has publicly announced enterprise AI literacy work and AI-enabled
+logistics capabilities. The local opportunity is to help managers practice safe,
+useful workflows before moving toward governed pilots.
+
+**What is the ask today?**
+
+Feedback, prompt ideas, and one small candidate pilot with clear data boundaries
+and human review.
 
 ## Backup Plan
 
@@ -66,3 +91,5 @@ Then continue with the prompt library, governance checklist, and pilot template.
 - The safest first wins are prompts, drafts, summaries, checklists, and pilots.
 - Every AI output needs human review before it becomes a decision or message.
 - Public or synthetic data comes first; internal data requires formal approval.
+- Public proof points are collected in
+  [presentation proof points](presentation-proof-points.md).

@@ -137,6 +137,8 @@ A browser-based slide deck for the regional standup: **[view it online](https://
 
 For the day-before checklist, demo flow, and backup plan, use the
 [`presentation day runbook`](docs/presentation-day-runbook.md).
+For Q&A about official public sources and claims, keep
+[`presentation proof points`](docs/presentation-proof-points.md) nearby.
 
 ## Starter Projects
 

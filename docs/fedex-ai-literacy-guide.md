@@ -92,6 +92,8 @@ These align with FedEx's "Safety Above All" value and the company's responsible 
 
 ## Source
 
-- [FedEx AI Education and Literacy Program Announcement](https://newsroom.fedex.com/newsroom/global-english/fedex-empowers-global-workforce-with-ai-education-and-literacy-program) (FedEx Newsroom, December 2025)
-- [FedEx and Accenture AI Training Partnership](https://newsroom.fedex.com/newsroom/global-english/fedex-empowers-global-workforce-with-ai-education-and-literacy-program)
-- [FedEx-ServiceNow AI Supply Chain Collaboration](https://newsroom.fedex.com/newsroom/global/fedex-and-servicenow-expand-strategic-collaboration-with-new-ai-powered-supply-chain-solution) (May 2026)
+- [FedEx AI Education and Literacy Program Announcement](https://newsroom.fedex.com/newsroom/global-english/fedex-empowers-global-workforce-with-ai-education-and-literacy-program) (FedEx Newsroom, December 2, 2025)
+- [FedEx Dataworks](https://www.fedex.com/en-us/dataworks.html)
+- [FedEx and ServiceNow AI Supply Chain Collaboration](https://newsroom.fedex.com/newsroom/global/fedex-and-servicenow-expand-strategic-collaboration-with-new-ai-powered-supply-chain-solution) (FedEx Newsroom, May 5, 2026)
+- [FedEx AI-Powered Post-Purchase Solutions](https://newsroom.fedex.com/newsroom/global-english/fedex-to-offer-access-to-ai-powered-post-purchase-solutions-for-enterprises) (FedEx Newsroom, February 2, 2026)
+- [Presentation proof points](presentation-proof-points.md)
