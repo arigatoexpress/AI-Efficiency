@@ -38,6 +38,7 @@ Intelligence System prototype to operations leaders.
   prompt.
 - [ ] Open `docs/governance/project-review-checklist.md` and
   `docs/pilot-program-template.md`.
+- [ ] Keep `docs/presentation-leadership-brief.md` ready as the leave-behind.
 - [ ] Keep `docs/presentation-proof-points.md` ready for Q&A about official
   FedEx alignment.
 - [ ] Close or move any internal FedEx tools, email, chat, or private files away
@@ -50,7 +51,8 @@ Intelligence System prototype to operations leaders.
 3. Logistics app: show one station scenario, one risk signal, and one generated
    manager draft.
 4. Governance: show the project checklist and pilot template.
-5. Close: ask for feedback, new prompt ideas, and one small pilot candidate.
+5. Close: share the leadership brief and ask for feedback, new prompt ideas,
+   and one small pilot candidate.
 
 ## Q&A Anchors
 
@@ -93,3 +95,5 @@ Then continue with the prompt library, governance checklist, and pilot template.
 - Public or synthetic data comes first; internal data requires formal approval.
 - Public proof points are collected in
   [presentation proof points](presentation-proof-points.md).
+- The one-page leave-behind is
+  [leadership brief](presentation-leadership-brief.md).

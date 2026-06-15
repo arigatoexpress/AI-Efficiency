@@ -21,6 +21,12 @@ it aligns with FedEx direction, or where a specific claim came from.
 | AI in customer-facing logistics products | FedEx announced AI-powered Tracking+ and Returns+ capabilities for post-purchase visibility, support, pattern detection, and returns workflows. | [FedEx Newsroom: AI-powered post-purchase solutions](https://newsroom.fedex.com/newsroom/global-english/fedex-to-offer-access-to-ai-powered-post-purchase-solutions-for-enterprises) |
 | AI and workflow collaboration | FedEx and ServiceNow announced an expanded collaboration embedding FedEx Dataworks logistics intelligence into AI-driven workflows. | [FedEx and ServiceNow AI supply chain solution](https://newsroom.fedex.com/newsroom/global/fedex-and-servicenow-expand-strategic-collaboration-with-new-ai-powered-supply-chain-solution) |
 
+## External Governance Anchor
+
+| Topic | What it supports | Public source |
+| --- | --- | --- |
+| AI risk management | NIST's AI Risk Management Framework is a voluntary framework for improving how organizations incorporate trustworthiness considerations into AI design, development, use, and evaluation. | [NIST AI Risk Management Framework](https://www.nist.gov/itl/ai-risk-management-framework) |
+
 ## Presenter Framing
 
 Use this phrasing when you want to stay aligned and avoid overclaiming:
@@ -37,6 +43,9 @@ Use this phrasing when you want to stay aligned and avoid overclaiming:
   smarter supply chains.
 - FedEx has public AI-enabled logistics products and partnerships.
 - This repo uses public or synthetic data and keeps human review in the loop.
+- The governance posture is consistent with lightweight risk management:
+  define the use case, classify the data, document human review, and measure
+  outcomes before scaling.
 
 ## Claims To Avoid
 

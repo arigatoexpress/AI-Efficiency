@@ -139,6 +139,8 @@ For the day-before checklist, demo flow, and backup plan, use the
 [`presentation day runbook`](docs/presentation-day-runbook.md).
 For Q&A about official public sources and claims, keep
 [`presentation proof points`](docs/presentation-proof-points.md) nearby.
+For a one-page leave-behind, use the
+[`leadership brief`](docs/presentation-leadership-brief.md).
 
 ## Starter Projects
 
