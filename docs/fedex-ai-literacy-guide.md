@@ -23,9 +23,9 @@ FedEx handles millions of shipments daily across Express, Ground, and Freight ne
 - Permission to use any AI tool with confidential data
 - A technical coding manual
 
-## The FedEx AI Fluency Framework
+## Regional AI Fluency Lens
 
-FedEx's program builds fluency across three levels. This guide focuses on the first two, which apply to most FEC supervisors and managers.
+FedEx's public AI literacy direction emphasizes responsible, role-based learning. This regional guide uses three practical levels to help FEC supervisors and managers apply that direction safely.
 
 | Level | What You Learn | FedEx Example |
 |-------|---------------|---------------|
@@ -79,7 +79,7 @@ These align with FedEx's "Safety Above All" value and the company's responsible 
 | **Gemini** (Google) | Drafting, research, Google ecosystem work, AI Studio prototyping | Check with your IT team on availability and data-handling rules for your region |
 | **Microsoft 365 Copilot** | Work inside Outlook, Teams, Word, Excel, PowerPoint | Uses only content you have permission to access |
 | **ChatGPT** (if approved) | Drafting, analysis, project workspaces | Confirm enterprise agreement and data retention policy with IT |
-| **FedEx Internal AI Tools** | FedEx-specific workflows, Dataworks, approved pilots | Follow internal training and access controls |
+| **FedEx approved internal tools and data platforms** | FedEx-specific workflows and approved pilots | Follow internal training, access controls, and data-handling rules |
 
 ## Getting Started in 10 Minutes
 

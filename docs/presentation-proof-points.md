@@ -25,7 +25,7 @@ it aligns with FedEx direction, or where a specific claim came from.
 
 | Topic | What it supports | Public source |
 | --- | --- | --- |
-| AI risk management | NIST's AI Risk Management Framework is a voluntary framework for improving how organizations incorporate trustworthiness considerations into AI design, development, use, and evaluation. | [NIST AI Risk Management Framework](https://www.nist.gov/itl/ai-risk-management-framework) |
+| AI risk management | NIST's AI Risk Management Framework is a voluntary framework for improving how organizations incorporate trustworthiness considerations into AI design, development, use, and evaluation. Its core functions are Govern, Map, Measure, and Manage. | [NIST AI Risk Management Framework Core](https://airc.nist.gov/airmf-resources/airmf/5-sec-core/) |
 
 ## Presenter Framing
 

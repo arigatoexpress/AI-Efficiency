@@ -15,6 +15,8 @@ Use this before presenting, sharing, piloting, or deploying any AI project.
 
 ## 2. Data Review
 
+- If the data is not clearly public or synthetic, pause before use and classify
+  it first.
 - What data does the project use?
 - Is the data public, synthetic, internal, confidential, regulated, or unknown?
 - Does it include customer, employee, package, route, facility, security, or
@@ -27,7 +29,7 @@ Use this before presenting, sharing, piloting, or deploying any AI project.
 
 - What does the AI produce?
 - Can the AI take actions, or does it only draft and summarize?
-- Does a human review every output?
+- Who is the named human owner responsible for reviewing outputs?
 - Does the system show uncertainty and assumptions?
 - Is there a record of what source material was used?
 
@@ -40,6 +42,7 @@ Use this before presenting, sharing, piloting, or deploying any AI project.
 - Legal or compliance risk:
 - Brand or external-sharing risk:
 - Mitigations:
+- Stop condition:
 
 ## 5. Production Readiness
 

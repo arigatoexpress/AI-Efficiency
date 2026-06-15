@@ -47,10 +47,13 @@ Use this template to propose a small, measurable AI pilot to your leadership or 
 | Manager hours saved per week | | | |
 | Error rate or rework | | | |
 | Team satisfaction | | | |
+| AI errors, overrides, or manager corrections | | | |
 
 **Success criteria:** The pilot is successful if __________.
 
 **Failure criteria:** The pilot should stop if __________.
+
+**Stop condition:** The owner will pause or retire the pilot if __________.
 
 ## 5. Risk Review
 

@@ -44,12 +44,15 @@ verify the output, and keep humans accountable for decisions.
    success metric, and human review path.
 4. Require governance review before any internal data, production workflow, or
    outward-facing communication is introduced.
+5. Keep internal data out until the project review checklist is complete.
 
 ## Suggested next 30 days
 
 - Collect 10 manager-submitted prompts from real recurring workflows.
 - Choose one low-risk pilot candidate that uses public, synthetic, or already
   approved data.
+- Use the [pilot candidate shortlist](pilot-candidate-shortlist.md) to choose
+  the first path.
 - Complete the project review checklist and pilot template before any live test.
 - Report back with time saved, quality improvements, risks found, and the
   decision to continue, change direction, or stop.
@@ -60,3 +63,5 @@ verify the output, and keep humans accountable for decisions.
   public FedEx sources behind the AI literacy and Dataworks alignment.
 - Use [project review checklist](governance/project-review-checklist.md) before
   presenting, sharing, piloting, or deploying any AI project.
+- Use the NIST AI RMF lens in plain English: govern the use case, map risks,
+  measure outcomes, and manage or stop the pilot if risk exceeds value.
