@@ -23,6 +23,7 @@ This folder contains guides, standards, and templates for the AI Efficiency Team
 | [Feedback and screenshot intake rules](governance/feedback-and-screenshot-intake-rules.md) | How to safely collect feedback. | Governance leads |
 | [Pilot program template](pilot-program-template.md) | Template for proposing a small, measurable AI pilot. | Managers proposing pilots |
 | [Demo script](demo-script.md) | Script for presenting the repo and prototype to leadership. | Anyone giving a demo |
+| [Presentation day runbook](presentation-day-runbook.md) | Day-before checklist, demo flow, and backup plan. | Presenters |
 
 ## Technology Guides
 

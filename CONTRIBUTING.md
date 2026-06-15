@@ -29,6 +29,15 @@ Before opening a pull request, confirm:
 - The document follows the plain-English structure in
   [docs/documentation-standard.md](docs/documentation-standard.md).
 
+## Git Hygiene
+
+- Do **not** commit `node_modules/` or build artifacts such as `dist/`,
+  `build/`, or `coverage/`.
+- Keep the repo clean: rely on `.gitignore` and run `npm run build` locally
+  rather than checking in compiled output.
+- If you accidentally stage a dependency directory, remove it from the index
+  with `git rm -r --cached <path>` before opening a pull request.
+
 ## Project Submission Format
 
 Create a folder under `starter-projects/` with:

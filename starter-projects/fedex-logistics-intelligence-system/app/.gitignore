@@ -1,4 +1,8 @@
 node_modules
-dist
+/dist
+coverage/
+*.tmp
+.cache/
 .env
+.env.local
 *.log
