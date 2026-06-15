@@ -135,6 +135,8 @@ Today the Logistics Intelligence app runs on **Cloud Run** with **Google AI Stud
 
 A browser-based slide deck for the regional standup: **[view it online](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/assets/presentation-deck.html)** (navigate with arrow keys; print to PDF if needed). If you have the repo downloaded, the same deck is the file `assets/presentation-deck.html`.
 
+Start with the [`presentation kit`](docs/presentation-kit.md) to open the deck,
+runbook, Q&A proof points, leadership brief, and pilot shortlist from one place.
 For the day-before checklist, demo flow, and backup plan, use the
 [`presentation day runbook`](docs/presentation-day-runbook.md).
 For Q&A about official public sources and claims, keep
