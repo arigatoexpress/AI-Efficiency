@@ -117,10 +117,10 @@ FedEx regional AI Efficiency group — mix of technical and non-technical operat
 **Say:**
 > "FedEx is investing in AI literacy across the enterprise. This repo is our regional contribution to that effort — built by operations people, for operations people, with safety and governance built in from day one."
 
-> "The repo is public. The prompts are copy-paste ready. The app is open source. We welcome feedback, improvements, and new pilot ideas from anyone in this group."
+> "The repo is public. The prompts are copy-paste ready. The prototype source is available for review. We welcome feedback, improvements, and new pilot ideas from anyone in this group."
 
 **Call to action:**
-> "If you are a manager, start with the prompts. If you are technical, look at the starter projects. If you are a leader, use the pilot template to propose your first experiment. And if you have questions about governance, the checklist is your first stop."
+> "The decision requested today is simple: nominate one low-risk pilot owner, approve a 30-day prompt intake, and keep internal data out until the project checklist is complete."
 
 ---
 
@@ -139,7 +139,13 @@ FedEx regional AI Efficiency group — mix of technical and non-technical operat
 > "Open an issue or a pull request. Every contribution needs a use case, audience, data classification, and expected benefit. See CONTRIBUTING.md."
 
 **Q: What is next?**
-> "We are hardening the public data layer, exploring a Foundry export path for when internal data access is approved, and collecting more prompts from real manager workflows."
+> "We collect 10 manager-submitted prompts, choose one low-risk pilot candidate, complete the checklist, and decide whether to continue, change, or stop based on measured results."
+
+**Q: Who owns this after the demo?**
+> "No pilot starts without a named owner and backup owner. The repo can support enablement, but a pilot needs accountable local ownership."
+
+**Q: What happens if someone submits sensitive data?**
+> "We stop that submission, remove the sensitive content, and do not use it in public docs, demos, prompts, or AI tools."
 
 ---
 

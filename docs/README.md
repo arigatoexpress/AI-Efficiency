@@ -22,7 +22,12 @@ This folder contains guides, standards, and templates for the AI Efficiency Team
 | [AI use policy](governance/ai-use-policy.md) | Boundaries for safe AI use. | Everyone |
 | [Feedback and screenshot intake rules](governance/feedback-and-screenshot-intake-rules.md) | How to safely collect feedback. | Governance leads |
 | [Pilot program template](pilot-program-template.md) | Template for proposing a small, measurable AI pilot. | Managers proposing pilots |
+| [Pilot candidate shortlist](pilot-candidate-shortlist.md) | Low-risk first-pilot options with metrics and stop conditions. | Leaders, pilot owners |
 | [Demo script](demo-script.md) | Script for presenting the repo and prototype to leadership. | Anyone giving a demo |
+| [Presentation kit](presentation-kit.md) | Single entry point for the deck, runbook, Q&A, leave-behind, and pilot decision materials. | Presenters |
+| [Leadership brief](presentation-leadership-brief.md) | One-page leave-behind for leaders after the demo. | Leaders, presenters |
+| [Presentation day runbook](presentation-day-runbook.md) | Day-before checklist, demo flow, and backup plan. | Presenters |
+| [Presentation proof points](presentation-proof-points.md) | Official public sources for Q&A and claims support. | Presenters, reviewers |
 
 ## Technology Guides
 

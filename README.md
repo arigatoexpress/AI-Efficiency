@@ -39,7 +39,7 @@ Prefer a visual overview? **[View the interactive hub page](https://raw.githack.
 
 ## Why This Matters for FedEx
 
-FedEx moves millions of packages daily across Express, Ground, and Freight networks, generating over **2 petabytes of operational data every day**. In December 2025, FedEx launched a global **AI Education and Literacy program** to prepare team members for an AI-powered enterprise. This repo is our regional contribution to that mission — built by operations people, for operations people.
+FedEx moves millions of packages daily across Express, Ground, and Freight networks, generating over **2 petabytes of operational data every day**. In December 2025, FedEx launched a global **AI Education and Literacy program** to prepare team members for an AI-powered enterprise. This repo is our regional contribution to that mission — built by operations people, for operations people. Public source links for these claims are collected in [presentation proof points](docs/presentation-proof-points.md).
 
 **What we believe:**
 - AI should save managers time, not replace their judgment.
@@ -135,13 +135,24 @@ Today the Logistics Intelligence app runs on **Cloud Run** with **Google AI Stud
 
 A browser-based slide deck for the regional standup: **[view it online](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/assets/presentation-deck.html)** (navigate with arrow keys; print to PDF if needed). If you have the repo downloaded, the same deck is the file `assets/presentation-deck.html`.
 
+Start with the [`presentation kit`](docs/presentation-kit.md) to open the deck,
+runbook, Q&A proof points, leadership brief, and pilot shortlist from one place.
+For the day-before checklist, demo flow, and backup plan, use the
+[`presentation day runbook`](docs/presentation-day-runbook.md).
+For Q&A about official public sources and claims, keep
+[`presentation proof points`](docs/presentation-proof-points.md) nearby.
+For a one-page leave-behind, use the
+[`leadership brief`](docs/presentation-leadership-brief.md).
+For a concrete next-step menu, use the
+[`pilot candidate shortlist`](docs/pilot-candidate-shortlist.md).
+
 ## Starter Projects
 
 Early examples the team can learn from, improve, and submit for review.
 
 | Project | Status | What it does |
 | --- | --- | --- |
-| [FedEx Logistics Intelligence System](starter-projects/fedex-logistics-intelligence-system/README.md) | **Live prototype + source-owned rebuild** | Public-data station-ops console for weather, road, and regional risk briefings. |
+| [FedEx Logistics Intelligence System](starter-projects/fedex-logistics-intelligence-system/README.md) | **Deployed public-data prototype + source-owned rebuild** | Public-data station-ops console for weather, road, and regional risk briefings. |
 | [Dock Efficiency Signal Lab](starter-projects/dock-efficiency-signal-lab/README.md) | **Offline single-file app** | Process-control (SPC) + technical-analysis indicators + forecasting on weekly dock-efficiency KPIs; ranks top/bottom performers with $ impact and Scorecard focus. Fully offline — no data leaves the machine. |
 | [TLH/SPH Efficiency Explorer](starter-projects/tlh-sph-efficiency-explorer/README.md) | **Offline single-file app** | Splits each week-over-week efficiency change into its two real levers — throughput (SPH) and labor hours (TLH) — so an hours-cut gain is never mistaken for a productivity win. Companion to the Signal Lab; fully offline. |
 | [ADK Shift-Brief Agent](starter-projects/adk-shift-brief-agent/README.md) | **Runnable starter kit (offline-tested)** | The forward path's first agent, built with Google's ADK: drafts shift briefs from labeled synthetic signals through read-only tools, with CI-enforced guardrails. Ready to register into Gemini Enterprise when access lands. |
