@@ -7,7 +7,8 @@ live app or network acts up.
 ## Who this is for
 
 Anyone presenting the AI Efficiency Team repo, prompt library, or Logistics
-Intelligence System prototype to operations leaders.
+Intelligence System prototype to non-technical district managers and other
+operations leaders.
 
 ## When to use it
 
@@ -55,6 +56,11 @@ Intelligence System prototype to operations leaders.
 4. Governance: show the project checklist and pilot template.
 5. Close: ask leaders to nominate one pilot owner, approve a 30-day prompt
    intake, and keep internal data out until the checklist is complete.
+
+**Deck note:** the browser deck ends its main narrative at the Q&A slide (13). Slides
+14–15 are a clearly-badged optional appendix (how we test before we trust; the
+engineering forward path). For a non-technical district-manager room, stop at Q&A and
+only open the appendix if someone asks a technical question.
 
 ## Q&A Anchors
 

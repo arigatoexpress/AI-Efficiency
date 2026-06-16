@@ -1,14 +1,15 @@
 # Leadership Brief: AI Efficiency Team
 
-Use this one-page brief as the leave-behind for a regional standup, leadership
-review, or pilot discussion.
+Use this one-page brief as the leave-behind for a district standup, leadership
+review, or pilot discussion. Written for non-technical district managers.
 
 ## What this is
 
-The AI Efficiency Team repo is a public-safe enablement hub for operations
-managers. It contains copy-paste prompts, plain-English user guides, governance
-checklists, pilot templates, and starter projects that show how AI can support
-manager workflows without touching confidential FedEx data.
+The AI Efficiency Team repo is a public-safe enablement hub for the managers
+across your district. It contains copy-paste prompts, plain-English user guides,
+governance checklists, pilot templates, and starter projects that show how AI can
+support manager workflows without touching confidential FedEx data — and small daily
+time savings, multiplied across every station, add up to real district-wide capacity.
 
 ## Why now
 
@@ -40,8 +41,8 @@ verify the output, and keep humans accountable for decisions.
 1. Endorse safe experimentation with public or synthetic data.
 2. Encourage managers to contribute real workflow prompts with sensitive details
    removed.
-3. Identify one narrow pilot candidate with a clear owner, data classification,
-   success metric, and human review path.
+3. Identify one narrow pilot candidate from your district with a clear owner, data
+   classification, success metric, and human review path.
 4. Require governance review before any internal data, production workflow, or
    outward-facing communication is introduced.
 5. Keep internal data out until the project review checklist is complete.
