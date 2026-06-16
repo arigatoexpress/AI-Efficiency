@@ -12,7 +12,7 @@
 
 A presenter can read straight down this page. Jump to any section:
 
-1. [For the District Call — the 5-minute walk-through](#for-the-district-call)
+1. [For the District Call — the five-minute tour](#for-the-district-call)
 2. [Three Ways to Get Value in Five Minutes](#three-ways-to-get-value-in-five-minutes)
 3. [Why This Matters for FedEx](#why-this-matters-for-fedex)
 4. [Start Here — Pick By What You Need](#start-here--pick-by-what-you-need)
@@ -29,18 +29,18 @@ A presenter can read straight down this page. Jump to any section:
 
 ## For the District Call
 
-**Presenting this on the district conference call? Here is the whole story in five minutes — read down this list, click the links live.**
+**Our five-minute tour of the hub.** Read down the list together — each row is a plain-language summary anyone can follow, with a link to open the real thing live.
 
-| # | Say this | Show this |
+| # | What this is | Open it |
 | --- | --- | --- |
-| 1 | "This is one hub for safe, useful AI in our operation — built by ops people, no coding required." | The [interactive hub page](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/index.html) |
-| 2 | "It plugs into FedEx's own AI literacy push — public data only, a human checks every output." | [Why This Matters](#why-this-matters-for-fedex) |
-| 3 | "Anyone can get value in five minutes — copy a prompt, read the plain-English guide, or open the live dashboard." | [Three ways to get value](#three-ways-to-get-value-in-five-minutes) |
-| 4 | "Here is our most mature tool — public weather and road risk turned into a shift brief you can edit." | The [live dashboard](https://fedex-logistics-intelligence-system-267358751314.us-east1.run.app) |
-| 5 | "For the people who own a weekly number, two offline tools tell you if a KPI move is real and which lever moved it." | [Dock Efficiency Signal Lab](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/starter-projects/dock-efficiency-signal-lab/app/index.html) · [TLH/SPH Explorer](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/starter-projects/tlh-sph-efficiency-explorer/app/index.html) |
-| 6 | "51 ready-to-use prompts for the work you already do — search, fill the brackets, copy." | The [Prompt Explorer](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/prompts/explorer.html) |
-| 7 | "Here is where we're headed and how we keep it safe." | [Forward path](#forward-path-google-cloud--gemini--adk) · [How we work safely](#how-we-work-safely) |
-| 8 | "And here is everything we shipped since the June 4 meeting." | [What's New](#whats-new-since-the-june-4-meeting) |
+| 1 | One hub for safe, useful AI in our operation — built by ops people, no coding required. | [Interactive hub page](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/index.html) |
+| 2 | It plugs into FedEx's own AI literacy push — public data only, and a human checks every output. | [Why this matters](#why-this-matters-for-fedex) |
+| 3 | Anyone can get value in five minutes — copy a prompt, read the plain-English guide, or open the live dashboard. | [Three ways to get value](#three-ways-to-get-value-in-five-minutes) |
+| 4 | Our most mature tool turns public weather and road risk into a shift brief you can edit. | [Live dashboard](https://fedex-logistics-intelligence-system-267358751314.us-east1.run.app) |
+| 5 | Own a weekly number? Two offline tools show whether a KPI move is real and which lever moved it. | [Signal Lab](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/starter-projects/dock-efficiency-signal-lab/app/index.html) · [TLH/SPH Explorer](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/starter-projects/tlh-sph-efficiency-explorer/app/index.html) |
+| 6 | 51 ready-to-use prompts for the work you already do — search, fill in the brackets, copy. | [Prompt Explorer](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/prompts/explorer.html) |
+| 7 | Where we're headed next, and the rules that keep it safe. | [Forward path](#forward-path-google-cloud--gemini--adk) · [How we work safely](#how-we-work-safely) |
+| 8 | Everything we've shipped since the June 4 meeting. | [What's new](#whats-new-since-the-june-4-meeting) |
 
 **Driving the screen?** Open the [presentation deck](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/assets/presentation-deck.html) (15 slides, arrow keys to advance) or the [presentation kit](docs/presentation-kit.md) for the deck, runbook, Q&A proof points, and pilot shortlist in one place.
 
