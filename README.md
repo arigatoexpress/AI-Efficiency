@@ -6,26 +6,47 @@
 
 > **One platform for safe, useful AI in operations.** Operations-led tools, prompts, and guides that turn real operational friction into reusable, governance-ready AI — built by ops people, for ops people. No coding required to use it.
 
-## What's New Since the June 4 Meeting
+---
 
-One week, sixteen merged pull requests — every CTO-review item closed, two new tools shipped, and two research questions answered with measurements instead of opinions:
+## On This Page
 
-- **Dock Efficiency Signal Lab shipped** ([open it](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/starter-projects/dock-efficiency-signal-lab/app/index.html)) — offline statistical process control + trend indicators + forecasting on weekly dock KPIs, with a region/district scope filter for the six Western focus districts. No data leaves the machine.
-- **TLH/SPH Efficiency Explorer shipped** ([open it](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/starter-projects/tlh-sph-efficiency-explorer/app/index.html)) — splits every week-over-week efficiency change into its exact throughput (SPH) and hours (TLH) effects, so an hours-cut gain is never mistaken for a productivity win.
-- **All CTO review feedback implemented** — the "FEC supervisors and managers" audience standard repo-wide (glossary as source of truth, FEC = Federal Express Corporation confirmed), the [agentic AI agency-ladder guide](docs/technology/agentic-ai-for-operations.md), and the efficiency-decomposition tooling above.
-- **We benchmarked before adopting** — a zero-shot forecasting foundation model (Chronos-Bolt) was tested against the Signal Lab's simple, explainable ensemble in a walk-forward benchmark: [the ensemble won](starter-projects/forecast-foundation-model-spike/README.md), so the baseline stays and no pilot was spent. Privacy-preserving (encrypted) scoring was also measured as [background research](starter-projects/fhe-private-scoring-spike/README.md).
-- **Engineering hygiene** — CI now runs docs/link/claim checks and the full app build on every PR; GitHub Actions are SHA-pinned with Dependabot enabled; the [operating charter](AGENTS.md) keeps changes small, verified, and reversible; model licenses for the forecasting track all confirmed Apache-2.0.
-- **The platform is one hub** — unified [interactive hub page](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/index.html), refreshed [presentation deck](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/assets/presentation-deck.html) (15 slides, current as of today), and the printable [Daily Ops Playbook](docs/daily-ops-playbook.md).
-- **Gemini Enterprise prep started** — access requested from the org team; the [day-one readiness plan](docs/technology/gemini-enterprise-readiness.md) and the first registrable agent — the [ADK shift-brief agent starter kit](starter-projects/adk-shift-brief-agent/README.md) (read-only tools, synthetic signals, CI-enforced guardrails, tested offline) — are ready and waiting.
-- **The prompt library became programmable** — the new [Prompt Explorer](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/prompts/explorer.html) (search, fill in the brackets, copy — offline) plus a machine-readable [`prompts.json`](prompts/prompts.json) index generated from the markdown and kept in sync by CI, so scripts, agents, and enterprise tools can consume the same 51 prompts as people do.
-- **Research-driven Microsoft alignment** — three deep-research passes (Copilot/Teams landscape, public FedEx role ladder, prompt methodology) produced the [Copilot + Teams playbook](docs/technology/copilot-teams-playbook.md) (which Copilot you have, Microsoft's four prompt elements, role-by-role guidance from handler to managing director, the skills ladder) and explorer upgrades: a ⭐ Day 1 starter pack, per-category audience labels, and an Expectations builder that adds Microsoft's most-skipped prompt element with three dropdowns.
+A presenter can read straight down this page. Jump to any section:
 
-*Dependency hygiene: the four major-version Dependabot updates — Express 5, @google/genai 2.8, TypeScript 6, and @types/node 25 — have since been tested and merged; the logistics app installs, typechecks, and builds clean on all four (verified in CI).*
+1. [For the District Call — the 5-minute walk-through](#for-the-district-call)
+2. [Three Ways to Get Value in Five Minutes](#three-ways-to-get-value-in-five-minutes)
+3. [Why This Matters for FedEx](#why-this-matters-for-fedex)
+4. [Start Here — Pick By What You Need](#start-here--pick-by-what-you-need)
+5. [Featured Project: Logistics Intelligence System](#featured-project-logistics-intelligence-system)
+6. [Prompt Library at a Glance](#prompt-library-at-a-glance)
+7. [Forward Path: Google Cloud + Gemini + ADK](#forward-path-google-cloud--gemini--adk)
+8. [Presentation Deck and Kit](#presentation-deck-and-kit)
+9. [Starter Projects](#starter-projects)
+10. [How We Work Safely](#how-we-work-safely)
+11. [Repository Structure](#repository-structure)
+12. [What's New Since the June 4 Meeting](#whats-new-since-the-june-4-meeting) — the latest updates, at the end
 
 ---
 
+## For the District Call
 
-## New Here? Three Ways To Get Value In Five Minutes
+**Presenting this on the district conference call? Here is the whole story in five minutes — read down this list, click the links live.**
+
+| # | Say this | Show this |
+| --- | --- | --- |
+| 1 | "This is one hub for safe, useful AI in our operation — built by ops people, no coding required." | The [interactive hub page](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/index.html) |
+| 2 | "It plugs into FedEx's own AI literacy push — public data only, a human checks every output." | [Why This Matters](#why-this-matters-for-fedex) |
+| 3 | "Anyone can get value in five minutes — copy a prompt, read the plain-English guide, or open the live dashboard." | [Three ways to get value](#three-ways-to-get-value-in-five-minutes) |
+| 4 | "Here is our most mature tool — public weather and road risk turned into a shift brief you can edit." | The [live dashboard](https://fedex-logistics-intelligence-system-267358751314.us-east1.run.app) |
+| 5 | "For the people who own a weekly number, two offline tools tell you if a KPI move is real and which lever moved it." | [Dock Efficiency Signal Lab](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/starter-projects/dock-efficiency-signal-lab/app/index.html) · [TLH/SPH Explorer](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/starter-projects/tlh-sph-efficiency-explorer/app/index.html) |
+| 6 | "51 ready-to-use prompts for the work you already do — search, fill the brackets, copy." | The [Prompt Explorer](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/prompts/explorer.html) |
+| 7 | "Here is where we're headed and how we keep it safe." | [Forward path](#forward-path-google-cloud--gemini--adk) · [How we work safely](#how-we-work-safely) |
+| 8 | "And here is everything we shipped since the June 4 meeting." | [What's New](#whats-new-since-the-june-4-meeting) |
+
+**Driving the screen?** Open the [presentation deck](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/assets/presentation-deck.html) (15 slides, arrow keys to advance) or the [presentation kit](docs/presentation-kit.md) for the deck, runbook, Q&A proof points, and pilot shortlist in one place.
+
+---
+
+## Three Ways to Get Value in Five Minutes
 
 No setup, no installs, no technical background:
 
@@ -75,7 +96,7 @@ Ideas come in the front door and become projects. Daily **prompts** power manage
 
 ---
 
-## 🚀 Featured Project: Logistics Intelligence System
+## Featured Project: Logistics Intelligence System
 
 Our most mature starter project is a live, public-data decision-support dashboard for station-level FEC supervisors and managers.
 
@@ -131,7 +152,7 @@ Today the Logistics Intelligence app runs on **Cloud Run** with **Google AI Stud
 
 ---
 
-## Presentation Deck
+## Presentation Deck and Kit
 
 A browser-based slide deck for the regional standup: **[view it online](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/assets/presentation-deck.html)** (navigate with arrow keys; print to PDF if needed). If you have the repo downloaded, the same deck is the file `assets/presentation-deck.html`.
 
@@ -145,6 +166,8 @@ For a one-page leave-behind, use the
 [`leadership brief`](docs/presentation-leadership-brief.md).
 For a concrete next-step menu, use the
 [`pilot candidate shortlist`](docs/pilot-candidate-shortlist.md).
+
+---
 
 ## Starter Projects
 
@@ -165,7 +188,9 @@ Early examples the team can learn from, improve, and submit for review.
 
 ---
 
-## Team Operating Principles
+## How We Work Safely
+
+### Team Operating Principles
 
 1. **Protect people, customers, and the company first.**
 2. Use AI for drafts, analysis support, and workflow acceleration — not unchecked decisions.
@@ -173,6 +198,31 @@ Early examples the team can learn from, improve, and submit for review.
 4. Keep a human accountable for every external message, operational decision, and escalation.
 5. Document what the AI touched, what data was used, what was verified, and what changed because of it.
 6. Prefer small pilots with clear success metrics over broad, vague automation.
+
+### What Belongs Here
+
+- Safe prompts that improve manager productivity.
+- User guides written for non-technical operators.
+- Pilot ideas with expected value, data needs, risks, and owners.
+- Documentation for approved technology experiments such as Gemini and Google AI Studio.
+- Governance-ready demo scripts, checklists, and meeting notes.
+- Source-owned prototypes that use only public or synthetic data.
+
+### What Does Not Belong Here
+
+- Secrets, API keys, tokens, passwords, credentials, or private links.
+- Real package tracking numbers, customer names, addresses, phone numbers, delivery photos, signatures, GPS traces, route manifests, or employee records.
+- Live trading, wagering, money movement, order signing, or production customer communication automation.
+- Material that implies official FedEx policy, endorsement, or production approval before that approval exists.
+
+### How To Contribute
+
+1. Open an issue using one of the templates.
+2. Add or edit docs in a small pull request.
+3. Include the use case, audience, data classification, expected benefit, and review status.
+4. Ask for governance review before anything touches confidential data, production systems, customer communication, or external sharing.
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the full process.
 
 ---
 
@@ -240,32 +290,23 @@ assets/
 
 ---
 
-## What Belongs Here
+## What's New Since the June 4 Meeting
 
-- Safe prompts that improve manager productivity.
-- User guides written for non-technical operators.
-- Pilot ideas with expected value, data needs, risks, and owners.
-- Documentation for approved technology experiments such as Gemini and Google AI Studio.
-- Governance-ready demo scripts, checklists, and meeting notes.
-- Source-owned prototypes that use only public or synthetic data.
+*The latest updates, kept at the end so the page reads top-to-bottom as a guide. This is the running progress log.*
 
-## What Does Not Belong Here
+One week, sixteen merged pull requests — every CTO-review item closed, two new tools shipped, and two research questions answered with measurements instead of opinions:
 
-- Secrets, API keys, tokens, passwords, credentials, or private links.
-- Real package tracking numbers, customer names, addresses, phone numbers, delivery photos, signatures, GPS traces, route manifests, or employee records.
-- Live trading, wagering, money movement, order signing, or production customer communication automation.
-- Material that implies official FedEx policy, endorsement, or production approval before that approval exists.
+- **Dock Efficiency Signal Lab shipped** ([open it](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/starter-projects/dock-efficiency-signal-lab/app/index.html)) — offline statistical process control + trend indicators + forecasting on weekly dock KPIs, with a region/district scope filter for the six Western focus districts. No data leaves the machine.
+- **TLH/SPH Efficiency Explorer shipped** ([open it](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/starter-projects/tlh-sph-efficiency-explorer/app/index.html)) — splits every week-over-week efficiency change into its exact throughput (SPH) and hours (TLH) effects, so an hours-cut gain is never mistaken for a productivity win.
+- **All CTO review feedback implemented** — the "FEC supervisors and managers" audience standard repo-wide (glossary as source of truth, FEC = Federal Express Corporation confirmed), the [agentic AI agency-ladder guide](docs/technology/agentic-ai-for-operations.md), and the efficiency-decomposition tooling above.
+- **We benchmarked before adopting** — a zero-shot forecasting foundation model (Chronos-Bolt) was tested against the Signal Lab's simple, explainable ensemble in a walk-forward benchmark: [the ensemble won](starter-projects/forecast-foundation-model-spike/README.md), so the baseline stays and no pilot was spent. Privacy-preserving (encrypted) scoring was also measured as [background research](starter-projects/fhe-private-scoring-spike/README.md).
+- **Engineering hygiene** — CI now runs docs/link/claim checks and the full app build on every PR; GitHub Actions are SHA-pinned with Dependabot enabled; the [operating charter](AGENTS.md) keeps changes small, verified, and reversible; model licenses for the forecasting track all confirmed Apache-2.0.
+- **The platform is one hub** — unified [interactive hub page](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/index.html), refreshed [presentation deck](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/assets/presentation-deck.html) (15 slides, current as of today), and the printable [Daily Ops Playbook](docs/daily-ops-playbook.md).
+- **Gemini Enterprise prep started** — access requested from the org team; the [day-one readiness plan](docs/technology/gemini-enterprise-readiness.md) and the first registrable agent — the [ADK shift-brief agent starter kit](starter-projects/adk-shift-brief-agent/README.md) (read-only tools, synthetic signals, CI-enforced guardrails, tested offline) — are ready and waiting.
+- **The prompt library became programmable** — the new [Prompt Explorer](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/prompts/explorer.html) (search, fill in the brackets, copy — offline) plus a machine-readable [`prompts.json`](prompts/prompts.json) index generated from the markdown and kept in sync by CI, so scripts, agents, and enterprise tools can consume the same 51 prompts as people do.
+- **Research-driven Microsoft alignment** — three deep-research passes (Copilot/Teams landscape, public FedEx role ladder, prompt methodology) produced the [Copilot + Teams playbook](docs/technology/copilot-teams-playbook.md) (which Copilot you have, Microsoft's four prompt elements, role-by-role guidance from handler to managing director, the skills ladder) and explorer upgrades: a ⭐ Day 1 starter pack, per-category audience labels, and an Expectations builder that adds Microsoft's most-skipped prompt element with three dropdowns.
 
----
-
-## How To Contribute
-
-1. Open an issue using one of the templates.
-2. Add or edit docs in a small pull request.
-3. Include the use case, audience, data classification, expected benefit, and review status.
-4. Ask for governance review before anything touches confidential data, production systems, customer communication, or external sharing.
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for the full process.
+*Dependency hygiene: the four major-version Dependabot updates — Express 5, @google/genai 2.8, TypeScript 6, and @types/node 25 — have since been tested and merged; the logistics app installs, typechecks, and builds clean on all four (verified in CI).*
 
 ---
 
