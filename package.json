@@ -1,0 +1,10 @@
+{
+  "name": "ai-efficiency",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Operations-led AI efficiency hub for FedEx. Root workspace for docs, prompts, and starter projects.",
+  "scripts": {
+    "test": "cd starter-projects/fedex-logistics-intelligence-system/app && npm run build",
+    "verify": "npm run test"
+  }
+}
