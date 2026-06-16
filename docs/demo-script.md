@@ -4,7 +4,10 @@ Use this script for a 10–15 minute walkthrough of the AI-Efficiency repo and t
 
 ## Audience
 
-FedEx regional AI Efficiency group — mix of technical and non-technical operations leaders.
+Non-technical **district managers** — leaders who own multiple stations and care about
+time saved, risk, and the ask, not the underlying technology. (Also works for a mixed
+regional AI Efficiency group; for a purely non-technical room, skip the technical asides
+and end at the deck's Q&A slide — slides 14–15 are an optional technical appendix.)
 
 ## Setup (Before the Meeting)
 
@@ -19,7 +22,7 @@ FedEx regional AI Efficiency group — mix of technical and non-technical operat
 
 ## Opening (1 minute)
 
-> "This repo is our operations-led AI efficiency hub. It is not a production FedEx system. It is a collection of prompts, guides, starter projects, and governance templates that any FedEx FEC supervisor or manager can use to get started with AI safely and productively."
+> "This repo is our operations-led AI efficiency hub. It is not a production FedEx system. It is a collection of prompts, guides, starter projects, and governance templates that any FEC supervisor or manager in your district can use to get started with AI safely and productively — with you in control of the gate."
 
 > "Everything here uses public or synthetic data until formal governance approval is in place. That is intentional — we want to show value first, then scale responsibly."
 
@@ -67,7 +70,7 @@ FedEx regional AI Efficiency group — mix of technical and non-technical operat
 **Show:** The running app
 
 **Say:**
-> "This is our most mature starter project — a public-data decision-support dashboard for station-level FEC supervisors and managers. It is built with React and Express, and it uses Gemini for AI-generated briefs."
+> "This is our most mature starter project — a public-data decision-support tool for any station in your district. It runs on public information only and drafts briefings a manager edits and owns — no FedEx data involved."
 
 **Walk through each panel:**
 
