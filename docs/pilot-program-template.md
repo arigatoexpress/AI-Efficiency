@@ -33,7 +33,7 @@ Use this template to propose a small, measurable AI pilot to your leadership or 
 |-------|-------------|
 | **Data sources** | Public data, synthetic data, scrubbed notes, or internal approved data? |
 | **Data classification** | Public / Internal / Confidential / Regulated |
-| **AI tool** | Gemini / Copilot / ChatGPT / FedEx internal tool |
+| **AI tool** | Gemini / Microsoft 365 Copilot (or Copilot Chat) / ChatGPT / GitHub Copilot (BYOK/local) / FedEx internal tool |
 | **Tool approval status** | Approved for this data class? Pending? |
 | **Data retention** | How long is input/output kept? Where? |
 | **Access controls** | Who can see inputs and outputs? |

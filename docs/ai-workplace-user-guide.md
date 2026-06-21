@@ -158,7 +158,8 @@ Red: do not use without formal approval.
 | Tool | Best for | Use with care |
 | --- | --- | --- |
 | ChatGPT | Drafting, research, project workspaces, analysis, reusable team prompts. | Do not assume private chats are shared unless you share them. Check connected apps before using work data. |
-| Microsoft 365 Copilot | Work inside Outlook, Teams, Word, Excel, PowerPoint, and Microsoft 365 files. | It can only use content you have permission to access, but sensitive data rules still apply. |
+| Microsoft 365 Copilot (paid add-on) | Work inside Outlook, Teams, Word, Excel, PowerPoint, and Microsoft 365 files with Microsoft Graph context. | It can only use content you have permission to access, but sensitive data rules still apply. |
+| Microsoft 365 Copilot Chat (included with M365) | Web + uploaded files in the Copilot app, Teams, or Edge with your work account. | Enterprise data protection; still follow the safe-data rules. |
 | Gemini | Google ecosystem work, Gemini app, AI Studio prototypes, Workspace features, and newer Google AI tools. | Availability depends on plan, region, device, and company approval. |
 | Google AI Studio | Prototyping apps from prompts and exporting code for review. | Use synthetic data until governance approves the use case. |
 

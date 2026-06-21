@@ -1,6 +1,6 @@
 # ChatGPT And Copilot Workplace Guide
 
-Last reviewed: 2026-05-22
+Last reviewed: 2026-06-20
 
 This guide explains how to use ChatGPT and Microsoft 365 Copilot at work in a
 simple, safe way. It is written for FEC supervisors and managers, not engineers.
@@ -78,6 +78,14 @@ Microsoft states that Microsoft 365 Copilot uses organizational data and the web
 for licensed users, while Copilot Chat is web-based and can use data the user
 provides. Copilot responses should respect the signed-in user's permissions, but
 that does not remove the need for company data rules.
+
+> **Developer note (2026):** GitHub Copilot Chat and CLI now let you switch
+> models and, for CLI, point at an OpenAI-compatible endpoint such as a local
+> Ollama instance (BYOK). That does not change Microsoft 365 Copilot's managed
+> model behavior in Outlook/Teams, but it keeps the coding assistant
+> model-agnostic. See the [Copilot + Teams playbook](copilot-teams-playbook.md)
+> and [model-agnostic examples](copilot-model-agnostic-examples.md) for
+> developer snippets.
 
 ## Prompt Formula For Both Tools
 
@@ -163,5 +171,6 @@ confirmation.
 - [Apps in ChatGPT](https://help.openai.com/en/articles/11487775-connectors-in-chatgpt)
 - [Projects in ChatGPT](https://help.openai.com/en/articles/10169521-using-projects-in-chatgpt)
 - [Managing data, sharing, and privacy in ChatGPT Business](https://help.openai.com/en/articles/8798634-managing-data-sharing-and-privacy-in-chatgpt-and-other-ai-chatbots)
-- [Microsoft 365 Copilot overview](https://learn.microsoft.com/en-us/microsoft-365/copilot/microsoft-365-copilot-overview)
+- [Microsoft 365 Copilot overview](https://learn.microsoft.com/en-us/copilot/microsoft-365/microsoft-365-copilot-overview)
 - [Craft effective prompts for Microsoft 365 Copilot](https://learn.microsoft.com/en-us/training/paths/craft-effective-prompts-copilot-microsoft-365/)
+- [GitHub Copilot supported AI models](https://docs.github.com/en/copilot/using-github-copilot/ai-models/supported-ai-models-in-copilot)

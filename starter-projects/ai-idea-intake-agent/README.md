@@ -2,6 +2,8 @@
 
 > **Part of the [FedEx AI Efficiency Hub](../../README.md).** Public + synthetic data only · human review required.
 
+Last reviewed: 2026-06-20
+
 ## What This Is
 
 AI Idea Intake Agent is a safe concept for a Teams/Copilot or Gemini-channel
@@ -48,8 +50,12 @@ Why:
 
 - employees already know Teams;
 - Teams supports channel conversations and file attachments;
-- Copilot Studio can publish agents into Teams and Microsoft 365 Copilot;
-- Teams app permissions and admin approval provide a natural governance gate.
+- agents built in Copilot Studio or as **declarative agents** (Microsoft 365
+  Agents Toolkit + VS Code) can publish into Teams and Microsoft 365 Copilot;
+- Teams app permissions and admin approval provide a natural governance gate;
+- Microsoft's agent surfaces now support open standards (**MCP** for tools,
+  **A2A** for agent-to-agent coordination), so the same skills transfer to the
+  Google ADK side of our stack.
 
 Important caveat: file and image uploads to a Teams bot require careful review.
 Microsoft's Teams app permissions guidance says a file sent to a bot can leave
@@ -136,6 +142,8 @@ pull request for review.
 ## Official Reference Points
 
 - [Microsoft 365 Copilot extensibility](https://learn.microsoft.com/en-us/microsoft-365/copilot/extensibility/)
+- [Overview of declarative agents for Microsoft 365 Copilot](https://learn.microsoft.com/en-us/microsoft-365/copilot/extensibility/overview-declarative-agent)
+- [Microsoft 365 Agents Toolkit](https://learn.microsoft.com/en-us/microsoft-365-copilot/extensibility/teams-toolkit-overview?tabs=vscode%2Cvsc)
 - [Connect a Copilot Studio agent to Teams and Microsoft 365 Copilot](https://learn.microsoft.com/en-us/microsoft-copilot-studio/publication-add-bot-to-microsoft-teams)
 - [Microsoft Teams app permissions and consent](https://learn.microsoft.com/en-us/microsoftteams/app-permissions)
 - [Google Workspace updates at I/O 2026](https://blog.google/products-and-platforms/products/workspace/workspace-updates/)

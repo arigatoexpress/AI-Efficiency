@@ -77,7 +77,8 @@ These align with FedEx's "Safety Above All" value and the company's responsible 
 | Tool | Best For | What to Know |
 |------|----------|-------------|
 | **Gemini** (Google) | Drafting, research, Google ecosystem work, AI Studio prototyping | Check with your IT team on availability and data-handling rules for your region |
-| **Microsoft 365 Copilot** | Work inside Outlook, Teams, Word, Excel, PowerPoint | Uses only content you have permission to access |
+| **Microsoft 365 Copilot** (paid add-on) | Work inside Outlook, Teams, Word, Excel, PowerPoint; uses Microsoft Graph for work context | Uses only content you have permission to access |
+| **Microsoft 365 Copilot Chat** (included with M365) | Web + files you upload in the Copilot app/Teams/Edge | Enterprise data protection; still follow the safe-data rules |
 | **ChatGPT** (if approved) | Drafting, analysis, project workspaces | Confirm enterprise agreement and data retention policy with IT |
 | **FedEx approved internal tools and data platforms** | FedEx-specific workflows and approved pilots | Follow internal training, access controls, and data-handling rules |
 
