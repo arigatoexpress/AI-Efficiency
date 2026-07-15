@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/ai-efficiency/priority-metrics-analysis.schema.json",
+  "title": "Priority Metrics Analysis",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "analyzerVersion",
+    "inputSummary",
+    "comparisons",
+    "riskLineages",
+    "patterns",
+    "projections",
+    "limitations",
+    "provenance"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "1.0.0" },
+    "analyzerVersion": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+    "inputSummary": { "type": "object" },
+    "comparisons": { "type": "array", "items": { "type": "object" } },
+    "riskLineages": { "type": "array", "items": { "type": "object" } },
+    "patterns": { "type": "object" },
+    "projections": { "type": "array", "items": { "type": "object" } },
+    "limitations": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["dataClassification", "periodRange", "methods"],
+      "properties": {
+        "dataClassification": { "enum": ["synthetic", "scrubbed"] },
+        "periodRange": { "type": "object" },
+        "methods": { "type": "array", "items": { "type": "string" }, "uniqueItems": true }
+      }
+    }
+  }
+}

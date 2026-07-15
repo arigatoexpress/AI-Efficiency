@@ -110,4 +110,5 @@ Active. Presentation-ready for the regional AI Efficiency group standup.
 Before feature work, read `.specify/memory/constitution.md` and the applicable
 `spec.md`, `plan.md`, and `tasks.md`. The constitution is binding; the feature
 artifacts provide the exact technologies, structure, commands, and eval gates.
+Current approved plan: `specs/001-priority-metrics-intelligence/plan.md`.
 <!-- SPECKIT END -->
