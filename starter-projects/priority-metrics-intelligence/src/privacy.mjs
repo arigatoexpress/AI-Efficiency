@@ -1,8 +1,9 @@
 import { SafeInputError } from "./errors.mjs";
-import { METRIC_FIELDS } from "./schema.mjs";
+import { isCanonicalMetricObservation, METRIC_FIELDS } from "./schema.mjs";
 
 const ALLOWED_FIELDS = new Set(METRIC_FIELDS);
-const DIRECT_IDENTIFIER = /@|[\u0000-\u001f\u007f]|\d{4,}|\b\d+\s+(?:[\p{L}]+\s+){0,4}(?:street|st|road|rd|avenue|ave|lane|ln|drive|dr|boulevard|blvd|highway|hwy)\b|\b(?:street|st|road|rd|avenue|ave|lane|ln|drive|dr|boulevard|blvd|highway|hwy)\s+\d+/iu;
+const DIRECT_IDENTIFIER =
+  /@|[\u0000-\u001f\u007f]|\b(?:\d{1,6}\s+(?:[\p{L}\d]+\s+){0,4}(?:street|st|road|rd|avenue|ave|lane|ln|drive|dr|boulevard|blvd|highway|hwy)|(?:street|st|road|rd|avenue|ave|lane|ln|drive|dr|boulevard|blvd|highway|hwy)\s+\d{1,6})\b/iu;
 const IDENTIFIER_SLUG =
   /(?:employee|customer|tracking|manifest|address|route|source[_-]?system)[_-]?id(?:[_-]|$)|\d{4,}/;
 
@@ -21,15 +22,22 @@ export function assertPublicSafe(records) {
     if (forbiddenFields.length > 0) {
       throw new SafeInputError("PRIVACY_FORBIDDEN_FIELD", forbiddenFields, rowNumber);
     }
+    if (METRIC_FIELDS.some((field) => !Object.hasOwn(record, field))) {
+      throw new SafeInputError("PRIVACY_INVALID_RECORD", [], rowNumber);
+    }
 
     for (const [field, value] of Object.entries(record)) {
-      if (typeof value !== "string" || field === "period") continue;
+      if (typeof value !== "string") continue;
       const unsafe =
-        (field === "metricLabel" && DIRECT_IDENTIFIER.test(value)) ||
+        DIRECT_IDENTIFIER.test(value) ||
+        (field === "metricLabel" && /\d{4,}/.test(value)) ||
         ((field === "metricId" || field === "pillarId") && IDENTIFIER_SLUG.test(value));
       if (unsafe) {
         throw new SafeInputError("PRIVACY_DIRECT_IDENTIFIER", [field], rowNumber);
       }
+    }
+    if (!isCanonicalMetricObservation(record)) {
+      throw new SafeInputError("PRIVACY_INVALID_RECORD", [], rowNumber);
     }
   });
 }

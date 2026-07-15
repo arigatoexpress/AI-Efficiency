@@ -41,17 +41,17 @@ const ASSOCIATION_FIELDS = new Set([
 ]);
 const IDENTIFIER_SLUG =
   /(?:employee|customer|tracking|manifest|address|route|source[_-]?system)[_-]?id(?:[_-]|$)|\d{4,}/;
+const DECIMAL_NUMBER = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/;
 
 function fail(code, fields, rowNumber = null) {
   throw new SafeInputError(code, fields, rowNumber);
 }
 
 function parseNumber(value, field, rowNumber, { optional = false, minimum = null } = {}) {
-  const normalized = value.trim();
-  if (optional && normalized === "") return null;
-  if (normalized === "") fail("SCHEMA_INVALID_NUMBER", [field], rowNumber);
+  if (optional && value === "") return null;
+  if (!DECIMAL_NUMBER.test(value)) fail("SCHEMA_INVALID_NUMBER", [field], rowNumber);
 
-  const parsed = Number(normalized);
+  const parsed = Number(value);
   if (!Number.isFinite(parsed) || (minimum !== null && parsed < minimum)) {
     fail("SCHEMA_INVALID_NUMBER", [field], rowNumber);
   }
@@ -75,10 +75,7 @@ function validateLabel(value, rowNumber) {
     value.length < 1 ||
     value.length > 80 ||
     !/^[\p{L}\d ()/%+\-]+$/u.test(value) ||
-    /\d{4,}/.test(value) ||
-    /\b(?:street|st|road|rd|avenue|ave|lane|ln|drive|dr|boulevard|blvd|highway|hwy)\s+\d/i.test(
-      value,
-    )
+    /\d{4,}/.test(value)
   ) {
     fail("SCHEMA_INVALID_LABEL", ["metric_label"], rowNumber);
   }
@@ -134,7 +131,7 @@ export function validateMetricRows(rawRecords) {
       optional: true,
     });
     const warningMargin =
-      raw.warning_margin.trim() === ""
+      raw.warning_margin === ""
         ? 0
         : parseNumber(raw.warning_margin, "warning_margin", rowNumber, { minimum: 0 });
     validateTarget(targetType, targetMin, targetMax, rowNumber);
@@ -174,6 +171,59 @@ export function validateMetricRows(rawRecords) {
   }
 
   return observations;
+}
+
+export function isCanonicalMetricObservation(record) {
+  if (
+    record === null ||
+    Array.isArray(record) ||
+    typeof record !== "object" ||
+    METRIC_FIELDS.some((field) => !Object.hasOwn(record, field))
+  ) {
+    return false;
+  }
+
+  const targetTypeValid =
+    record.targetType === null || TARGET_TYPES.has(record.targetType);
+  const numericOrNull = (value) => value === null || Number.isFinite(value);
+  const targetValid =
+    targetTypeValid &&
+    numericOrNull(record.targetMin) &&
+    numericOrNull(record.targetMax) &&
+    ((record.targetType === null && record.targetMin === null && record.targetMax === null) ||
+      (record.targetType === "minimum" &&
+        record.targetMin !== null &&
+        record.targetMax === null) ||
+      (record.targetType === "maximum" &&
+        record.targetMin === null &&
+        record.targetMax !== null) ||
+      (record.targetType === "range" &&
+        record.targetMin !== null &&
+        record.targetMax !== null &&
+        record.targetMin <= record.targetMax));
+
+  return (
+    typeof record.period === "string" &&
+    /^\d{4}-(0[1-9]|1[0-2])$/.test(record.period) &&
+    typeof record.pillarId === "string" &&
+    record.pillarId.length <= 48 &&
+    /^[a-z][a-z0-9]*(?:[_-][a-z0-9]+)*$/.test(record.pillarId) &&
+    !IDENTIFIER_SLUG.test(record.pillarId) &&
+    typeof record.metricId === "string" &&
+    record.metricId.length <= 64 &&
+    /^[a-z][a-z0-9]*(?:[_-][a-z0-9]+)*$/.test(record.metricId) &&
+    !IDENTIFIER_SLUG.test(record.metricId) &&
+    typeof record.metricLabel === "string" &&
+    record.metricLabel.length >= 1 &&
+    record.metricLabel.length <= 80 &&
+    /^[\p{L}\d ()/%+\-]+$/u.test(record.metricLabel) &&
+    !/\d{4,}/.test(record.metricLabel) &&
+    Number.isFinite(record.value) &&
+    UNITS.has(record.unit) &&
+    targetValid &&
+    Number.isFinite(record.warningMargin) &&
+    record.warningMargin >= 0
+  );
 }
 
 function integerInRange(value, minimum, maximum) {
