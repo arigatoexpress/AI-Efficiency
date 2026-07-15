@@ -1,9 +1,10 @@
 # Priority Metrics Intelligence — Feature Specification
 
-**Feature branch:** `spec/001-priority-metrics-intelligence`  
-**Status:** Draft for user review  
-**Created:** 2026-07-15  
+**Feature branch:** `spec/operations-intelligence-program`
+**Status:** Revised draft for user review
+**Created:** 2026-07-15
 **Source request:** AI Meeting Notes received 2026-07-15
+**Parent design:** `specs/000-operations-intelligence-program/design.md`
 
 ## Purpose
 
@@ -43,6 +44,8 @@ FedEx data integration, or an autonomous decision system.
 - Claims of causal relationships from correlation.
 - Production deployment or integration with an enterprise data warehouse.
 - Refactoring `fedex-delivery-markets` or the Logistics Intelligence System.
+- Intraday volume forecasting, route/send-time evaluation, or DRO; those belong
+  to `002-operations-decision-lab`.
 - A new user interface in the first release.
 
 ## Users and Decisions
@@ -179,6 +182,15 @@ No names, email addresses, tracking numbers, addresses, employee identifiers,
 customer identifiers, route identifiers, free-text notes, or raw source-system
 fields are permitted.
 
+Metric identifiers must encode an unambiguous business definition. A rate
+definition names its numerator, denominator, and time basis; a generic `sph`,
+`productivity`, or `efficiency` metric is rejected. In particular,
+`stops_completed / on_road_hours`, `packages_delivered / paid_hours`, and
+`packages_delivered / stops_completed` are different metrics and cannot share
+a label or unit. When additive components are available, the analyzer sums the
+components before deriving an aggregate rate; it never averages row-level
+ratios across facilities or periods.
+
 The repository includes only synthetic fixtures. A gitignored `local-input/`
 directory may be documented for locally prepared scrubbed files, but the tool
 must not automatically copy those inputs into tracked locations.
@@ -293,9 +305,9 @@ feature.
 
 - `AI-Efficiency` remains public and therefore stores synthetic fixtures only.
 - A human prepares any locally used scrubbed file before invoking the tool.
-- Monthly periods are the first-release cadence.
+- Monthly periods are the `001` cadence; intraday and next-day decisions are
+  isolated in `002-operations-decision-lab`.
 - Candidate leading indicators are configured comparisons, not an unrestricted
   search across every metric pair.
 - The first release prioritizes correctness, explainability, and privacy over a
   graphical interface or advanced forecasting model.
-
