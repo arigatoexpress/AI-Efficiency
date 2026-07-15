@@ -1,5 +1,6 @@
 import { SafeInputError } from "./errors.mjs";
 import { CSV_FIELDS, validateMetricRows, validatePolicy } from "./schema.mjs";
+import { assertPublicSafe } from "./privacy.mjs";
 
 function malformedCsv() {
   throw new SafeInputError("CSV_MALFORMED");
@@ -78,6 +79,100 @@ function parseCsvRows(text) {
   return rows;
 }
 
+function rejectDuplicateJsonMembers(text) {
+  let index = 0;
+
+  const skipWhitespace = () => {
+    while (/\s/.test(text[index] ?? "")) index += 1;
+  };
+
+  const parseString = () => {
+    const start = index;
+    index += 1;
+    while (index < text.length) {
+      if (text[index] === "\\") {
+        index += text[index + 1] === "u" ? 6 : 2;
+      } else if (text[index] === '"') {
+        index += 1;
+        return JSON.parse(text.slice(start, index));
+      } else {
+        index += 1;
+      }
+    }
+    throw new SyntaxError("unterminated JSON string");
+  };
+
+  const parseValue = () => {
+    skipWhitespace();
+    if (text[index] === "{") {
+      parseObject();
+    } else if (text[index] === "[") {
+      parseArray();
+    } else if (text[index] === '"') {
+      parseString();
+    } else {
+      const start = index;
+      while (index < text.length && !/[\s,}\]]/.test(text[index])) index += 1;
+      if (index === start) throw new SyntaxError("invalid JSON value");
+    }
+  };
+
+  const parseObject = () => {
+    index += 1;
+    const memberNames = new Set();
+    skipWhitespace();
+    if (text[index] === "}") {
+      index += 1;
+      return;
+    }
+    while (index < text.length) {
+      skipWhitespace();
+      if (text[index] !== '"') throw new SyntaxError("invalid JSON member");
+      const memberName = parseString();
+      if (memberNames.has(memberName)) {
+        throw new SafeInputError("SCHEMA_DUPLICATE_JSON_MEMBER", ["input"]);
+      }
+      memberNames.add(memberName);
+      skipWhitespace();
+      if (text[index] !== ":") throw new SyntaxError("missing JSON colon");
+      index += 1;
+      parseValue();
+      skipWhitespace();
+      if (text[index] === "}") {
+        index += 1;
+        return;
+      }
+      if (text[index] !== ",") throw new SyntaxError("invalid JSON object");
+      index += 1;
+    }
+    throw new SyntaxError("unterminated JSON object");
+  };
+
+  const parseArray = () => {
+    index += 1;
+    skipWhitespace();
+    if (text[index] === "]") {
+      index += 1;
+      return;
+    }
+    while (index < text.length) {
+      parseValue();
+      skipWhitespace();
+      if (text[index] === "]") {
+        index += 1;
+        return;
+      }
+      if (text[index] !== ",") throw new SyntaxError("invalid JSON array");
+      index += 1;
+    }
+    throw new SyntaxError("unterminated JSON array");
+  };
+
+  parseValue();
+  skipWhitespace();
+  if (index !== text.length) throw new SyntaxError("trailing JSON content");
+}
+
 export function parseMetricsCsv(text) {
   const rows = parseCsvRows(text);
   if (rows.length === 0) throw new SafeInputError("SCHEMA_INVALID_CSV_HEADER");
@@ -99,7 +194,9 @@ export function parseMetricsCsv(text) {
     }
     return Object.fromEntries(CSV_FIELDS.map((field, fieldIndex) => [field, values[fieldIndex]]));
   });
-  return validateMetricRows(rawRecords);
+  const records = validateMetricRows(rawRecords);
+  assertPublicSafe(records);
+  return records;
 }
 
 export function parsePolicyJson(text) {
@@ -107,8 +204,10 @@ export function parsePolicyJson(text) {
 
   let raw;
   try {
+    rejectDuplicateJsonMembers(text);
     raw = JSON.parse(text);
-  } catch {
+  } catch (error) {
+    if (error instanceof SafeInputError) throw error;
     throw new SafeInputError("SCHEMA_INVALID_POLICY_JSON");
   }
   return validatePolicy(raw);

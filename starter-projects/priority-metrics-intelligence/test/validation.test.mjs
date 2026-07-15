@@ -120,6 +120,32 @@ test("policy rejects duplicate association keys and malformed ranges", () => {
   });
 });
 
+test("policy rejects duplicate JSON members at every object depth", () => {
+  assert.throws(
+    () => parsePolicyJson('{"projectionWindow":6,"projectionWindow":7}'),
+    { code: "SCHEMA_DUPLICATE_JSON_MEMBER" },
+  );
+  assert.throws(
+    () =>
+      parsePolicyJson(
+        '{"candidateAssociations":[{"sourceMetricId":"volume","sourceMetric\\u0049d":"packages","outcomeMetricId":"on_time","lagMonths":1,"minimumObservations":6}]}',
+      ),
+    { code: "SCHEMA_DUPLICATE_JSON_MEMBER" },
+  );
+});
+
+test("CSV accepts only canonical decimal number tokens", () => {
+  for (const token of ["0x10", "0b10", "01", "+1", "Infinity"]) {
+    assert.throws(
+      () =>
+        parseMetricsCsv(
+          csv(`2026-06,service,on_time,On-time percent,${token},percent,minimum,95,,1`),
+        ),
+      { code: "SCHEMA_INVALID_NUMBER" },
+    );
+  }
+});
+
 test("privacy rejects forbidden fields without echoing rejected values", () => {
   const rows = [
     { ...parseMetricsCsv(valid)[0], employee_id: "SYNTH-UNSAFE-999" },
@@ -130,6 +156,70 @@ test("privacy rejects forbidden fields without echoing rejected values", () => {
     assert.doesNotMatch(error.message, /SYNTH-UNSAFE-999/);
     return true;
   });
+});
+
+test("attacker-controlled field names are replaced by a generic marker", () => {
+  const recordField = "employee_tracking_number";
+  const policyField = "customer_email_address";
+  const row = { ...parseMetricsCsv(valid)[0], [recordField]: "SYNTH-UNSAFE-999" };
+
+  assert.throws(() => assertPublicSafe([row]), (error) => {
+    assert.equal(error.code, "PRIVACY_FORBIDDEN_FIELD");
+    assert.deepEqual(error.fieldNames, ["input"]);
+    assert.doesNotMatch(error.message, /employee_tracking_number/);
+    return true;
+  });
+  assert.throws(
+    () => parsePolicyJson(`{"${policyField}":"SYNTH-UNSAFE-999"}`),
+    (error) => {
+      assert.equal(error.code, "SCHEMA_UNKNOWN_POLICY_FIELD");
+      assert.deepEqual(error.fieldNames, ["input"]);
+      assert.doesNotMatch(error.message, /customer_email_address/);
+      return true;
+    },
+  );
+});
+
+test("privacy requires complete canonical records with canonical types", () => {
+  const missingMetric = { ...parseMetricsCsv(valid)[0] };
+  delete missingMetric.metricId;
+
+  assert.throws(() => assertPublicSafe([missingMetric]), {
+    code: "PRIVACY_INVALID_RECORD",
+  });
+  assert.throws(
+    () => assertPublicSafe([{ ...parseMetricsCsv(valid)[0], value: "96.2" }]),
+    { code: "PRIVACY_INVALID_RECORD" },
+  );
+});
+
+test("privacy scans malformed periods for direct identifiers without echo", () => {
+  const rejected = "synth@example.invalid";
+
+  assert.throws(
+    () => assertPublicSafe([{ ...parseMetricsCsv(valid)[0], period: rejected }]),
+    (error) => {
+      assert.equal(error.code, "PRIVACY_DIRECT_IDENTIFIER");
+      assert.doesNotMatch(error.message, /synth@example\.invalid/);
+      return true;
+    },
+  );
+});
+
+test("CSV parsing rejects address-shaped controlled labels at the boundary", () => {
+  const rejected = "123 Main Street";
+
+  assert.throws(
+    () =>
+      parseMetricsCsv(
+        csv(`2026-06,service,on_time,${rejected},96.2,percent,minimum,95,,1`),
+      ),
+    (error) => {
+      assert.equal(error.code, "PRIVACY_DIRECT_IDENTIFIER");
+      assert.doesNotMatch(error.message, /123 Main Street/);
+      return true;
+    },
+  );
 });
 
 test("privacy rejects direct-identifier patterns without creating output", () => {
