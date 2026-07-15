@@ -18,15 +18,15 @@ artifact or echoing a rejected value.
 **Interfaces produced:** `SafeInputError`, `parseMetricsCsv`,
 `parsePolicyJson`, and `assertPublicSafe` exactly as declared in `plan.md`.
 
-- [ ] T001 Create the starter directories and ignored outputs in `starter-projects/priority-metrics-intelligence/.gitignore`, with exactly `output/`, `local-input/`, and `*.tmp`.
-- [ ] T002 Write failing closed-schema, quoted-CSV, duplicate-key, malformed-target, unsafe-field, and non-echo assertions in `starter-projects/priority-metrics-intelligence/test/validation.test.mjs`.
-- [ ] T003 Run `node --test starter-projects/priority-metrics-intelligence/test/validation.test.mjs` and verify it fails with `ERR_MODULE_NOT_FOUND` for `src/parse.mjs`.
-- [ ] T004 Implement stable safe error codes in `starter-projects/priority-metrics-intelligence/src/errors.mjs`.
-- [ ] T005 Implement field enums, slug/date checks, target consistency, policy defaults, and stable-record checks in `starter-projects/priority-metrics-intelligence/src/schema.mjs`.
-- [ ] T006 Implement RFC-4180-style quoted CSV parsing and closed policy JSON parsing in `starter-projects/priority-metrics-intelligence/src/parse.mjs`.
-- [ ] T007 Implement forbidden-field and direct-identifier pattern rejection without value echo in `starter-projects/priority-metrics-intelligence/src/privacy.mjs`.
-- [ ] T008 Run `node --test starter-projects/priority-metrics-intelligence/test/validation.test.mjs` and verify all validation tests pass.
-- [ ] T009 Commit the input boundary with `git add starter-projects/priority-metrics-intelligence/.gitignore starter-projects/priority-metrics-intelligence/test/validation.test.mjs starter-projects/priority-metrics-intelligence/src/errors.mjs starter-projects/priority-metrics-intelligence/src/schema.mjs starter-projects/priority-metrics-intelligence/src/parse.mjs starter-projects/priority-metrics-intelligence/src/privacy.mjs && git commit -m "feat: add safe priority metrics input boundary"`.
+- [x] T001 Create the starter directories and ignored outputs in `starter-projects/priority-metrics-intelligence/.gitignore`, with exactly `output/`, `local-input/`, and `*.tmp`.
+- [x] T002 Write failing closed-schema, quoted-CSV, duplicate-key, malformed-target, unsafe-field, and non-echo assertions in `starter-projects/priority-metrics-intelligence/test/validation.test.mjs`.
+- [x] T003 Run `node --test starter-projects/priority-metrics-intelligence/test/validation.test.mjs` and verify it fails with `ERR_MODULE_NOT_FOUND` for `src/parse.mjs`.
+- [x] T004 Implement stable safe error codes in `starter-projects/priority-metrics-intelligence/src/errors.mjs`.
+- [x] T005 Implement field enums, slug/date checks, target consistency, policy defaults, and stable-record checks in `starter-projects/priority-metrics-intelligence/src/schema.mjs`.
+- [x] T006 Implement RFC-4180-style quoted CSV parsing and closed policy JSON parsing in `starter-projects/priority-metrics-intelligence/src/parse.mjs`.
+- [x] T007 Implement forbidden-field and direct-identifier pattern rejection without value echo in `starter-projects/priority-metrics-intelligence/src/privacy.mjs`.
+- [x] T008 Run `node --test starter-projects/priority-metrics-intelligence/test/validation.test.mjs` and verify all validation tests pass.
+- [x] T009 Commit the input boundary with `git add starter-projects/priority-metrics-intelligence/.gitignore starter-projects/priority-metrics-intelligence/test/validation.test.mjs starter-projects/priority-metrics-intelligence/src/errors.mjs starter-projects/priority-metrics-intelligence/src/schema.mjs starter-projects/priority-metrics-intelligence/src/parse.mjs starter-projects/priority-metrics-intelligence/src/privacy.mjs && git commit -m "feat: add safe priority metrics input boundary"`.
 
 Test construction:
 
