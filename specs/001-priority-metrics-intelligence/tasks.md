@@ -8,6 +8,8 @@ commit. Never stage the repository root.
 
 ## Phase 1: Closed input and privacy foundation
 
+### Task 1: Closed input and privacy foundation
+
 **Goal:** Parse valid CSV/policy input and reject unsafe input before analytics.
 
 **Independent test:** `validation.test.mjs` passes without creating an output
@@ -68,6 +70,8 @@ test("policy is closed and applies deterministic defaults", () => {
 
 ## Phase 2: User Story 1 — Monthly comparisons (P1)
 
+### Task 2: Monthly comparisons
+
 **Goal:** Produce correct month-over-month and year-over-year changes.
 
 **Independent test:** Exact values pass for positive, negative, zero-baseline,
@@ -100,6 +104,8 @@ assert.equal(june.yoy.percentageChange, 23.75);
 
 ## Phase 3: User Story 2 — Target evaluation (P1)
 
+### Task 3: Target evaluation
+
 **Goal:** Evaluate minimum, maximum, range, warning, and no-target conditions.
 
 **Independent test:** A table-driven target matrix returns exact status and
@@ -128,6 +134,8 @@ for (const [input, status, distance] of cases) {
 ```
 
 ## Phase 4: User Story 3 — Risk lineage (P2)
+
+### Task 4: Risk lineage
 
 **Goal:** Trace target breaches through persistence, worsening, recovery, and
 gaps without causal language.
@@ -158,6 +166,8 @@ assert.deepEqual(traceRiskLineages(comparisons), [{
 ```
 
 ## Phase 5: User Story 4 — Configured patterns (P2)
+
+### Task 5: Configured patterns
 
 **Goal:** Report recurrence and configured lagged association evidence with
 exact observations and limitations.
@@ -195,6 +205,8 @@ assert.deepEqual(result.candidateAssociations[0], {
 
 ## Phase 6: User Story 5 — Baseline outlook and brief (P2)
 
+### Task 6: Baseline outlook and brief
+
 **Goal:** Produce conservative projections and canonical JSON/Markdown output.
 
 **Independent test:** Median-drift math and exact golden JSON/Markdown facts are
@@ -224,6 +236,8 @@ assert.equal(result[0].method, "median_recent_drift");
 ```
 
 ## Phase 7: User Story 6 — Safe CLI rejection and atomic workflow (P1)
+
+### Task 7: Safe CLI rejection and atomic workflow
 
 **Goal:** Expose the complete analysis through a safe CLI with stable exit codes
 and no partial artifacts.
@@ -256,6 +270,8 @@ assert.match(stdout.join("\n"), /^OK priority-metrics-analysis:/);
 ```
 
 ## Phase 8: Repository integration and full verification
+
+### Task 8: Repository integration and full verification
 
 **Goal:** Document the synthetic workflow, add the prompt-library entry, and
 make the focused eval a root/CI gate.
