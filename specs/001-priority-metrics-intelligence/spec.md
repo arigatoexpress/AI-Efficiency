@@ -1,7 +1,7 @@
 # Priority Metrics Intelligence — Feature Specification
 
 **Feature branch:** `spec/operations-intelligence-program`
-**Status:** Revised draft for user review
+**Status:** Approved for implementation
 **Created:** 2026-07-15
 **Source request:** AI Meeting Notes received 2026-07-15
 **Parent design:** `specs/000-operations-intelligence-program/design.md`
@@ -69,7 +69,7 @@ interpretation, escalation, and every operational action.
 
 ## User Scenarios and Acceptance Criteria
 
-### Scenario 1: Compare monthly performance
+### Scenario 1: Compare monthly performance (P1)
 
 Given valid synthetic monthly metrics with comparable periods, the workflow
 calculates absolute and percentage changes for the latest month versus the
@@ -84,22 +84,25 @@ Acceptance criteria:
 3. Percentage change from a zero baseline is marked `not_computable` while the
    absolute change remains available.
 4. Metric units are preserved and incompatible units are rejected.
+5. `latest month` means the dataset-wide latest period. A metric absent from
+   that period is disclosed as `missing_current_period` and is not silently
+   analyzed at an older date.
 
-### Scenario 2: Evaluate target performance
+### Scenario 2: Evaluate target performance (P1)
 
-Given a metric, target, and preferred direction, the workflow calculates target
-variance and assigns a deterministic status.
+Given a metric and target type, the workflow calculates target variance and
+assigns a deterministic status.
 
 Acceptance criteria:
 
-1. `higher_is_better`, `lower_is_better`, and `within_range` targets are
-   evaluated correctly.
+1. `minimum`, `maximum`, and `range` targets are evaluated correctly as
+   higher-is-better, lower-is-better, and within-range conditions.
 2. Thresholds are supplied in the input definition rather than invented by the
    analyzer.
 3. A metric without a target is labeled `no_target`; it is not classified as a
    risk solely because its value changed.
 
-### Scenario 3: Trace a risk forward
+### Scenario 3: Trace a risk forward (P2)
 
 Given a metric classified as at risk in one month, the workflow evaluates each
 subsequent available month and reports when the risk persisted, worsened,
@@ -113,7 +116,7 @@ Acceptance criteria:
 3. Missing months break continuity and are disclosed.
 4. The output does not claim that one metric caused another metric's outcome.
 
-### Scenario 4: Surface recurring and leading patterns
+### Scenario 4: Surface recurring and leading patterns (P2)
 
 Given at least 13 consecutive months of comparable data, the workflow searches
 for repeated threshold breaches and lagged associations between metrics.
@@ -128,8 +131,10 @@ Acceptance criteria:
 4. Results use the label `candidate association`, never `cause`, `driver`, or
    `prediction`, unless an external approved methodology later establishes it.
 5. Insufficient or non-consecutive history produces an explicit limitation.
+6. The 13-consecutive-period requirement is evaluated per configured metric,
+   ending at the dataset-wide latest period.
 
-### Scenario 5: Produce a conservative outlook and executive brief
+### Scenario 5: Produce a conservative outlook and executive brief (P2)
 
 Given valid derived analytics, the workflow produces a baseline projection and
 an executive Markdown brief.
@@ -143,7 +148,7 @@ Acceptance criteria:
    baseline outlook, missing evidence, and suggested review questions.
 4. Suggested actions are review steps, not autonomous operational directives.
 
-### Scenario 6: Reject unsafe or malformed input
+### Scenario 6: Reject unsafe or malformed input (P1)
 
 Given a file with unknown columns, free-text notes, or identifiers outside the
 allowlist, the workflow stops before analysis.
@@ -178,6 +183,14 @@ Allowed fields:
 | `target_max` | finite number | Conditional | Maximum acceptable value |
 | `warning_margin` | non-negative number | No | Explicit near-target warning band |
 
+An optional UTF-8 JSON configuration file supplies analysis policy rather than
+observations. Its closed schema permits `projection_window`,
+`minimum_recurrences`, and an array of candidate associations containing only
+`source_metric_id`, `outcome_metric_id`, `lag_months`, and
+`minimum_observations`. Unknown configuration fields fail closed. If no
+configuration file is supplied, deterministic documented defaults apply and no
+candidate association search runs.
+
 No names, email addresses, tracking numbers, addresses, employee identifiers,
 customer identifiers, route identifiers, free-text notes, or raw source-system
 fields are permitted.
@@ -190,6 +203,11 @@ definition names its numerator, denominator, and time basis; a generic `sph`,
 a label or unit. When additive components are available, the analyzer sums the
 components before deriving an aggregate rate; it never averages row-level
 ratios across facilities or periods.
+
+`metric_label` is a controlled display label, not a notes field. It permits
+letters, spaces, digits, and the limited punctuation `()/%+-`; email-like
+values, digit runs of four or more, address-like text, and control characters
+fail the privacy gate. All other string fields are enums, dates, or slugs.
 
 The repository includes only synthetic fixtures. A gitignored `local-input/`
 directory may be documented for locally prepared scrubbed files, but the tool
@@ -208,8 +226,18 @@ The JSON output contains:
 - limitations and missing-data disclosures; and
 - a provenance block naming the analyzer version and deterministic methods.
 
+The dataset-wide latest period is the analysis period. Comparisons are sorted
+by `metric_id` then `period`; lineage and projection arrays are sorted by
+`metric_id`. Absolute changes remain in the metric unit. For `percent` metrics,
+absolute and target distances are percentage points while `percentage_change`
+is the relative percent change from the prior value. Non-computable numeric
+values are JSON `null` with a reason code. Calculations use full precision and
+canonical serialization rounds only floating noise beyond 12 decimal places.
+
 The Markdown brief renders the same facts without adding new calculations.
-Generated artifacts are disposable outputs and are not committed by default.
+Runtime-generated artifacts are disposable outputs and are not committed. The
+repository commits only reviewed synthetic golden inputs and expected outputs
+under `fixtures/` so deterministic behavior can be evaluated.
 
 ## Architecture
 
@@ -239,8 +267,9 @@ demonstrates that equivalent correct behavior would otherwise be unreasonable.
   failure, when the remaining input is valid.
 - Internal invariant failures exit nonzero with a stable error code and no raw
   input dump.
-- JSON and Markdown files are written only after validation and analysis both
-  succeed, preventing partial or misleading artifacts.
+- JSON and Markdown are published together by atomically renaming a newly
+  created temporary output directory after validation and analysis succeed.
+  The final output directory must not already exist.
 
 ## Prompt-Library Integration
 
