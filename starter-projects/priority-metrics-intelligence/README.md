@@ -140,7 +140,7 @@ rendering.
 | Section | Meaning | Review caution |
 | --- | --- | --- |
 | `comparisons` | Latest-period values, month-over-month and year-over-year changes, and supplied target status | A missing or zero baseline is disclosed instead of invented. Percent-metric absolute changes are percentage points. |
-| `riskLineages` | At-risk metrics followed through persistence, improvement, recovery, or a gap | A lineage describes target status, not cause. |
+| `riskLineages` | At-risk metrics followed through persisted, worsened, improved-at-risk, recovered, or untraceable states | A lineage describes target status, not cause. |
 | `patterns.recurrences` | Repeated configured target-breach events | Repetition alone does not explain why the event occurred. |
 | `patterns.candidateAssociations` | Configured lagged Pearson correlations with periods and observation counts | Treat only as a hypothesis for investigation, never a driver or causal finding. |
 | `projections` | Median-recent-drift baselines and their exact input periods | A baseline is not a guarantee or an authorized plan. |

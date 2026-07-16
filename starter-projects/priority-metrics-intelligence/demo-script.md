@@ -41,7 +41,7 @@ cannot compute.”
 ## 3. Follow Risk And Patterns
 
 - Trace an `at_risk` comparison into `riskLineages` and show whether it
-  persisted, improved, recovered, or became untraceable.
+  persisted, worsened, improved, recovered, or became untraceable.
 - Open `patterns.recurrences` and show the periods behind a repeated event.
 - Open `patterns.candidateAssociations` and show the configured metric pair,
   lag, coefficient, observation count, and period pairs.
