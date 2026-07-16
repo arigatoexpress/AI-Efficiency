@@ -1,6 +1,7 @@
 import {
   lstat as fsLstat,
   mkdir as fsMkdir,
+  open as fsOpen,
   readFile as fsReadFile,
   rename as fsRename,
   rm as fsRm,
@@ -117,6 +118,7 @@ function runtimeIo(io) {
     rm: io.rm ?? fsRm,
     mkdir: io.mkdir ?? fsMkdir,
     lstat: io.lstat ?? fsLstat,
+    open: io.open ?? fsOpen,
     stdout: io.stdout ?? ((line) => process.stdout.write(`${line}\n`)),
     stderr: io.stderr ?? ((line) => process.stderr.write(`${line}\n`)),
   };
@@ -191,28 +193,61 @@ export async function run(argv, io = {}) {
 
   const outputDirectory = resolve(parsed.outputDirectory);
   const temporaryDirectory = `${outputDirectory}.tmp`;
-  let temporaryCreated = false;
+  const lockPath = `${outputDirectory}.lock`;
+  let lockHandle;
   try {
     await runtime.mkdir(dirname(outputDirectory), { recursive: true });
+    lockHandle = await runtime.open(lockPath, "wx");
+  } catch (error) {
+    emitError(
+      runtime.stderr,
+      error?.code === "EEXIST" ? "OUTPUT_LOCKED" : "FILE_WRITE",
+      ["output-dir"],
+    );
+    return 6;
+  }
+
+  let temporaryCreated = false;
+  let publicationError = null;
+  try {
     if (await outputExists(outputDirectory, runtime.lstat)) {
-      emitError(runtime.stderr, "OUTPUT_EXISTS", ["output-dir"]);
-      return 6;
+      publicationError = "OUTPUT_EXISTS";
+    } else {
+      await runtime.mkdir(temporaryDirectory, { recursive: false });
+      temporaryCreated = true;
+      await runtime.writeFile(join(temporaryDirectory, "analysis.json"), analysisJson, "utf8");
+      await runtime.writeFile(join(temporaryDirectory, "brief.md"), briefMarkdown, "utf8");
+      if (await outputExists(outputDirectory, runtime.lstat)) {
+        publicationError = "OUTPUT_EXISTS";
+      } else {
+        await runtime.rename(temporaryDirectory, outputDirectory);
+        temporaryCreated = false;
+      }
     }
-    await runtime.mkdir(temporaryDirectory, { recursive: false });
-    temporaryCreated = true;
-    await runtime.writeFile(join(temporaryDirectory, "analysis.json"), analysisJson, "utf8");
-    await runtime.writeFile(join(temporaryDirectory, "brief.md"), briefMarkdown, "utf8");
-    await runtime.rename(temporaryDirectory, outputDirectory);
-    temporaryCreated = false;
   } catch {
+    publicationError = "FILE_WRITE";
+  } finally {
     if (temporaryCreated) {
       try {
         await runtime.rm(temporaryDirectory, { recursive: true, force: true });
       } catch {
-        // Publication still fails closed even if best-effort temporary cleanup fails.
+        publicationError = "FILE_WRITE";
       }
     }
-    emitError(runtime.stderr, "FILE_WRITE", ["output-dir"]);
+    try {
+      await lockHandle.close();
+    } catch {
+      publicationError = "FILE_WRITE";
+    }
+    try {
+      await runtime.rm(lockPath, { force: true });
+    } catch {
+      publicationError = "FILE_WRITE";
+    }
+  }
+
+  if (publicationError !== null) {
+    emitError(runtime.stderr, publicationError, ["output-dir"]);
     return 6;
   }
 

@@ -255,6 +255,7 @@ test("runs the complete workflow and atomically publishes exactly both artifacts
   const events = [];
   const harness = cliHarness({
     writeFile: async (path, contents, options) => {
+      assert.equal(await readFile(`${outputDirectory}.lock`, "utf8"), "");
       events.push(`write:${basename(path)}`);
       await writeFile(path, contents, options);
     },
@@ -269,7 +270,7 @@ test("runs the complete workflow and atomically publishes exactly both artifacts
   assert.equal(code, 0);
   assert.deepEqual(harness.stderr, []);
   assert.match(harness.stdout.join("\n"), /^OK priority-metrics-analysis:/);
-  assert.deepEqual(await readdir(outputDirectory), ["analysis.json", "brief.md"]);
+  assert.deepEqual((await readdir(outputDirectory)).sort(), ["analysis.json", "brief.md"]);
   assert.equal(
     await readFile(join(outputDirectory, "analysis.json"), "utf8"),
     await fixture("expected-analysis.json"),
@@ -283,6 +284,7 @@ test("runs the complete workflow and atomically publishes exactly both artifacts
     "rename:analysis.tmp:analysis",
   ]);
   await assert.rejects(readFile(`${outputDirectory}.tmp`, "utf8"), { code: "ENOENT" });
+  await assert.rejects(readFile(`${outputDirectory}.lock`, "utf8"), { code: "ENOENT" });
 });
 
 test("rejects unknown, positional, duplicate, missing, and invalid arguments before I/O", async () => {
@@ -401,10 +403,62 @@ test("rejects an existing output directory without changing it", async (t) => {
   assert.equal(await run(validArgs(outputDirectory), harness.io), 6);
   assert.deepEqual(harness.stdout, []);
   assert.deepEqual(harness.stderr, ["ERROR OUTPUT_EXISTS: output-dir"]);
-  assert.deepEqual(await readdir(outputDirectory), ["sentinel.txt"]);
+  assert.deepEqual((await readdir(outputDirectory)).sort(), ["sentinel.txt"]);
   assert.equal(await readFile(join(outputDirectory, "sentinel.txt"), "utf8"), "keep");
   assert.equal(renames, 0);
   await assert.rejects(readdir(`${outputDirectory}.tmp`), { code: "ENOENT" });
+  await assert.rejects(readFile(`${outputDirectory}.lock`, "utf8"), { code: "ENOENT" });
+});
+
+test("a pre-existing sibling lock blocks publication and remains untouched", async (t) => {
+  const directory = await workspace(t, "lock-collision");
+  const outputDirectory = join(directory, "analysis");
+  const lockPath = `${outputDirectory}.lock`;
+  await writeFile(lockPath, "stale-owner", "utf8");
+  let renames = 0;
+  const harness = cliHarness({
+    rename: async () => {
+      renames += 1;
+    },
+  });
+
+  assert.equal(await run(validArgs(outputDirectory), harness.io), 6);
+  assert.deepEqual(harness.stdout, []);
+  assert.deepEqual(harness.stderr, ["ERROR OUTPUT_LOCKED: output-dir"]);
+  assert.equal(await readFile(lockPath, "utf8"), "stale-owner");
+  assert.equal(renames, 0);
+  await assert.rejects(readdir(outputDirectory), { code: "ENOENT" });
+  await assert.rejects(readdir(`${outputDirectory}.tmp`), { code: "ENOENT" });
+});
+
+test("rechecks the destination under lock immediately before rename", async (t) => {
+  const directory = await workspace(t, "late-destination");
+  const outputDirectory = join(directory, "analysis");
+  let writes = 0;
+  let renames = 0;
+  const harness = cliHarness({
+    writeFile: async (path, contents, options) => {
+      writes += 1;
+      await writeFile(path, contents, options);
+      if (writes === 2) {
+        assert.equal(await readFile(`${outputDirectory}.lock`, "utf8"), "");
+        await mkdir(outputDirectory);
+        await writeFile(join(outputDirectory, "sentinel.txt"), "preserve", "utf8");
+      }
+    },
+    rename: async () => {
+      renames += 1;
+    },
+  });
+
+  assert.equal(await run(validArgs(outputDirectory), harness.io), 6);
+  assert.deepEqual(harness.stdout, []);
+  assert.deepEqual(harness.stderr, ["ERROR OUTPUT_EXISTS: output-dir"]);
+  assert.equal(renames, 0);
+  assert.deepEqual((await readdir(outputDirectory)).sort(), ["sentinel.txt"]);
+  assert.equal(await readFile(join(outputDirectory, "sentinel.txt"), "utf8"), "preserve");
+  await assert.rejects(readdir(`${outputDirectory}.tmp`), { code: "ENOENT" });
+  await assert.rejects(readFile(`${outputDirectory}.lock`, "utf8"), { code: "ENOENT" });
 });
 
 test("cleans the sibling temporary directory after write and rename failures", async (t) => {
@@ -418,7 +472,10 @@ test("cleans the sibling temporary directory after write and rename failures", a
     const harness = cliHarness({
       writeFile: async (path, contents, options) => {
         writes += 1;
-        if (failurePoint === "write" && writes === 2) throw new Error(secret);
+        if (writes === 2) {
+          assert.equal(await readFile(`${outputDirectory}.lock`, "utf8"), "");
+          if (failurePoint === "write") throw new Error(secret);
+        }
         await writeFile(path, contents, options);
       },
       rename: async (source, destination) => {
@@ -434,6 +491,7 @@ test("cleans the sibling temporary directory after write and rename failures", a
     assert.doesNotMatch(harness.stderr.join("\n"), /SYNTH-REJECTED-FS-998877/);
     await assert.rejects(readdir(outputDirectory), { code: "ENOENT" });
     await assert.rejects(readdir(`${outputDirectory}.tmp`), { code: "ENOENT" });
+    await assert.rejects(readFile(`${outputDirectory}.lock`, "utf8"), { code: "ENOENT" });
     assert.equal(renames, failurePoint === "rename" ? 1 : 0);
   }
 });
@@ -470,7 +528,8 @@ test("processes 10,000 valid rows through the CLI without a timing threshold", a
   assert.deepEqual(harness.stderr, []);
   const analysis = JSON.parse(await readFile(join(output, "analysis.json"), "utf8"));
   assert.equal(analysis.inputSummary.observationCount, 10_000);
-  assert.deepEqual(await readdir(output), ["analysis.json", "brief.md"]);
+  assert.deepEqual((await readdir(output)).sort(), ["analysis.json", "brief.md"]);
+  await assert.rejects(readFile(`${output}.lock`, "utf8"), { code: "ENOENT" });
 });
 
 test("source remains offline and excludes network and child-process interfaces", async () => {
