@@ -184,10 +184,10 @@ Allowed fields:
 | `warning_margin` | non-negative number | No | Explicit near-target warning band |
 
 An optional UTF-8 JSON configuration file supplies analysis policy rather than
-observations. Its closed schema permits `projection_window`,
-`minimum_recurrences`, and an array of candidate associations containing only
-`source_metric_id`, `outcome_metric_id`, `lag_months`, and
-`minimum_observations`. Unknown configuration fields fail closed. If no
+observations. Its closed schema permits `projectionWindow`,
+`minimumRecurrences`, and `candidateAssociations`, an array containing only
+`sourceMetricId`, `outcomeMetricId`, `lagMonths`, and
+`minimumObservations`. Unknown configuration fields fail closed. If no
 configuration file is supplied, deterministic documented defaults apply and no
 candidate association search runs.
 

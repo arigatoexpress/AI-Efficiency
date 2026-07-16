@@ -38,7 +38,7 @@ A presenter can read straight down this page. Jump to any section:
 | 3 | Anyone can get value in five minutes — copy a prompt, read the plain-English guide, or open the live dashboard. | [Three ways to get value](#three-ways-to-get-value-in-five-minutes) |
 | 4 | Our most mature tool turns public weather and road risk into a shift brief you can edit. | [Live dashboard](https://fedex-logistics-intelligence-system-267358751314.us-east1.run.app) |
 | 5 | Own a weekly number? Two offline tools show whether a KPI move is real and which lever moved it. | [Signal Lab](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/starter-projects/dock-efficiency-signal-lab/app/index.html) · [TLH/SPH Explorer](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/starter-projects/tlh-sph-efficiency-explorer/app/index.html) |
-| 6 | 51 ready-to-use prompts for the work you already do — search, fill in the brackets, copy. | [Prompt Explorer](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/prompts/explorer.html) |
+| 6 | 52 ready-to-use prompts for the work you already do — search, fill in the brackets, copy. | [Prompt Explorer](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/prompts/explorer.html) |
 | 7 | Where we're headed next, and the rules that keep it safe. | [Forward path](#forward-path-google-cloud--gemini--adk) · [How we work safely](#how-we-work-safely) |
 | 8 | Everything we've shipped since the June 4 meeting. | [What's new](#whats-new-since-the-june-4-meeting) |
 
@@ -50,7 +50,7 @@ A presenter can read straight down this page. Jump to any section:
 
 No setup, no installs, no technical background:
 
-1. **Copy a prompt.** Open the [prompt library](prompts/README.md), pick a prompt, paste it into Gemini or ChatGPT, and fill in the brackets. 51 prompts for shift briefs, safety huddles, handoffs, peak planning, and more — each with its safety rule built in.
+1. **Copy a prompt.** Open the [prompt library](prompts/README.md), pick a prompt, paste it into Gemini or ChatGPT, and fill in the brackets. 52 prompts for shift briefs, safety huddles, handoffs, peak planning, and more — each with its safety rule built in.
 2. **Read the starter guide.** The [AI workplace user guide](docs/ai-workplace-user-guide.md) is the plain-English explanation of what AI can (and can't) safely do for your day — written for the least technical teammate.
 3. **Try the live dashboard.** The [Station Ops Intelligence demo](https://fedex-logistics-intelligence-system-267358751314.us-east1.run.app) shows public weather and road risk before a shift and drafts briefs you can edit. Public data only; every output says "needs manager verification."
 
@@ -119,7 +119,7 @@ Our most mature starter project is a live, public-data decision-support dashboar
 
 ## Prompt Library at a Glance
 
-**51 copy-paste prompts** across 10 categories — plus a [prompt-engineering basics](prompts/prompt-engineering-basics.md) guide — organized by what FedEx managers actually do.
+**52 copy-paste prompts** across 10 categories — plus a [prompt-engineering basics](prompts/prompt-engineering-basics.md) guide — organized by what FedEx managers actually do.
 
 **Easiest way in: the [Prompt Explorer](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/prompts/explorer.html)** — search the whole library, fill in the brackets on screen, and copy the finished prompt. Fully offline like the other tools, works in any browser on any machine, and the prompts are plain text that works with any model (Gemini, Copilot, ChatGPT, Claude). Programs and agents can read the same library from [`prompts/prompts.json`](prompts/prompts.json).
 
@@ -303,7 +303,7 @@ One week, sixteen merged pull requests — every CTO-review item closed, two new
 - **Engineering hygiene** — CI now runs docs/link/claim checks and the full app build on every PR; GitHub Actions are SHA-pinned with Dependabot enabled; the [operating charter](AGENTS.md) keeps changes small, verified, and reversible; model licenses for the forecasting track all confirmed Apache-2.0.
 - **The platform is one hub** — unified [interactive hub page](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/index.html), refreshed [presentation deck](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/assets/presentation-deck.html) (15 slides, current as of today), and the printable [Daily Ops Playbook](docs/daily-ops-playbook.md).
 - **Gemini Enterprise prep started** — access requested from the org team; the [day-one readiness plan](docs/technology/gemini-enterprise-readiness.md) and the first registrable agent — the [ADK shift-brief agent starter kit](starter-projects/adk-shift-brief-agent/README.md) (read-only tools, synthetic signals, CI-enforced guardrails, tested offline) — are ready and waiting.
-- **The prompt library became programmable** — the new [Prompt Explorer](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/prompts/explorer.html) (search, fill in the brackets, copy — offline) plus a machine-readable [`prompts.json`](prompts/prompts.json) index generated from the markdown and kept in sync by CI, so scripts, agents, and enterprise tools can consume the same 51 prompts as people do.
+- **The prompt library became programmable** — the new [Prompt Explorer](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/prompts/explorer.html) (search, fill in the brackets, copy — offline) plus a machine-readable [`prompts.json`](prompts/prompts.json) index generated from the markdown and kept in sync by CI, so scripts, agents, and enterprise tools can consume the same 52 prompts as people do.
 - **Research-driven Microsoft alignment** — three deep-research passes (Copilot/Teams landscape, public FedEx role ladder, prompt methodology) produced the [Copilot + Teams playbook](docs/technology/copilot-teams-playbook.md) (which Copilot you have, Microsoft's four prompt elements, role-by-role guidance from handler to managing director, the skills ladder) and explorer upgrades: a ⭐ Day 1 starter pack, per-category audience labels, and an Expectations builder that adds Microsoft's most-skipped prompt element with three dropdowns.
 - **Copilot guidance refreshed for 2026** — updated the [Copilot + Teams playbook](docs/technology/copilot-teams-playbook.md) with current Microsoft 365 Copilot / Copilot Chat / GitHub Copilot distinctions, the four agent-building surfaces (SharePoint agents, Agent Builder, Copilot Studio, declarative agents), open standards (MCP and A2A), and a new [model-agnostic examples](docs/technology/copilot-model-agnostic-examples.md) page showing GitHub Copilot CLI BYOK and VS Code "OAI Compatible" provider setup for local/Ollama endpoints.
 

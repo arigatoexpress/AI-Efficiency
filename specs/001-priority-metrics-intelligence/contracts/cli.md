@@ -30,13 +30,20 @@ raw rows, local file contents, or stack traces.
 
 The output directory contains exactly `analysis.json` and `brief.md`.
 
-## Atomic output
+## Coordinated atomic output
 
 The CLI requires the final output directory not to exist. It renders both
-artifacts in memory, creates a sibling `<name>.tmp` directory, writes
-`analysis.json` and `brief.md`, then renames the directory into place. Any
-failure removes the temporary directory and exits `6`; no final directory or
+artifacts in memory, acquires an exclusive sibling `<name>.lock`, creates a
+sibling `<name>.tmp` directory, writes `analysis.json` and `brief.md`, checks
+the destination again, then renames the directory into place. Any handled
+failure removes the publisher's temporary directory and lock and exits `6`; no
 partial pair is published.
+
+The publication guarantee assumes coordinated publishers that honor the lock.
+External, uncoordinated mutation of the destination, lock, or temporary paths
+is outside the contract. A process crash can leave a stale lock that blocks
+later runs. An operator must verify no publisher is active and inspect the
+destination and temporary paths before removing a crash-stale lock.
 
 ## Offline contract
 

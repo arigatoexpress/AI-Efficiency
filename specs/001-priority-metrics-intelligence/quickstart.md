@@ -6,6 +6,8 @@ This quickstart is for an FEC supervisor, manager, or reviewer evaluating the
 offline prototype. The repository fixture is synthetic. Do not copy a real
 report into the repository; a local scrubbed file remains the user's
 responsibility and must stay under the ignored `local-input/` directory.
+Runtime output under `output/` is also ignored. Only reviewed synthetic golden
+fixtures under `fixtures/` are tracked.
 
 ## Run the focused evals
 
@@ -39,6 +41,12 @@ OK priority-metrics-analysis: synthetic output written
 ```
 
 The output directory is disposable and ignored by Git.
+
+The CLI coordinates publishers with a sibling `<output>.lock`. External,
+uncoordinated mutation of the output, lock, or temporary paths is outside the
+supported contract. If a crash leaves a stale lock, an operator must first
+verify that no publisher is active and inspect the destination and temporary
+paths before removing the lock.
 
 ## Confirm deterministic output
 

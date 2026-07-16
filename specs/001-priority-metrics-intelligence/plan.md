@@ -216,17 +216,17 @@ absolute distance beyond the applicable target boundary in the metric's unit.
 
 ### Patterns
 
-- Recurrence is a repeated `at_risk` event meeting `minimum_recurrences`.
+- Recurrence is a repeated `at_risk` event meeting `minimumRecurrences`.
 - Candidate association runs only for configured metric pairs and integer lags.
 - It uses Pearson correlation on aligned finite observations, returns the exact
   periods and count, and labels the result `candidate_association`.
-- Fewer than `minimum_observations`, zero variance, or period gaps produce an
+- Fewer than `minimumObservations`, zero variance, or period gaps produce an
   explicit limitation rather than a numeric result.
 
 ### Projection
 
 Use a deterministic drift baseline: the last observed value plus the median of
-the most recent first differences, using at most `projection_window` periods.
+the most recent first differences, using at most `projectionWindow` periods.
 This is robust to one extreme change, simple to explain, and not marketed as a
 calibrated forecast. Missing consecutive history returns a limitation.
 
