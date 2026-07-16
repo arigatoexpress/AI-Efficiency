@@ -34,6 +34,14 @@ test("quoted CSV maps to one canonical observation", () => {
   });
 });
 
+test("CSV rejects a dataset with zero observation rows at the parse boundary", () => {
+  assert.throws(() => parseMetricsCsv(`${header}\n`), {
+    code: "SCHEMA_EMPTY_INPUT",
+    message: "SCHEMA_EMPTY_INPUT; fields=input",
+  });
+  assert.throws(() => parseMetricsCsv(header), { code: "SCHEMA_EMPTY_INPUT" });
+});
+
 test("CSV schema rejects unknown, reordered, and duplicate headers", () => {
   const row = "2026-06,synth_service,synth_on_time_percent,SYNTH On-time percent,96.2,percent,minimum,95,,1";
 
