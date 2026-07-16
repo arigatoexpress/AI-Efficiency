@@ -8,7 +8,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 const root = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..");
-const SKIP_DIRS = new Set(["node_modules", "dist", ".git"]);
+const SKIP_DIRS = new Set(["node_modules", "dist", ".git", ".worktrees"]);
 let failures = 0;
 const fail = (msg) => { console.error("FAIL  " + msg); failures++; };
 
@@ -49,12 +49,11 @@ for (const f of docFiles) {
 /* 3. Single-file pages: DOCTYPE + balanced structural tags; offline apps: CSP */
 const pages = [
   "index.html",
-  "assets/presentation-deck.html",
   "starter-projects/dock-efficiency-signal-lab/app/index.html",
   "starter-projects/tlh-sph-efficiency-explorer/app/index.html",
   "prompts/explorer.html",
 ];
-const offlineApps = pages.slice(2).concat(["index.html"]);
+const offlineApps = pages.slice(1).concat(["index.html"]);
 for (const p of pages) {
   const txt = fs.readFileSync(path.join(root, p), "utf8");
   if (!/^<!DOCTYPE html>/i.test(txt)) fail(`${p}: missing DOCTYPE`);
@@ -77,7 +76,7 @@ for (const f of fs.readdirSync(promptDir)) {
   actual += (fs.readFileSync(path.join(promptDir, f), "utf8").match(/^```text/gm) || []).length;
 }
 const claimRe = /(\d+)(?:\+)?\s*(?:copy-paste prompts|ops prompts|FedEx-specific prompts|FedEx-Specific Prompts)|Index of (\d+) prompts/g;
-for (const rel of ["README.md", "index.html", "AGENTS.md", "assets/presentation-deck.html"]) {
+for (const rel of ["README.md", "index.html", "AGENTS.md"]) {
   const txt = fs.readFileSync(path.join(root, rel), "utf8");
   for (const m of txt.matchAll(claimRe)) {
     const claimed = Number(m[1] ?? m[2]);

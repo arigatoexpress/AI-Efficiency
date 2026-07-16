@@ -22,7 +22,6 @@ The repo turns operational friction into reusable AI assets: prompts for manager
 | `docs/fedex-terminology.md` | Quick reference for FedEx operations terms — source of truth for the "FEC supervisors and managers" audience term |
 | `docs/technology/agentic-ai-for-operations.md` | The agency ladder — manager-level guide to agentic AI, indexes the ADK and intake-agent docs |
 | `docs/pilot-program-template.md` | Template for proposing small, measurable AI pilots |
-| `docs/demo-script.md` | Script for presenting the repo and prototype to leadership |
 | `docs/documentation-standard.md` | Style guide for all repo docs and starter projects |
 | `prompts/` | Copy-paste prompt library organized by operational area |
 | `prompts/README.md` | Index of 52 prompts across 10 categories |
