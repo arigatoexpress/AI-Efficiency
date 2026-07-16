@@ -103,12 +103,19 @@ export async function fetchAlerts(loc: StationLocation, fetchFn: FetchLike): Pro
   }))
 }
 
-// USGS earthquakes within ~300 km over the past day.
+// USGS earthquakes within ~300 km over the past 7 days. Time-ordered with an
+// explicit starttime: the magnitude-ordered default-window query takes ~4s on
+// the USGS side and races the timeout; this form answers in <200ms.
 // https://earthquake.usgs.gov/fdsnws/event/1/
-export async function fetchQuakes(loc: StationLocation, fetchFn: FetchLike): Promise<LiveQuake[]> {
+export async function fetchQuakes(
+  loc: StationLocation,
+  fetchFn: FetchLike,
+  now: Date = new Date()
+): Promise<LiveQuake[]> {
+  const starttime = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10)
   const url =
     `https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&latitude=${loc.lat}&longitude=${loc.lon}` +
-    `&maxradiuskm=300&minmagnitude=2.5&orderby=magnitude&limit=5`
+    `&maxradiuskm=300&minmagnitude=2.5&orderby=time&limit=5&starttime=${starttime}`
   const data = (await getJson(fetchFn, url)) as {
     features?: Array<{ properties?: { mag?: number; place?: string; time?: number } }>
   }
@@ -132,7 +139,7 @@ export async function fetchLiveSignals(
   const [weather, alerts, quakes] = await Promise.all([
     fetchWeather(loc, fetchFn).catch((e: Error) => ({ error: `weather unavailable: ${e.message}` })),
     fetchAlerts(loc, fetchFn).catch((e: Error) => ({ error: `alerts unavailable: ${e.message}` })),
-    fetchQuakes(loc, fetchFn).catch((e: Error) => ({ error: `quakes unavailable: ${e.message}` })),
+    fetchQuakes(loc, fetchFn, now).catch((e: Error) => ({ error: `quakes unavailable: ${e.message}` })),
   ])
 
   return { station: loc.name, fetchedAt: now.toISOString(), weather, alerts, quakes }
