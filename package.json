@@ -6,6 +6,7 @@
   "scripts": {
     "test": "cd starter-projects/fedex-logistics-intelligence-system/app && npm run build",
     "verify:priority-metrics": "node --test starter-projects/priority-metrics-intelligence/test/*.test.mjs",
-    "verify": "npm run verify:priority-metrics && npm run test"
+    "verify:logistics": "cd starter-projects/fedex-logistics-intelligence-system/app && npm test",
+    "verify": "npm run verify:priority-metrics && npm run verify:logistics && npm run test"
   }
 }
