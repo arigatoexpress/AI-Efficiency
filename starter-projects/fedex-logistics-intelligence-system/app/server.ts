@@ -78,7 +78,7 @@ Include what to verify internally and what is public data only.
     }
 
     const response = await genAI.models.generateContent({
-      model: 'gemini-2.0-flash',
+      model: process.env.GEMINI_MODEL || 'gemini-2.5-flash',
       contents: [{ role: 'user', parts: [{ text: userPrompt }] }],
       config: { systemInstruction },
     })
@@ -145,7 +145,7 @@ function generateFallbackDraft(
 
 // Serve static client build in production
 app.use(express.static(path.join(SCRIPT_DIR, 'client')))
-app.get('*', (_req, res) => {
+app.get('/{*splat}', (_req, res) => {
   res.sendFile(path.join(SCRIPT_DIR, 'client', 'index.html'))
 })
 
