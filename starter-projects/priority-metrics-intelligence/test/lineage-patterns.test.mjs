@@ -136,6 +136,8 @@ const sourcePeriods = [
   "2026-07",
 ];
 const outcomePeriods = sourcePeriods;
+const extendedHistoryPeriods = ["2025-05", "2025-06", ...sourcePeriods];
+const olderGapHistoryPeriods = ["2025-03", ...extendedHistoryPeriods];
 const gappedHistoryPeriods = ["2025-05", "2025-06", ...sourcePeriods].filter(
   (period) => period !== "2025-10",
 );
@@ -145,6 +147,21 @@ const configuredAssociation = {
   lagMonths: 1,
   minimumObservations: 6,
 };
+
+function recordsWithOlderGap() {
+  return [
+    ...observations(
+      "late_inbound",
+      olderGapHistoryPeriods,
+      olderGapHistoryPeriods.map((_, index) => index + 1),
+    ),
+    ...observations(
+      "on_time",
+      olderGapHistoryPeriods,
+      olderGapHistoryPeriods.map((_, index) => olderGapHistoryPeriods.length - index),
+    ),
+  ];
+}
 
 test("reports only recurrence events meeting the configured threshold", () => {
   const records = [
@@ -236,6 +253,69 @@ test("calculates a configured Pearson association at the exact calendar lag", ()
     ],
     limitation: null,
   });
+});
+
+test("uses only the exact trailing 13-month windows for association evidence", () => {
+  const records = [
+    ...observations(
+      "late_inbound",
+      extendedHistoryPeriods,
+      extendedHistoryPeriods.map((_, index) => index + 1),
+    ),
+    ...observations(
+      "on_time",
+      extendedHistoryPeriods,
+      extendedHistoryPeriods.map((_, index) => extendedHistoryPeriods.length - index),
+    ),
+  ];
+
+  const [result] = findPatterns(records, [], {
+    minimumRecurrences: 3,
+    candidateAssociations: [configuredAssociation],
+  }).candidateAssociations;
+
+  assert.equal(result.observationCount, 12);
+  assert.equal(result.coefficient, -1);
+  assert.equal(result.limitation, null);
+  assert.deepEqual(
+    result.periodPairs,
+    sourcePeriods.slice(0, -1).map((sourcePeriod, index) => ({
+      sourcePeriod,
+      outcomePeriod: outcomePeriods[index + 1],
+    })),
+  );
+});
+
+test("ignores a gap older than the trailing window for recurrence eligibility", () => {
+  const comparisons = [
+    comparison("late_inbound", "2025-09", "at_risk", -1),
+    comparison("late_inbound", "2026-03", "at_risk", -2),
+    comparison("late_inbound", "2026-07", "at_risk", -1),
+  ];
+
+  const result = findPatterns(recordsWithOlderGap(), comparisons, {
+    minimumRecurrences: 3,
+    candidateAssociations: [],
+  });
+
+  assert.deepEqual(result.recurrences, [
+    {
+      metricId: "late_inbound",
+      eventCount: 3,
+      periods: ["2025-09", "2026-03", "2026-07"],
+    },
+  ]);
+});
+
+test("ignores a gap older than the trailing windows for association evidence", () => {
+  const [result] = findPatterns(recordsWithOlderGap(), [], {
+    minimumRecurrences: 3,
+    candidateAssociations: [configuredAssociation],
+  }).candidateAssociations;
+
+  assert.equal(result.observationCount, 12);
+  assert.equal(result.coefficient, -1);
+  assert.equal(result.limitation, null);
 });
 
 test("does not search metric pairs that were not configured", () => {

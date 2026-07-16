@@ -49,10 +49,15 @@ function pearson(sourceValues, outcomeValues) {
   return Math.max(-1, Math.min(1, coefficient));
 }
 
-function historyLimitation(records, latestPeriod) {
-  if (records.length < REQUIRED_HISTORY_PERIODS) return "insufficient_history";
-  if (records.at(-1).period !== latestPeriod || hasPeriodGap(records)) return "period_gap";
-  return null;
+function selectHistoryWindow(records, latestPeriod) {
+  const window = records.slice(-REQUIRED_HISTORY_PERIODS);
+  if (window.length < REQUIRED_HISTORY_PERIODS) {
+    return { records: window, limitation: "insufficient_history" };
+  }
+  if (window.at(-1).period !== latestPeriod || hasPeriodGap(window)) {
+    return { records: window, limitation: "period_gap" };
+  }
+  return { records: window, limitation: null };
 }
 
 function findRecurrences(comparisons, minimumRecurrences, eligibleMetricIds) {
@@ -81,8 +86,16 @@ function findRecurrences(comparisons, minimumRecurrences, eligibleMetricIds) {
 }
 
 function analyzeAssociation(definition, recordsByMetric, latestPeriod) {
-  const sourceRecords = recordsByMetric.get(definition.sourceMetricId) ?? [];
-  const outcomeRecords = recordsByMetric.get(definition.outcomeMetricId) ?? [];
+  const sourceHistory = selectHistoryWindow(
+    recordsByMetric.get(definition.sourceMetricId) ?? [],
+    latestPeriod,
+  );
+  const outcomeHistory = selectHistoryWindow(
+    recordsByMetric.get(definition.outcomeMetricId) ?? [],
+    latestPeriod,
+  );
+  const sourceRecords = sourceHistory.records;
+  const outcomeRecords = outcomeHistory.records;
   const outcomesByPeriod = new Map(outcomeRecords.map((record) => [record.period, record]));
   const aligned = sourceRecords.flatMap((source) => {
     const outcomePeriod = offsetPeriod(source.period, definition.lagMonths);
@@ -96,16 +109,14 @@ function analyzeAssociation(definition, recordsByMetric, latestPeriod) {
 
   let coefficient = null;
   let limitation = null;
-  const sourceHistoryLimitation = historyLimitation(sourceRecords, latestPeriod);
-  const outcomeHistoryLimitation = historyLimitation(outcomeRecords, latestPeriod);
   if (
-    sourceHistoryLimitation === "insufficient_history" ||
-    outcomeHistoryLimitation === "insufficient_history"
+    sourceHistory.limitation === "insufficient_history" ||
+    outcomeHistory.limitation === "insufficient_history"
   ) {
     limitation = "insufficient_history";
   } else if (
-    sourceHistoryLimitation === "period_gap" ||
-    outcomeHistoryLimitation === "period_gap"
+    sourceHistory.limitation === "period_gap" ||
+    outcomeHistory.limitation === "period_gap"
   ) {
     limitation = "period_gap";
   } else if (aligned.length < definition.minimumObservations) {
@@ -146,7 +157,10 @@ export function findPatterns(records, comparisons, policy) {
   );
   const eligibleMetricIds = new Set(
     [...recordsByMetric]
-      .filter(([, metricRecords]) => historyLimitation(metricRecords, latestPeriod) === null)
+      .filter(
+        ([, metricRecords]) =>
+          selectHistoryWindow(metricRecords, latestPeriod).limitation === null,
+      )
       .map(([metricId]) => metricId),
   );
 
