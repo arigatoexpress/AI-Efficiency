@@ -1,6 +1,6 @@
 <!--
 Sync Impact Report
-- Version change: 1.0.0 -> 1.0.1
+- Version change: 1.0.1 -> 1.0.2
 - Added principles:
   - I. Evals Are the Specification
   - II. Public-Safe Synthetic Data
@@ -19,6 +19,8 @@ Sync Impact Report
 - Clarified principles:
   - II. Public-Safe Synthetic Data: distinguish controlled labels from
     prohibited unstructured free-text notes
+  - II. Public-Safe Synthetic Data: distinguish stable entity IDs (`SYNTH-`)
+    from closed synthetic metric-definition IDs (`synth_`)
 - Deferred items: none
 -->
 # AI Efficiency Constitution
@@ -37,7 +39,9 @@ operational method is correct.
 ### II. Public-Safe Synthetic Data
 
 Tracked fixtures and examples MUST contain synthetic data only. Stable entity
-identifiers MUST use declared `SYNTH-` namespaces. Schemas MUST fail closed on
+identifiers MUST use declared `SYNTH-` namespaces; closed synthetic
+metric-definition identifiers MUST use the declared lowercase `synth_`
+namespace. Schemas MUST fail closed on
 unknown fields, unstructured free-text notes, direct identifiers, precise real locations, and
 values resembling tracking, employee, customer, route, address, manifest, or
 source-system identifiers. Rejected values MUST NOT appear in logs or derived
@@ -113,4 +117,4 @@ principles, and PATCH for non-semantic clarification. Every plan MUST pass the
 Constitution Check before research and after design; every pull request MUST
 report applicable gates and evidence.
 
-**Version**: 1.0.1 | **Ratified**: 2026-07-15 | **Last Amended**: 2026-07-15
+**Version**: 1.0.2 | **Ratified**: 2026-07-15 | **Last Amended**: 2026-07-15
