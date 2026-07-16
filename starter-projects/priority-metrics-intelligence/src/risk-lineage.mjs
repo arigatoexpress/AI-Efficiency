@@ -50,7 +50,10 @@ export function traceRiskLineages(comparisons) {
       previousSeverity = null;
     }
 
-    if (comparison.target.status === "at_risk") {
+    if (
+      comparison.target.status === "at_risk" ||
+      (active !== null && comparison.target.status === "warning")
+    ) {
       const severity = severityOf(comparison);
       if (active === null) {
         active = {

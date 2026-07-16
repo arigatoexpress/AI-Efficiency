@@ -52,6 +52,30 @@ test("keeps an equal-severity consecutive breach active as persisted", () => {
   ]);
 });
 
+test("tracks warning severity inside an active lineage without opening from warning alone", () => {
+  const comparisons = [
+    comparison("on_time", "2025-12", "warning", -0.5),
+    comparison("on_time", "2026-01", "at_risk", -3),
+    comparison("on_time", "2026-02", "warning", -0.5),
+    comparison("on_time", "2026-03", "at_risk", -2),
+    comparison("on_time", "2026-04", "on_target", 1),
+  ];
+
+  assert.deepEqual(traceRiskLineages(comparisons), [
+    {
+      metricId: "on_time",
+      originPeriod: "2026-01",
+      originSeverity: 3,
+      events: [
+        { period: "2026-02", classification: "improved_at_risk", severity: 0.5 },
+        { period: "2026-03", classification: "worsened", severity: 2 },
+        { period: "2026-04", classification: "recovered", severity: 0 },
+      ],
+      outcome: "recovered",
+    },
+  ]);
+});
+
 test("closes a discontinuous lineage and opens a new lineage at the next breach", () => {
   const comparisons = [
     comparison("scan_quality", "2026-01", "at_risk", -2),
