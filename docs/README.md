@@ -14,6 +14,7 @@ This folder contains guides, standards, and templates for the AI Efficiency Team
 | [FedEx terminology](fedex-terminology.md) | Quick reference for FedEx operations terms. | Anyone writing prompts or docs |
 | [Daily operations playbook](daily-ops-playbook.md) | Printable, run-it-every-day shift routine with ready-to-paste prompts. | FEC supervisors and managers |
 | [How It Works series](how-it-works/README.md) | Diagrams of the real systems plus captured runs — the "yes, we actually built it" evidence. | Skeptics, reviewers, presenters |
+| [What's new](whats-new.md) | Running progress log of what has shipped. | Everyone |
 
 ## Governance and Standards
 
