@@ -88,8 +88,8 @@ or silent repair.
 - [x] T044 Add the starter to `starter-projects/README.md`, root `README.md`, and `index.html` without changing claims unrelated to the new tool.
 - [x] T045 Run the focused suite, docs check, prompt-index check, TLH/SPH checks, ADK checks, root verification, TypeScript check, and app build; record exact results.
 - [x] T046 Run `git diff --check`, offline/identifier scans, generated-artifact scan, and SpecKit consistency analysis.
-- [ ] T047 Request an independent read-only final review and add adversarial evals before any fix.
-- [ ] T048 Push, open, observe CI, and merge only when every gate is green; do not deploy or connect live data.
+- [x] T047 Request an independent read-only final review and add adversarial evals before any fix.
+- [x] T048 Push, open, observe CI, and merge only when every gate is green; do not deploy or connect live data.
 
 ## Dependencies
 
