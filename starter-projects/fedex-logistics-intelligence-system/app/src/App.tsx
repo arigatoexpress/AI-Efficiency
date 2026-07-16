@@ -5,10 +5,11 @@ import StationImpact from './components/StationImpact'
 import RouteWatch from './components/RouteWatch'
 import ManagerDrafts from './components/ManagerDrafts'
 import SourceTrail from './components/SourceTrail'
+import LiveSignalsPanel from './components/LiveSignalsPanel'
 import { STATIONS, DEFAULT_STATION, type StationConfig } from './data/stations'
 
 export default function App() {
-  const [health, setHealth] = useState<{ geminiConfigured: boolean } | null>(null)
+  const [health, setHealth] = useState<{ geminiConfigured: boolean; liveSignals?: boolean } | null>(null)
   const [station, setStation] = useState<StationConfig>(DEFAULT_STATION)
 
   useEffect(() => {
@@ -59,6 +60,7 @@ export default function App() {
       </header>
 
       <section className="panels">
+        <LiveSignalsPanel station={station} enabled={!!health?.liveSignals} />
         <ShiftReadiness station={station} />
         <StationImpact station={station} />
         <RouteWatch station={station} />
