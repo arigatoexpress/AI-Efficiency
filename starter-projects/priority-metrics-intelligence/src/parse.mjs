@@ -1,6 +1,6 @@
 import { SafeInputError } from "./errors.mjs";
 import { CSV_FIELDS, validateMetricRows, validatePolicy } from "./schema.mjs";
-import { assertPublicSafe } from "./privacy.mjs";
+import { assertPublicSafe, assertRawPublicSafe } from "./privacy.mjs";
 
 function malformedCsv() {
   throw new SafeInputError("CSV_MALFORMED");
@@ -194,6 +194,7 @@ export function parseMetricsCsv(text) {
     }
     return Object.fromEntries(CSV_FIELDS.map((field, fieldIndex) => [field, values[fieldIndex]]));
   });
+  assertRawPublicSafe(rawRecords);
   const records = validateMetricRows(rawRecords);
   assertPublicSafe(records);
   return records;

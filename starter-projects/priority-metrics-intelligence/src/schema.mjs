@@ -42,20 +42,138 @@ const ASSOCIATION_FIELDS = new Set([
 const IDENTIFIER_SLUG =
   /(?:employee|customer|tracking|manifest|address|route|source[_-]?system)[_-]?id(?:[_-]|$)|\d{4,}/;
 const DECIMAL_NUMBER = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/;
+const MAXIMUM_ABSOLUTE_NUMBER = 1e12;
+const MINIMUM_NONZERO_ABSOLUTE_NUMBER = 1e-12;
+const MAXIMUM_SIGNIFICANT_DIGITS = 15;
+const MAXIMUM_INPUT_PERIODS = 60;
+
+const METRIC_CATALOG = new Map(
+  [
+    {
+      metricId: "synth_damage_percent",
+      metricLabel: "SYNTH Damage percent",
+      pillarId: "synth_quality",
+      unit: "percent",
+      semanticDefinition: {
+        denominator: "packages_handled",
+        kind: "rate",
+        numerator: "damaged_packages",
+        timeBasis: "monthly_aggregate",
+      },
+    },
+    {
+      metricId: "synth_late_inbound_count",
+      metricLabel: "SYNTH Late inbound count",
+      pillarId: "synth_flow",
+      unit: "count",
+      semanticDefinition: {
+        kind: "measure",
+        measure: "late_inbound_packages",
+        timeBasis: "monthly_aggregate",
+      },
+    },
+    {
+      metricId: "synth_on_time_percent",
+      metricLabel: "SYNTH On-time percent",
+      pillarId: "synth_service",
+      unit: "percent",
+      semanticDefinition: {
+        denominator: "eligible_packages",
+        kind: "rate",
+        numerator: "packages_delivered_on_time",
+        timeBasis: "monthly_aggregate",
+      },
+    },
+    {
+      metricId: "synth_packages_per_paid_hour",
+      metricLabel: "SYNTH Packages per paid hour",
+      pillarId: "synth_flow",
+      unit: "ratio",
+      semanticDefinition: {
+        denominator: "paid_hours",
+        kind: "rate",
+        numerator: "packages_delivered",
+        timeBasis: "monthly_aggregate",
+      },
+    },
+    {
+      metricId: "synth_packages_per_stop",
+      metricLabel: "SYNTH Packages per stop",
+      pillarId: "synth_route",
+      unit: "ratio",
+      semanticDefinition: {
+        denominator: "stops_completed",
+        kind: "rate",
+        numerator: "packages_delivered",
+        timeBasis: "monthly_aggregate",
+      },
+    },
+    {
+      metricId: "synth_stops_per_on_road_hour",
+      metricLabel: "SYNTH Stops per on-road hour",
+      pillarId: "synth_route",
+      unit: "ratio",
+      semanticDefinition: {
+        denominator: "on_road_hours",
+        kind: "rate",
+        numerator: "stops_completed",
+        timeBasis: "monthly_aggregate",
+      },
+    },
+  ].map((definition) => [definition.metricId, Object.freeze(definition)]),
+);
 
 function fail(code, fields, rowNumber = null) {
   throw new SafeInputError(code, fields, rowNumber);
 }
 
+function significantDigitCount(value) {
+  const significand = value.replace(/^-/, "").split(/[eE]/, 1)[0].replace(".", "");
+  return significand.replace(/^0+/, "").length || 1;
+}
+
+function isSafeNumericValue(value) {
+  if (!Number.isFinite(value)) return false;
+  const magnitude = Math.abs(value);
+  return (
+    magnitude <= MAXIMUM_ABSOLUTE_NUMBER &&
+    (magnitude === 0 || magnitude >= MINIMUM_NONZERO_ABSOLUTE_NUMBER)
+  );
+}
+
 function parseNumber(value, field, rowNumber, { optional = false, minimum = null } = {}) {
   if (optional && value === "") return null;
-  if (!DECIMAL_NUMBER.test(value)) fail("SCHEMA_INVALID_NUMBER", [field], rowNumber);
+  if (
+    !DECIMAL_NUMBER.test(value) ||
+    significantDigitCount(value) > MAXIMUM_SIGNIFICANT_DIGITS
+  ) {
+    fail("SCHEMA_INVALID_NUMBER", [field], rowNumber);
+  }
 
   const parsed = Number(value);
-  if (!Number.isFinite(parsed) || (minimum !== null && parsed < minimum)) {
+  if (!isSafeNumericValue(parsed) || (minimum !== null && parsed < minimum)) {
     fail("SCHEMA_INVALID_NUMBER", [field], rowNumber);
   }
   return parsed;
+}
+
+function matchesCatalogDefinition({ pillarId, metricId, metricLabel, unit }) {
+  const catalogDefinition = METRIC_CATALOG.get(metricId);
+  return (
+    catalogDefinition !== undefined &&
+    catalogDefinition.pillarId === pillarId &&
+    catalogDefinition.metricLabel === metricLabel &&
+    catalogDefinition.unit === unit
+  );
+}
+
+export function metricDefinitionsFor(metricIds) {
+  return [...new Set(metricIds)]
+    .sort()
+    .flatMap((metricId) => {
+      const definition = METRIC_CATALOG.get(metricId);
+      return definition === undefined ? [] : [definition];
+    });
 }
 
 function validateSlug(value, field, maximumLength, rowNumber, code = "SCHEMA_INVALID_SLUG") {
@@ -122,6 +240,13 @@ export function validateMetricRows(rawRecords) {
     if (targetType !== null && !TARGET_TYPES.has(targetType)) {
       fail("SCHEMA_INVALID_TARGET", ["target_type"], rowNumber);
     }
+    if (!matchesCatalogDefinition({ pillarId, metricId, metricLabel, unit })) {
+      fail(
+        "PRIVACY_UNAPPROVED_DEFINITION",
+        ["pillar_id", "metric_id", "metric_label", "unit"],
+        rowNumber,
+      );
+    }
 
     const value = parseNumber(raw.value, "value", rowNumber);
     const targetMin = parseNumber(raw.target_min, "target_min", rowNumber, {
@@ -185,7 +310,7 @@ export function isCanonicalMetricObservation(record) {
 
   const targetTypeValid =
     record.targetType === null || TARGET_TYPES.has(record.targetType);
-  const numericOrNull = (value) => value === null || Number.isFinite(value);
+  const numericOrNull = (value) => value === null || isSafeNumericValue(value);
   const targetValid =
     targetTypeValid &&
     numericOrNull(record.targetMin) &&
@@ -218,10 +343,11 @@ export function isCanonicalMetricObservation(record) {
     record.metricLabel.length <= 80 &&
     /^[\p{L}\d ()/%+\-]+$/u.test(record.metricLabel) &&
     !/\d{4,}/.test(record.metricLabel) &&
-    Number.isFinite(record.value) &&
+    matchesCatalogDefinition(record) &&
+    isSafeNumericValue(record.value) &&
     UNITS.has(record.unit) &&
     targetValid &&
-    Number.isFinite(record.warningMargin) &&
+    isSafeNumericValue(record.warningMargin) &&
     record.warningMargin >= 0
   );
 }
@@ -251,7 +377,7 @@ export function validatePolicy(raw) {
     : [];
   if (
     !integerInRange(projectionWindow, 3, 24) ||
-    !integerInRange(minimumRecurrences, 2, 12) ||
+    !integerInRange(minimumRecurrences, 3, 12) ||
     !Array.isArray(candidateAssociations) ||
     candidateAssociations.length > 50
   ) {
@@ -296,7 +422,8 @@ export function validatePolicy(raw) {
     if (
       sourceMetricId === outcomeMetricId ||
       !integerInRange(lagMonths, 1, 12) ||
-      !integerInRange(minimumObservations, 6, 60)
+      !integerInRange(minimumObservations, 6, 60) ||
+      lagMonths + minimumObservations > MAXIMUM_INPUT_PERIODS
     ) {
       fail("SCHEMA_INVALID_POLICY_VALUE", ["candidateAssociations"], index + 1);
     }
@@ -314,4 +441,16 @@ export function validatePolicy(raw) {
     minimumRecurrences,
     candidateAssociations: validatedAssociations,
   };
+}
+
+export function validatePolicyMetricReferences(policy, records) {
+  const observedMetricIds = new Set(records.map(({ metricId }) => metricId));
+  const hasUnknownReference = policy.candidateAssociations.some(
+    ({ sourceMetricId, outcomeMetricId }) =>
+      !observedMetricIds.has(sourceMetricId) || !observedMetricIds.has(outcomeMetricId),
+  );
+  if (hasUnknownReference) {
+    fail("SCHEMA_UNKNOWN_METRIC_REFERENCE", ["metricId"]);
+  }
+  return policy;
 }

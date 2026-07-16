@@ -13,6 +13,7 @@ import { analyzeMetrics } from "./analyze.mjs";
 import { SafeInputError } from "./errors.mjs";
 import { parseMetricsCsv, parsePolicyJson } from "./parse.mjs";
 import { renderMarkdown, stableJson } from "./render.mjs";
+import { validatePolicyMetricReferences } from "./schema.mjs";
 
 const ANALYZER_VERSION = "0.1.0";
 const ARGUMENT_FLAGS = new Map([
@@ -165,6 +166,7 @@ export async function run(argv, io = {}) {
   try {
     records = parseMetricsCsv(inputText);
     policy = parsePolicyJson(policyText);
+    validatePolicyMetricReferences(policy, records);
   } catch (error) {
     if (error instanceof SafeInputError) {
       emitError(runtime.stderr, error.code, error.fieldNames);

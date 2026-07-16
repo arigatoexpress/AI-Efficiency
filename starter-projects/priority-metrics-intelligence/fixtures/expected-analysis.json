@@ -77,6 +77,43 @@
   "inputSummary": {
     "analysisPeriod": "2026-06",
     "metricCount": 3,
+    "metricDefinitions": [
+      {
+        "metricId": "synth_damage_percent",
+        "metricLabel": "SYNTH Damage percent",
+        "pillarId": "synth_quality",
+        "semanticDefinition": {
+          "denominator": "packages_handled",
+          "kind": "rate",
+          "numerator": "damaged_packages",
+          "timeBasis": "monthly_aggregate"
+        },
+        "unit": "percent"
+      },
+      {
+        "metricId": "synth_late_inbound_count",
+        "metricLabel": "SYNTH Late inbound count",
+        "pillarId": "synth_flow",
+        "semanticDefinition": {
+          "kind": "measure",
+          "measure": "late_inbound_packages",
+          "timeBasis": "monthly_aggregate"
+        },
+        "unit": "count"
+      },
+      {
+        "metricId": "synth_on_time_percent",
+        "metricLabel": "SYNTH On-time percent",
+        "pillarId": "synth_service",
+        "semanticDefinition": {
+          "denominator": "eligible_packages",
+          "kind": "rate",
+          "numerator": "packages_delivered_on_time",
+          "timeBasis": "monthly_aggregate"
+        },
+        "unit": "percent"
+      }
+    ],
     "observationCount": 39,
     "periodRange": {
       "end": "2026-06",

@@ -24,29 +24,53 @@ function hasPeriodGap(records) {
 }
 
 function pearson(sourceValues, outcomeValues) {
+  if (
+    sourceValues.some((value) => !Number.isFinite(value)) ||
+    outcomeValues.some((value) => !Number.isFinite(value))
+  ) {
+    return { coefficient: null, limitation: "numeric_overflow" };
+  }
+  const sourceScale = Math.max(...sourceValues.map(Math.abs));
+  const outcomeScale = Math.max(...outcomeValues.map(Math.abs));
+  if (sourceScale === 0 || outcomeScale === 0) {
+    return { coefficient: null, limitation: "zero_variance" };
+  }
+  const scaledSource = sourceValues.map((value) => value / sourceScale);
+  const scaledOutcome = outcomeValues.map((value) => value / outcomeScale);
   const sourceMean =
-    sourceValues.reduce((sum, value) => sum + value, 0) / sourceValues.length;
+    scaledSource.reduce((sum, value) => sum + value, 0) / scaledSource.length;
   const outcomeMean =
-    outcomeValues.reduce((sum, value) => sum + value, 0) / outcomeValues.length;
+    scaledOutcome.reduce((sum, value) => sum + value, 0) / scaledOutcome.length;
   let covariance = 0;
   let sourceSquaredDeviation = 0;
   let outcomeSquaredDeviation = 0;
 
   for (let index = 0; index < sourceValues.length; index += 1) {
-    const sourceDeviation = sourceValues[index] - sourceMean;
-    const outcomeDeviation = outcomeValues[index] - outcomeMean;
+    const sourceDeviation = scaledSource[index] - sourceMean;
+    const outcomeDeviation = scaledOutcome[index] - outcomeMean;
     covariance += sourceDeviation * outcomeDeviation;
     sourceSquaredDeviation += sourceDeviation ** 2;
     outcomeSquaredDeviation += outcomeDeviation ** 2;
   }
 
   if (sourceSquaredDeviation === 0 || outcomeSquaredDeviation === 0) {
-    return null;
+    return { coefficient: null, limitation: "zero_variance" };
   }
 
   const coefficient =
-    covariance / Math.sqrt(sourceSquaredDeviation * outcomeSquaredDeviation);
-  return Math.max(-1, Math.min(1, coefficient));
+    covariance /
+    (Math.sqrt(sourceSquaredDeviation) * Math.sqrt(outcomeSquaredDeviation));
+  if (!Number.isFinite(coefficient)) {
+    return { coefficient: null, limitation: "numeric_overflow" };
+  }
+  const bounded = Math.max(-1, Math.min(1, coefficient));
+  const normalized = Math.abs(1 - Math.abs(bounded)) < 1e-12
+    ? Math.sign(bounded)
+    : bounded;
+  return {
+    coefficient: normalized,
+    limitation: null,
+  };
 }
 
 function selectHistoryWindow(records, latestPeriod) {
@@ -86,16 +110,16 @@ function findRecurrences(comparisons, minimumRecurrences, eligibleMetricIds) {
 }
 
 function analyzeAssociation(definition, recordsByMetric, latestPeriod) {
-  const sourceHistory = selectHistoryWindow(
-    recordsByMetric.get(definition.sourceMetricId) ?? [],
-    latestPeriod,
+  const allSourceRecords = recordsByMetric.get(definition.sourceMetricId) ?? [];
+  const allOutcomeRecords = recordsByMetric.get(definition.outcomeMetricId) ?? [];
+  const sourceHistory = selectHistoryWindow(allSourceRecords, latestPeriod);
+  const outcomeHistory = selectHistoryWindow(allOutcomeRecords, latestPeriod);
+  const evidenceWindow = Math.max(
+    REQUIRED_HISTORY_PERIODS,
+    definition.minimumObservations + definition.lagMonths,
   );
-  const outcomeHistory = selectHistoryWindow(
-    recordsByMetric.get(definition.outcomeMetricId) ?? [],
-    latestPeriod,
-  );
-  const sourceRecords = sourceHistory.records;
-  const outcomeRecords = outcomeHistory.records;
+  const sourceRecords = allSourceRecords.slice(-evidenceWindow);
+  const outcomeRecords = allOutcomeRecords.slice(-evidenceWindow);
   const outcomesByPeriod = new Map(outcomeRecords.map((record) => [record.period, record]));
   const aligned = sourceRecords.flatMap((source) => {
     const outcomePeriod = offsetPeriod(source.period, definition.lagMonths);
@@ -122,11 +146,12 @@ function analyzeAssociation(definition, recordsByMetric, latestPeriod) {
   } else if (aligned.length < definition.minimumObservations) {
     limitation = "insufficient_observations";
   } else {
-    coefficient = pearson(
+    const correlation = pearson(
       aligned.map(({ source }) => source.value),
       aligned.map(({ outcome }) => outcome.value),
     );
-    if (coefficient === null) limitation = "zero_variance";
+    coefficient = correlation.coefficient;
+    limitation = correlation.limitation;
   }
 
   return {

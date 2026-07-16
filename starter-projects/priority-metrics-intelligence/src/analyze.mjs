@@ -2,6 +2,7 @@ import { compareMetrics } from "./compare.mjs";
 import { findPatterns } from "./patterns.mjs";
 import { projectBaselines } from "./project.mjs";
 import { traceRiskLineages } from "./risk-lineage.mjs";
+import { metricDefinitionsFor, validatePolicyMetricReferences } from "./schema.mjs";
 
 function compareText(left, right) {
   if (left < right) return -1;
@@ -54,6 +55,7 @@ export function analyzeMetrics({
   analyzerVersion,
   dataClassification = "synthetic",
 }) {
+  validatePolicyMetricReferences(policy, records);
   const range = periodRange(records);
   const analysisPeriod = range.end;
   const metricIds = [...new Set(records.map(({ metricId }) => metricId))].sort(compareText);
@@ -87,6 +89,7 @@ export function analyzeMetrics({
       analysisPeriod,
       observationCount: records.length,
       metricCount: metricIds.length,
+      metricDefinitions: metricDefinitionsFor(metricIds),
       periodRange: range,
       validationResult: "passed",
     },

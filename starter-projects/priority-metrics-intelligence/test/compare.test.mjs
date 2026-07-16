@@ -190,8 +190,8 @@ test("evaluates target status and signed boundary distance", () => {
 test("rejects incompatible metric definitions at the parse boundary", () => {
   const incompatibleDefinitions = [
     csvHeader,
-    "2026-05,service,on_time,On-time percent,90,percent,,,,0",
-    "2026-06,service,on_time,On-time percent,99,count,,,,0",
+    "2026-05,synth_service,synth_on_time_percent,SYNTH On-time percent,90,percent,minimum,95,,1",
+    "2026-06,synth_service,synth_on_time_percent,SYNTH On-time percent,99,percent,minimum,94,,1",
   ].join("\n");
 
   assert.throws(() => parseMetricsCsv(incompatibleDefinitions), {

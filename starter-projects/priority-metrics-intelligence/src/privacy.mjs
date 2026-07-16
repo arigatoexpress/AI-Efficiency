@@ -6,6 +6,22 @@ const DIRECT_IDENTIFIER =
   /@|[\u0000-\u001f\u007f]|\b(?:\d{1,6}\s+(?:[\p{L}\d]+\s+){0,4}(?:street|st|road|rd|avenue|ave|lane|ln|drive|dr|boulevard|blvd|highway|hwy)|(?:street|st|road|rd|avenue|ave|lane|ln|drive|dr|boulevard|blvd|highway|hwy)\s+\d{1,6})\b/iu;
 const IDENTIFIER_SLUG =
   /(?:employee|customer|tracking|manifest|address|route|source[_-]?system)[_-]?id(?:[_-]|$)|\d{4,}/;
+const TRACKING_SHAPED_INTEGER = /^\d{12,22}$/;
+
+export function assertRawPublicSafe(records) {
+  if (!Array.isArray(records)) throw new SafeInputError("PRIVACY_INVALID_RECORDS");
+
+  records.forEach((record, index) => {
+    for (const [field, value] of Object.entries(record)) {
+      if (
+        typeof value === "string" &&
+        (DIRECT_IDENTIFIER.test(value) || TRACKING_SHAPED_INTEGER.test(value.trim()))
+      ) {
+        throw new SafeInputError("PRIVACY_DIRECT_IDENTIFIER", [field], index + 2);
+      }
+    }
+  });
+}
 
 export function assertPublicSafe(records) {
   if (!Array.isArray(records)) {

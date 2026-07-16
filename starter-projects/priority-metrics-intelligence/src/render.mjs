@@ -37,6 +37,7 @@ export function renderMarkdown(analysis) {
     "## Confirmed Observations",
     "",
     `- Analysis period: \`${analysis.inputSummary.analysisPeriod}\``,
+    ...evidenceLines(analysis.inputSummary.metricDefinitions),
     ...evidenceLines(analysis.comparisons),
     "",
     "## Risks",

@@ -458,6 +458,87 @@ test("returns an insufficient observation limitation after the history gate", ()
   );
 });
 
+function consecutivePeriods(count, startYear = 2024, startMonth = 1) {
+  return Array.from({ length: count }, (_, index) => {
+    const absoluteMonth = startYear * 12 + startMonth - 1 + index;
+    const year = Math.floor(absoluteMonth / 12);
+    const month = (absoluteMonth % 12) + 1;
+    return `${year}-${String(month).padStart(2, "0")}`;
+  });
+}
+
+test("retains enough aligned history for a lag-eight association after the latest 13-month gate", () => {
+  const periods = consecutivePeriods(14);
+  const [result] = findPatterns(
+    [
+      ...observations("late_inbound", periods, periods.map((_, index) => index + 1)),
+      ...observations("on_time", periods, periods.map((_, index) => index + 10)),
+    ],
+    [],
+    {
+      minimumRecurrences: 3,
+      candidateAssociations: [
+        { ...configuredAssociation, lagMonths: 8, minimumObservations: 6 },
+      ],
+    },
+  ).candidateAssociations;
+
+  assert.equal(result.observationCount, 6);
+  assert.equal(result.coefficient, 1);
+  assert.equal(result.limitation, null);
+});
+
+test("retains 25 periods for a lag-twelve association with 13 required observations", () => {
+  const periods = consecutivePeriods(25);
+  const [result] = findPatterns(
+    [
+      ...observations("late_inbound", periods, periods.map((_, index) => index + 1)),
+      ...observations("on_time", periods, periods.map((_, index) => 100 - index)),
+    ],
+    [],
+    {
+      minimumRecurrences: 3,
+      candidateAssociations: [
+        { ...configuredAssociation, lagMonths: 12, minimumObservations: 13 },
+      ],
+    },
+  ).candidateAssociations;
+
+  assert.equal(result.observationCount, 13);
+  assert.equal(result.coefficient, -1);
+  assert.equal(result.limitation, null);
+});
+
+test("scaled Pearson remains stable for finite extreme values", () => {
+  const values = sourcePeriods.map((_, index) => (index % 2 === 0 ? 1e308 : -1e308));
+  const [result] = findPatterns(
+    [
+      ...observations("late_inbound", sourcePeriods, values),
+      ...observations("on_time", sourcePeriods, values),
+    ],
+    [],
+    { minimumRecurrences: 3, candidateAssociations: [configuredAssociation] },
+  ).candidateAssociations;
+
+  assert.ok(Number.isFinite(result.coefficient));
+  assert.equal(result.limitation, null);
+});
+
+test("unexpected non-finite association arithmetic degrades to numeric overflow", () => {
+  const values = sourcePeriods.map((_, index) => (index === 4 ? Infinity : index + 1));
+  const [result] = findPatterns(
+    [
+      ...observations("late_inbound", sourcePeriods, values),
+      ...observations("on_time", sourcePeriods, sourcePeriods.map((_, index) => index + 1)),
+    ],
+    [],
+    { minimumRecurrences: 3, candidateAssociations: [configuredAssociation] },
+  ).candidateAssociations;
+
+  assert.equal(result.coefficient, null);
+  assert.equal(result.limitation, "numeric_overflow");
+});
+
 test("pattern results contain no causal vocabulary", () => {
   const result = findPatterns(
     [

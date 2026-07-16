@@ -10,7 +10,7 @@ const header =
   "period,pillar_id,metric_id,metric_label,value,unit,target_type,target_min,target_max,warning_margin";
 const valid = [
   header,
-  '2026-06,service,on_time,"On-time percent",96.2,percent,minimum,95,,1',
+  '2026-06,synth_service,synth_on_time_percent,"SYNTH On-time percent",96.2,percent,minimum,95,,1',
 ].join("\n");
 
 function csv(...rows) {
@@ -22,9 +22,9 @@ test("quoted CSV maps to one canonical observation", () => {
 
   assert.deepEqual(row, {
     period: "2026-06",
-    pillarId: "service",
-    metricId: "on_time",
-    metricLabel: "On-time percent",
+    pillarId: "synth_service",
+    metricId: "synth_on_time_percent",
+    metricLabel: "SYNTH On-time percent",
     value: 96.2,
     unit: "percent",
     targetType: "minimum",
@@ -35,7 +35,7 @@ test("quoted CSV maps to one canonical observation", () => {
 });
 
 test("CSV schema rejects unknown, reordered, and duplicate headers", () => {
-  const row = "2026-06,service,on_time,On-time percent,96.2,percent,minimum,95,,1";
+  const row = "2026-06,synth_service,synth_on_time_percent,SYNTH On-time percent,96.2,percent,minimum,95,,1";
 
   assert.throws(
     () => parseMetricsCsv(`notes,${header}\nx,${row}`),
@@ -52,7 +52,7 @@ test("CSV schema rejects unknown, reordered, and duplicate headers", () => {
 });
 
 test("CSV rejects duplicate observation keys and unstable metric definitions", () => {
-  const first = "2026-06,service,on_time,On-time percent,96.2,percent,minimum,95,,1";
+  const first = "2026-06,synth_service,synth_on_time_percent,SYNTH On-time percent,96.2,percent,minimum,95,,1";
 
   assert.throws(() => parseMetricsCsv(csv(first, first)), {
     code: "SCHEMA_DUPLICATE_OBSERVATION",
@@ -62,7 +62,7 @@ test("CSV rejects duplicate observation keys and unstable metric definitions", (
       parseMetricsCsv(
         csv(
           first,
-          "2026-07,service,on_time,On-time percent,95.1,minutes,minimum,95,,1",
+          "2026-07,synth_service,synth_on_time_percent,SYNTH On-time percent,95.1,percent,minimum,94,,1",
         ),
       ),
     { code: "SCHEMA_UNSTABLE_METRIC" },
@@ -73,14 +73,14 @@ test("CSV rejects malformed target definitions", () => {
   assert.throws(
     () =>
       parseMetricsCsv(
-        csv("2026-06,service,on_time,On-time percent,96.2,percent,minimum,,,1"),
+        csv("2026-06,synth_service,synth_on_time_percent,SYNTH On-time percent,96.2,percent,minimum,,,1"),
       ),
     { code: "SCHEMA_INVALID_TARGET" },
   );
   assert.throws(
     () =>
       parseMetricsCsv(
-        csv("2026-06,service,on_time,On-time percent,96.2,percent,range,98,95,1"),
+        csv("2026-06,synth_service,synth_on_time_percent,SYNTH On-time percent,96.2,percent,range,98,95,1"),
       ),
     { code: "SCHEMA_INVALID_TARGET" },
   );
@@ -139,11 +139,83 @@ test("CSV accepts only canonical decimal number tokens", () => {
     assert.throws(
       () =>
         parseMetricsCsv(
-          csv(`2026-06,service,on_time,On-time percent,${token},percent,minimum,95,,1`),
+          csv(`2026-06,synth_service,synth_on_time_percent,SYNTH On-time percent,${token},percent,minimum,95,,1`),
         ),
       { code: "SCHEMA_INVALID_NUMBER" },
     );
   }
+});
+
+test("closed metric catalog rejects arbitrary identities and definition changes without echo", () => {
+  const rejectedRows = [
+    "2026-06,synth_service,john_smith,SYNTH On-time percent,96.2,percent,minimum,95,,1",
+    "2026-06,denver_station,synth_on_time_percent,SYNTH On-time percent,96.2,percent,minimum,95,,1",
+    "2026-06,synth_service,fxg123,SYNTH On-time percent,96.2,percent,minimum,95,,1",
+    "2026-06,synth_service,synth_on_time_percent,Denver Station,96.2,percent,minimum,95,,1",
+    "2026-06,synth_service,synth_on_time_percent,SYNTH On-time percent,96.2,hours,minimum,95,,1",
+  ];
+
+  for (const rejectedRow of rejectedRows) {
+    assert.throws(() => parseMetricsCsv(csv(rejectedRow)), (error) => {
+      assert.equal(error.code, "PRIVACY_UNAPPROVED_DEFINITION");
+      assert.doesNotMatch(error.message, /john_smith|denver_station|fxg123|Denver Station/);
+      return true;
+    });
+  }
+});
+
+test("raw tracking-shaped numeric tokens are privacy-rejected before numeric conversion", () => {
+  for (const token of ["123456789012", "9007199254740992", "9007199254740993"]) {
+    assert.throws(
+      () =>
+        parseMetricsCsv(
+          csv(
+            `2026-06,synth_service,synth_on_time_percent,SYNTH On-time percent,${token},percent,minimum,95,,1`,
+          ),
+        ),
+      (error) => {
+        assert.equal(error.code, "PRIVACY_DIRECT_IDENTIFIER");
+        assert.doesNotMatch(error.message, new RegExp(token));
+        return true;
+      },
+    );
+  }
+});
+
+test("numeric domain rejects overflow-scale, sub-resolution, and precision-collapse tokens", () => {
+  for (const token of ["1e308", "-1e308", "1e-13", "1.234567890123456"]) {
+    assert.throws(
+      () =>
+        parseMetricsCsv(
+          csv(
+            `2026-06,synth_service,synth_on_time_percent,SYNTH On-time percent,${token},percent,minimum,95,,1`,
+          ),
+        ),
+      { code: "SCHEMA_INVALID_NUMBER" },
+    );
+  }
+});
+
+test("policy requires at least three recurrences and a feasible lagged evidence window", () => {
+  assert.throws(() => parsePolicyJson('{"minimumRecurrences":2}'), {
+    code: "SCHEMA_INVALID_POLICY_VALUE",
+  });
+  assert.throws(
+    () =>
+      parsePolicyJson(
+        JSON.stringify({
+          candidateAssociations: [
+            {
+              sourceMetricId: "synth_late_inbound_count",
+              outcomeMetricId: "synth_on_time_percent",
+              lagMonths: 12,
+              minimumObservations: 49,
+            },
+          ],
+        }),
+      ),
+    { code: "SCHEMA_INVALID_POLICY_VALUE" },
+  );
 });
 
 test("privacy rejects forbidden fields without echoing rejected values", () => {
@@ -193,6 +265,15 @@ test("privacy requires complete canonical records with canonical types", () => {
   );
 });
 
+test("privacy rejects canonical-record numeric fields outside the safe domain", () => {
+  const observation = parseMetricsCsv(valid)[0];
+
+  assert.throws(
+    () => assertPublicSafe([{ ...observation, targetMin: 1e308 }]),
+    { code: "PRIVACY_INVALID_RECORD" },
+  );
+});
+
 test("privacy scans malformed periods for direct identifiers without echo", () => {
   const rejected = "synth@example.invalid";
 
@@ -212,7 +293,7 @@ test("CSV parsing rejects address-shaped controlled labels at the boundary", () 
   assert.throws(
     () =>
       parseMetricsCsv(
-        csv(`2026-06,service,on_time,${rejected},96.2,percent,minimum,95,,1`),
+        csv(`2026-06,synth_service,synth_on_time_percent,${rejected},96.2,percent,minimum,95,,1`),
       ),
     (error) => {
       assert.equal(error.code, "PRIVACY_DIRECT_IDENTIFIER");

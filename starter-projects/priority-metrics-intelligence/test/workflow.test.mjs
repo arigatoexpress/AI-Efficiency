@@ -138,6 +138,48 @@ test("keeps semantic result order and emits exact canonical golden JSON", async 
   assert.doesNotMatch(expected, /timestamp|generatedAt|generated_at|hostPath|host_path/i);
 });
 
+test("canonical evidence preserves the closed semantic metric definitions", async () => {
+  const result = await analyzeFixture();
+
+  assert.deepEqual(result.inputSummary.metricDefinitions, [
+    {
+      metricId: "synth_damage_percent",
+      metricLabel: "SYNTH Damage percent",
+      pillarId: "synth_quality",
+      unit: "percent",
+      semanticDefinition: {
+        denominator: "packages_handled",
+        kind: "rate",
+        numerator: "damaged_packages",
+        timeBasis: "monthly_aggregate",
+      },
+    },
+    {
+      metricId: "synth_late_inbound_count",
+      metricLabel: "SYNTH Late inbound count",
+      pillarId: "synth_flow",
+      unit: "count",
+      semanticDefinition: {
+        kind: "measure",
+        measure: "late_inbound_packages",
+        timeBasis: "monthly_aggregate",
+      },
+    },
+    {
+      metricId: "synth_on_time_percent",
+      metricLabel: "SYNTH On-time percent",
+      pillarId: "synth_service",
+      unit: "percent",
+      semanticDefinition: {
+        denominator: "eligible_packages",
+        kind: "rate",
+        numerator: "packages_delivered_on_time",
+        timeBasis: "monthly_aggregate",
+      },
+    },
+  ]);
+});
+
 test("recursively sorts keys and rounds only floating noise to 12 decimals", () => {
   assert.equal(
     stableJson({ z: 0.1234567890126, a: { z: 1, a: 2 }, c: [0.1 + 0.2] }),
@@ -170,6 +212,7 @@ test("renders only canonical analysis facts in the required Markdown sections", 
   const result = await analyzeFixture();
   const markdown = renderMarkdown(result);
   const factCollections = [
+    result.inputSummary.metricDefinitions,
     result.comparisons,
     result.riskLineages,
     result.patterns.recurrences,
@@ -198,7 +241,7 @@ test("renders only canonical analysis facts in the required Markdown sections", 
   assert.doesNotMatch(markdown, /cause|driver|guarantee/i);
   assert.equal(
     sha256(markdown),
-    "c63897fa1084379e652f82f98d4eba8a8600f38ff5c179b4eaabd89d82572398",
+    "84e4c450aaecc84caeca05c8c6f447fb241075967e0e6c987e19b9aa2133ccf6",
   );
   assert.ok(markdown.endsWith("\n"));
 });
@@ -355,12 +398,12 @@ test("uses stable schema, privacy, invariant, and file-I/O exit codes without ec
     {
       expectedCode: 3,
       expectedError: "ERROR SCHEMA_INVALID_LABEL: metric_label",
-      contents: `${header}\n2026-06,service,on_time,Bad?label,96.2,percent,minimum,95,,1\n`,
+      contents: `${header}\n2026-06,synth_service,synth_on_time_percent,Bad?label,96.2,percent,minimum,95,,1\n`,
     },
     {
       expectedCode: 4,
-      expectedError: "ERROR PRIVACY_DIRECT_IDENTIFIER: metricLabel",
-      contents: `${header}\n2026-06,service,on_time,123 Secret Street,96.2,percent,minimum,95,,1\n`,
+      expectedError: "ERROR PRIVACY_DIRECT_IDENTIFIER: metric_label",
+      contents: `${header}\n2026-06,synth_service,synth_on_time_percent,123 Secret Street,96.2,percent,minimum,95,,1\n`,
     },
     {
       expectedCode: 5,
@@ -385,6 +428,95 @@ test("uses stable schema, privacy, invariant, and file-I/O exit codes without ec
   assert.deepEqual(harness.stdout, []);
   assert.deepEqual(harness.stderr, ["ERROR FILE_READ: input"]);
   assert.doesNotMatch(harness.stderr.join("\n"), /SYNTH-REJECTED-SECRET-998877/);
+  await assert.rejects(readdir(output), { code: "ENOENT" });
+});
+
+test("CLI privacy failures for names, facilities, emails, and tracking shapes publish nothing and echo nothing", async (t) => {
+  const directory = await workspace(t, "privacy-catalog");
+  const input = join(directory, "metrics.csv");
+  const header =
+    "period,pillar_id,metric_id,metric_label,value,unit,target_type,target_min,target_max,warning_margin";
+  const cases = [
+    "2026-06,synth_service,john_smith,SYNTH On-time percent,96.2,percent,minimum,95,,1",
+    "2026-06,denver_station,synth_on_time_percent,SYNTH On-time percent,96.2,percent,minimum,95,,1",
+    "2026-06,synth_service,synth_on_time_percent,manager@example.invalid,96.2,percent,minimum,95,,1",
+    "2026-06,synth_service,synth_on_time_percent,SYNTH On-time percent,9007199254740993,percent,minimum,95,,1",
+  ];
+
+  for (const [index, row] of cases.entries()) {
+    const output = join(directory, `output-${index}`);
+    await writeFile(input, `${header}\n${row}\n`, "utf8");
+    const harness = cliHarness();
+    const code = await run(
+      [
+        "--input",
+        input,
+        "--output-dir",
+        output,
+        "--data-classification",
+        "scrubbed",
+      ],
+      harness.io,
+    );
+
+    assert.equal(code, 4);
+    assert.deepEqual(harness.stdout, []);
+    assert.doesNotMatch(
+      harness.stderr.join("\n"),
+      /john_smith|denver_station|manager@example\.invalid|9007199254740993/,
+    );
+    await assert.rejects(readdir(output), { code: "ENOENT" });
+  }
+});
+
+test("CLI rejects configured metric references absent from observations before publication", async (t) => {
+  const directory = await workspace(t, "missing-policy-metric");
+  const output = join(directory, "output");
+  const policy = join(directory, "policy.json");
+  await writeFile(
+    policy,
+    JSON.stringify({
+      candidateAssociations: [
+        {
+          sourceMetricId: "synth_late_inbound_count",
+          outcomeMetricId: "synth_on_time_percent",
+          lagMonths: 1,
+          minimumObservations: 6,
+        },
+      ],
+    }),
+    "utf8",
+  );
+  const harness = cliHarness();
+  const code = await run(
+    [
+      "--input",
+      new URL("../fixtures/synthetic-monthly-metrics.csv", import.meta.url).pathname,
+      "--policy",
+      policy,
+      "--output-dir",
+      output,
+      "--data-classification",
+      "synthetic",
+    ],
+    {
+      ...harness.io,
+      readFile: async (path, options) => {
+        const contents = await readFile(path, options);
+        if (String(path).endsWith("synthetic-monthly-metrics.csv")) {
+          return contents
+            .split("\n")
+            .filter((line) => !line.includes("synth_late_inbound_count"))
+            .join("\n");
+        }
+        return contents;
+      },
+    },
+  );
+
+  assert.equal(code, 3);
+  assert.deepEqual(harness.stdout, []);
+  assert.deepEqual(harness.stderr, ["ERROR SCHEMA_UNKNOWN_METRIC_REFERENCE: metricId"]);
   await assert.rejects(readdir(output), { code: "ENOENT" });
 });
 
@@ -496,21 +628,19 @@ test("cleans the sibling temporary directory after write and rename failures", a
   }
 });
 
-test("processes 10,000 valid rows through the CLI without a timing threshold", async (t) => {
+test("processes the full 60-period catalog history through the CLI", async (t) => {
   const directory = await workspace(t, "smoke");
   const input = join(directory, "metrics.csv");
   const output = join(directory, "analysis");
   const rows = [
     "period,pillar_id,metric_id,metric_label,value,unit,target_type,target_min,target_max,warning_margin",
   ];
-  for (let metric = 0; metric < 100; metric += 1) {
-    for (let offset = 0; offset < 100; offset += 1) {
-      const date = new Date(Date.UTC(2018, offset, 1));
-      const period = `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, "0")}`;
-      rows.push(
-        `${period},synthetic,metric_${String(metric).padStart(3, "0")},SYNTH Metric ${metric},${metric + offset},count,,,,0`,
-      );
-    }
+  for (let offset = 0; offset < 60; offset += 1) {
+    const date = new Date(Date.UTC(2021, offset, 1));
+    const period = `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, "0")}`;
+    rows.push(
+      `${period},synth_flow,synth_late_inbound_count,SYNTH Late inbound count,${offset},count,,,,0`,
+    );
   }
   await writeFile(input, `${rows.join("\n")}\n`, "utf8");
   const harness = cliHarness();
@@ -527,7 +657,7 @@ test("processes 10,000 valid rows through the CLI without a timing threshold", a
   assert.equal(code, 0);
   assert.deepEqual(harness.stderr, []);
   const analysis = JSON.parse(await readFile(join(output, "analysis.json"), "utf8"));
-  assert.equal(analysis.inputSummary.observationCount, 10_000);
+  assert.equal(analysis.inputSummary.observationCount, 60);
   assert.deepEqual((await readdir(output)).sort(), ["analysis.json", "brief.md"]);
   await assert.rejects(readFile(`${output}.lock`, "utf8"), { code: "ENOENT" });
 });
