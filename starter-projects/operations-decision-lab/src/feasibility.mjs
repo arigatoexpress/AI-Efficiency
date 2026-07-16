@@ -25,7 +25,10 @@ function recordUsage(usages, resourceId, interval) {
 }
 
 function addOverlapViolations(violations, usages, constraintCode, unit) {
-  for (const intervals of usages.values()) {
+  for (const unsortedIntervals of usages.values()) {
+    const intervals = [...unsortedIntervals].sort((left, right) =>
+      left.routeId.localeCompare(right.routeId),
+    );
     for (let rightIndex = 1; rightIndex < intervals.length; rightIndex += 1) {
       const right = intervals[rightIndex];
       for (let leftIndex = 0; leftIndex < rightIndex; leftIndex += 1) {

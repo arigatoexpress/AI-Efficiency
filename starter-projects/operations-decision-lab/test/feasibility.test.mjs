@@ -238,7 +238,7 @@ test("declared service minutes are a hard lower bound", () => {
 });
 
 test("overlapping routes cannot reuse the same vehicle or labor shift", () => {
-  const result = evaluate((value) => {
+  const addOverlap = (value) => {
     value.demandGroups.push({
       ...value.demandGroups[0],
       demandGroupId: "SYNTH-DEMAND-02",
@@ -257,10 +257,18 @@ test("overlapping routes cannot reuse the same vehicle or labor shift", () => {
       ],
     });
     return value;
-  });
+  };
+  const result = evaluate(addOverlap);
 
   assert.ok(result.violations.some(({ constraintCode }) => constraintCode === "vehicle_overlap"));
   assert.ok(result.violations.some(({ constraintCode }) => constraintCode === "labor_overlap"));
+
+  const reversed = evaluate((value) => {
+    addOverlap(value);
+    value.plan.routes.reverse();
+    return value;
+  });
+  assert.deepEqual(reversed, result);
 });
 
 test("violation ordering is total beyond code and entity", () => {
