@@ -39,35 +39,60 @@ the public APIs.
    │  ┌────────────────┐ ┌───────────────┐ ┌────────────────┐       │
    │  │ ShiftReadiness │ │ StationImpact │ │   RouteWatch   │  ...  │
    │  └────────────────┘ └───────────────┘ └────────────────┘       │
-   │        ▲ all panels render labeled SYNTHETIC signals           │
-   │        │ from src/data/stations.ts (no live fetch yet)         │
+   │        ▲ these panels render labeled SYNTHETIC demo signals    │
+   │        │ from src/data/stations.ts                             │
    │                                                                │
-   │  ┌──────────────────────── ManagerDrafts ────────────────────┐ │
-   │  │ [Pre-shift] [Handoff] [After-action]  → "Draft it" button │ │
-   │  └──────────────────────────────┬─────────────────────────── ┘│
-   └─────────────────────────────────┼──────────────────────────────┘
-                                     │ POST /api/compile-advice-draft
-                                     │ { station, weather, road, seismic, topic }
-                                     ▼
+   │  ┌────── ManagerDrafts ───────┐  ┌──── LiveSignalsPanel ─────┐ │
+   │  │ [Pre-shift] [Handoff]      │  │ shown when /api/health    │ │
+   │  │ [After-action]             │  │ reports liveSignals: on;  │ │
+   │  │  → "Draft it" button       │  │ values labeled "LIVE      │ │
+   │  │                            │  │ public data: <source>"    │ │
+   │  │                            │  │                           │ │
+   │  └──────────────┬─────────────┘  └─────────────┬─────────────┘ │
+   └─────────────────┼──────────────────────────────┼───────────────┘
+                     │ POST /api/compile-advice-draft
+                     │ { station, weather, road, seismic, topic }
+                     │                              │ GET /api/live-signals?station=GUC
+                     │                              │ (zero upstream calls unless LIVE_SIGNALS=on)
+                     ▼                              ▼
                     EXPRESS + TYPESCRIPT SERVER (Cloud Run)
    ┌────────────────────────────────────────────────────────────────┐
-   │  server.ts — one job: turn signals into a reviewed draft       │
+   │  server.ts wires the environment into lib/create-app.ts:       │
+   │  read-only JSON APIs + the static client build                 │
    │                                                                │
+   │  GET /api/health → { status, geminiConfigured, liveSignals }   │
+   │                                                                │
+   │  GET /api/live-signals — with LIVE_SIGNALS=on: five-minute     │
+   │  cache per station, then a fan-out where each source degrades  │
+   │  independently (one dead feed fills its slot with { error }    │
+   │  and the rest still answer):                                   │
+   │     ┌───────────────┐ ┌───────────────┐ ┌───────────────┐      │
+   │     │  Open-Meteo   │ │  NWS active   │ │  USGS recent  │      │
+   │     │  weather      │ │  alerts       │ │  earthquakes  │      │
+   │     └───────────────┘ └───────────────┘ └───────────────┘      │
+   │  flag off: { enabled:false } — zero upstream calls             │
+   │                                                                │
+   │  POST /api/compile-advice-draft                                │
    │   system instruction (enforced on every call):                 │
    │   · plain English memo for busy station managers               │
    │   · every recommendation ends "Needs manager verification."    │
    │   · label synthetic/estimated values                           │
    │   · never claim access to package/route/customer data          │
    │                                                                │
+   │   auth from the environment:                                   │
+   │   GOOGLE_GENAI_USE_VERTEXAI=true + GOOGLE_CLOUD_PROJECT →      │
+   │   Vertex AI (Application Default Credentials — no API key);    │
+   │   else GEMINI_API_KEY → AI Studio key; else no model client    │
+   │                                                                │
    │            ┌── Gemini configured and healthy? ──┐              │
    │        yes │                                    │ no / error   │
    │            ▼                                    ▼              │
    │   ┌─────────────────────┐          ┌─────────────────────────┐ │
    │   │  Gemini 2.5 Flash   │          │ generateFallbackDraft() │ │
-   │   │  (@google/genai,    │          │ deterministic rules:    │ │
-   │   │  server-side key)   │          │  snow > 6 in → flag     │ │
-   │   └──────────┬──────────┘          │  wind > 35 mph → flag   │ │
-   │              │                     │  "closed" road → flag   │ │
+   │   │  via @google/genai; │          │ deterministic rules:    │ │
+   │   │  GEMINI_MODEL env   │          │  snow > 6 in → flag     │ │
+   │   │  overrides the id   │          │  wind > 35 mph → flag   │ │
+   │   └──────────┬──────────┘          │  "closed" road → flag   │ │
    │              │                     │  quake M > 2.5 → flag   │ │
    │              │                     └───────────┬─────────────┘ │
    │              └──────────────┬──────────────────┘               │
@@ -129,7 +154,14 @@ bumped to `gemini-2.5-flash`, overridable via the `GEMINI_MODEL` env var.)
 
 ## Where the Safety Lives
 
-- The Gemini key lives **server-side only** — the browser never sees it.
+- Gemini credentials live **server-side only** — an AI Studio API key, or
+  Application Default Credentials on the Vertex AI path (no key at all); the
+  browser never sees either. The environment picks the mode:
+  `GOOGLE_GENAI_USE_VERTEXAI=true` + `GOOGLE_CLOUD_PROJECT` wins, otherwise
+  `GEMINI_API_KEY`, otherwise no model client and every draft is a fallback.
+- Live public signals are **off unless the operator sets `LIVE_SIGNALS=on`**.
+  With the flag off the endpoint makes zero upstream calls and the UI keeps
+  the labeled synthetic demo data.
 - The system instruction bans command-console language ("execute", "deploy",
   "override") and forces "Needs manager verification." onto every
   recommendation.
@@ -144,6 +176,8 @@ bumped to `gemini-2.5-flash`, overridable via the `GEMINI_MODEL` env var.)
 2. Or run it locally: `cd starter-projects/fedex-logistics-intelligence-system/app`,
    `npm install`, `npm run dev` — works without any API key (you'll get the
    fallback drafts), and with a `GEMINI_API_KEY` in `.env` you get real Gemini
-   drafts.
+   drafts. Set `GOOGLE_GENAI_USE_VERTEXAI=true` with `GOOGLE_CLOUD_PROJECT`
+   to use the Vertex AI auth path instead, and `LIVE_SIGNALS=on` to turn on
+   the live public adapters (off by default).
 
 Full project docs: [starter project page](../../starter-projects/fedex-logistics-intelligence-system/README.md).
