@@ -129,6 +129,12 @@ test("entity identifiers require declared synthetic namespaces", () => {
     assert.doesNotMatch(error.message, /denver_vehicle/);
     return true;
   });
+
+  const locationShaped = validInput();
+  locationShaped.forecast.entityId = "SYNTH-STATION-DENVER";
+  assert.throws(() => parse(locationShaped), {
+    code: "PRIVACY_UNAPPROVED_IDENTIFIER",
+  });
 });
 
 test("availability time, not service date alone, enforces the snapshot fence", () => {
