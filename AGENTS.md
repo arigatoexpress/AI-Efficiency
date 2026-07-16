@@ -17,6 +17,10 @@ The repo turns operational friction into reusable AI assets: prompts for manager
 | Path | Purpose |
 |------|---------|
 | `docs/` | Human-first guides, governance checklists, technology how-tos, and templates |
+| `docs/how-it-works/` | Real-system walkthroughs: architecture diagrams + captured runs (the evidence layer) |
+| `docs/building-blocks.md` | Map of tested, liftable pieces for building new systems from this repo |
+| `docs/whats-new.md` | Running progress log (moved out of the README) |
+| `docs/technology/gcp-activation-runbook.md` | Gated day-one checklist for when GCP access lands |
 | `docs/ai-workplace-user-guide.md` | Onboarding doc for the least technical teammate |
 | `docs/fedex-ai-literacy-guide.md` | How the repo aligns with FedEx's enterprise AI Education program |
 | `docs/fedex-terminology.md` | Quick reference for FedEx operations terms — source of truth for the "FEC supervisors and managers" audience term |
