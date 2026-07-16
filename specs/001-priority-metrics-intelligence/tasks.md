@@ -143,11 +143,11 @@ gaps without causal language.
 **Independent test:** Four synthetic lineages return exact origin, event, and
 outcome sequences.
 
-- [ ] T020 [US3] Write failing persistence, worsening, improvement-at-risk, recovery, and gap assertions in `starter-projects/priority-metrics-intelligence/test/lineage-patterns.test.mjs`.
-- [ ] T021 [US3] Run the focused lineage test and verify it fails with `ERR_MODULE_NOT_FOUND` for `src/risk-lineage.mjs`.
-- [ ] T022 [US3] Implement consecutive-month lineage state transitions in `starter-projects/priority-metrics-intelligence/src/risk-lineage.mjs`.
-- [ ] T023 [US3] Run the focused lineage test and verify exact event sequences and zero causal vocabulary failures.
-- [ ] T024 [US3] Commit lineage behavior with `git add starter-projects/priority-metrics-intelligence/test/lineage-patterns.test.mjs starter-projects/priority-metrics-intelligence/src/risk-lineage.mjs && git commit -m "feat: trace priority metric risk lineage"`.
+- [x] T020 [US3] Write failing persistence, worsening, improvement-at-risk, recovery, and gap assertions in `starter-projects/priority-metrics-intelligence/test/lineage-patterns.test.mjs`.
+- [x] T021 [US3] Run the focused lineage test and verify it fails with `ERR_MODULE_NOT_FOUND` for `src/risk-lineage.mjs`.
+- [x] T022 [US3] Implement consecutive-month lineage state transitions in `starter-projects/priority-metrics-intelligence/src/risk-lineage.mjs`.
+- [x] T023 [US3] Run the focused lineage test and verify exact event sequences and zero causal vocabulary failures.
+- [x] T024 [US3] Commit lineage behavior with `git add starter-projects/priority-metrics-intelligence/test/lineage-patterns.test.mjs starter-projects/priority-metrics-intelligence/src/risk-lineage.mjs && git commit -m "feat: trace priority metric risk lineage"`.
 
 State-machine assertion:
 
