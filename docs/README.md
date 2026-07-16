@@ -36,6 +36,7 @@ This folder contains guides, standards, and templates for the AI Efficiency Team
 | [Copilot + Teams playbook](technology/copilot-teams-playbook.md) | The ops deep-dive for our Microsoft-first org: which Copilot you have, Microsoft's four prompt elements, role-by-role guidance, skills ladder. | Every level — handlers to leadership |
 | [Agentic AI for operations](technology/agentic-ai-for-operations.md) | The four-rung agency ladder — what "agentic" means and how much review each rung needs. | Everyone — managers first |
 | [Google Cloud + ADK integration](technology/google-cloud-adk-integration.md) | Forward path: Vertex AI, the Agent Development Kit, Agent Engine, Cloud Run. | Engineers, technically-curious managers |
+| [GCP activation runbook](technology/gcp-activation-runbook.md) | The exact day-one sequence when GCP access lands — every step gated, verified, and reversible. | Operators, reviewers |
 
 ## Planning and Architecture
 

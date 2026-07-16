@@ -172,7 +172,10 @@ lays out the engineering path — Gemini via **Vertex AI**, agents built with th
 **Agent Development Kit** on **Vertex AI Agent Engine** — while internal data
 and any action-taking stay gated behind FedEx governance until approved. The
 [Gemini Enterprise readiness plan](docs/technology/gemini-enterprise-readiness.md)
-covers day one of pending enterprise access.
+covers day one of pending enterprise access, and the
+[GCP activation runbook](docs/technology/gcp-activation-runbook.md) turns that
+day into a checklist: every step is a configuration change on code that is
+already merged, tested, and flag-gated — not a rebuild.
 
 <p align="center">
   <img src="assets/architecture-diagram-adk.svg" alt="Forward-path architecture: public data → Cloud Run app → Gemini via Vertex AI / ADK agent → human review → governance-gated Foundry" width="90%">
