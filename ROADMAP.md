@@ -1,6 +1,6 @@
 # AI Efficiency Team Roadmap
 
-Last reviewed: 2026-06-09
+Last reviewed: 2026-07-16
 
 This roadmap keeps the team focused on one useful path at a time: make the
 current logistics intelligence app credible, make the data provenance clean,
@@ -77,8 +77,7 @@ Deliverables:
   full-shift routine (pre-shift, mid-shift, peak, handoff, after-action, weekly);
 - FedEx terminology guide for authentic, accurate language;
 - FedEx AI literacy guide aligned with the company's enterprise AI Education program;
-- pilot program template for proposing small, measurable experiments;
-- demo script for presenting the repo to regional leadership.
+- pilot program template for proposing small, measurable experiments.
 
 Verification:
 
@@ -89,7 +88,10 @@ Verification:
 
 ## Phase 3 - Public Data Layer
 
-Status: design started
+Status: in progress — flag-gated live public adapters (Open-Meteo, NWS, USGS),
+five-minute cache, and the Live Public Signals panel shipped, all off by
+default until an operator sets `LIVE_SIGNALS=on`; record-hash persistence and
+the formal source-health contract still ahead
 
 Goal: integrate as much useful public or licensed data as possible while keeping
 the rights envelope honest.
@@ -105,11 +107,18 @@ Data classes:
 Deliverables:
 
 - source catalog with owner, URL, retrieval mode, rights, TTL, caveats, and
-  output policy;
-- adapters that store normalized record hashes and retrieval timestamps;
-- cache/rate-limit behavior by source;
-- source-health panel in the app;
-- reproducible public-data fixtures for demos and tests.
+  output policy — published:
+  [docs/data-source-catalog.md](docs/data-source-catalog.md);
+- adapters that store normalized record hashes and retrieval timestamps —
+  flag-gated Open-Meteo, NWS, and USGS adapters shipped with retrieval
+  timestamps and per-value source labels; record-hash persistence still ahead;
+- cache/rate-limit behavior by source — shipped: five-minute per-station
+  cache, per-source timeouts, and independent per-source degradation;
+- source-health panel in the app — partial: the Live Public Signals panel
+  shows per-source values and errors; a formal machine-readable health summary
+  is still ahead;
+- reproducible public-data fixtures for demos and tests — shipped for the app
+  test suite via dependency-injected fetch fixtures.
 
 Verification:
 
