@@ -35,7 +35,7 @@ the page says so and shows you where the label lives in the code.
 │ ChatGPT, Claude  │            │                             │        │   ready                  │
 │                  │            │ Priority Metrics CLI        │        │                          │
 │                  │            │   targets · risk lineage ·  │        │                          │
-│                  │            │   94 tests                  │        │                          │
+│                  │            │   95 tests                  │        │                          │
 └────────┬─────────┘            └──────────────┬──────────────┘        └────────────┬─────────────┘
          │                                     │                                    │
          │            deterministic math makes the FACTS; AI only drafts PROSE      │

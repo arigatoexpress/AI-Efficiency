@@ -47,7 +47,7 @@ The whole platform on one diagram (each layer has a full walkthrough):
    for agents              lever moved it?" (exact        ADK Shift-Brief Agent
  any model works           split)                           read-only tools,
                          Priority Metrics CLI               CI-tested guardrails
-                           risk lineage · 94 tests
+                           risk lineage · 95 tests
       │                            │                            │
       └──── deterministic math makes the FACTS; AI only drafts PROSE ────┘
                                    │
@@ -102,10 +102,10 @@ full document index: [docs/](docs/README.md).
 
 | Project | Status | What it does |
 | --- | --- | --- |
-| [Logistics Intelligence System](starter-projects/fedex-logistics-intelligence-system/README.md) | **Deployed on Cloud Run** | Station-ops dashboard: risk-signal panels plus Gemini-drafted shift briefs (pre-shift, handoff, after-action) with a deterministic fallback when the model is unavailable. Signals are labeled synthetic demo values standing in for public feeds (Open-Meteo, USGS, cotrip.org); swapping in the live feeds is a contained, reviewable next step. |
+| [Logistics Intelligence System](starter-projects/fedex-logistics-intelligence-system/README.md) | **Deployed on Cloud Run** | Station-ops dashboard: risk-signal panels plus Gemini-drafted shift briefs (pre-shift, handoff, after-action) with a deterministic fallback when the model is unavailable. Dashboard signals are labeled synthetic demo values; live adapters for the real public feeds (Open-Meteo, NWS, USGS) are built, tested, and off by default behind a `LIVE_SIGNALS` flag. |
 | [Dock Efficiency Signal Lab](starter-projects/dock-efficiency-signal-lab/README.md) | **Offline single-file app** | Answers "is this weekly KPI move real or noise?" with statistical process control (I-MR limits, Nelson rules, EWMA, CUSUM), trend indicators, and a benchmarked forecast ensemble. Runs entirely in the browser; loaded data never leaves the machine. |
 | [TLH/SPH Efficiency Explorer](starter-projects/tlh-sph-efficiency-explorer/README.md) | **Offline single-file app** | Splits each week-over-week efficiency change exactly into its two levers — throughput (SPH) and labor hours (TLH) — so an hours-cut gain is never mistaken for a productivity win. Companion to the Signal Lab. |
-| [Priority Metrics Intelligence](starter-projects/priority-metrics-intelligence/README.md) | **Offline deterministic CLI** | Validates monthly metrics, compares exact periods against targets, traces how each risk developed month by month, and publishes canonical JSON plus a manager brief. No network access; 94 automated tests. |
+| [Priority Metrics Intelligence](starter-projects/priority-metrics-intelligence/README.md) | **Offline deterministic CLI** | Validates monthly metrics, compares exact periods against targets, traces how each risk developed month by month, and publishes canonical JSON plus a manager brief. No network access; 95 automated tests. |
 | [ADK Shift-Brief Agent](starter-projects/adk-shift-brief-agent/README.md) | **Runnable starter kit** | First real agent, built on Google's Agent Development Kit: drafts shift briefs through five read-only tools over labeled synthetic signals, with CI-enforced guardrails. Ready to register when Gemini Enterprise access lands. |
 | [AI Idea Intake Agent](starter-projects/ai-idea-intake-agent/README.md) | Concept | Governance-first design for a Teams/Gemini channel that triages AI ideas and use cases. |
 | [Forecast Foundation-Model Spike](starter-projects/forecast-foundation-model-spike/README.md) | Research (complete) | Chronos-Bolt benchmarked against the Signal Lab's simple ensemble in a walk-forward test — the ensemble won, so the explainable baseline stays. |
