@@ -77,11 +77,11 @@ test("policy is closed and applies deterministic defaults", () => {
 **Independent test:** Exact values pass for positive, negative, zero-baseline,
 missing-period, and incompatible-definition fixtures.
 
-- [ ] T010 [US1] Write failing comparison assertions in `starter-projects/priority-metrics-intelligence/test/compare.test.mjs` for MoM, YoY, zero baseline, and missing history.
-- [ ] T011 [US1] Run `node --test starter-projects/priority-metrics-intelligence/test/compare.test.mjs` and verify it fails with `ERR_MODULE_NOT_FOUND` for `src/compare.mjs`.
-- [ ] T012 [US1] Implement period indexing, exact changes, null percentage reasons, and stable ordering in `starter-projects/priority-metrics-intelligence/src/compare.mjs`.
-- [ ] T013 [US1] Run `node --test starter-projects/priority-metrics-intelligence/test/compare.test.mjs` and verify the User Story 1 assertions pass.
-- [ ] T014 [US1] Commit comparison math with `git add starter-projects/priority-metrics-intelligence/test/compare.test.mjs starter-projects/priority-metrics-intelligence/src/compare.mjs && git commit -m "feat: compare monthly priority metrics"`.
+- [x] T010 [US1] Write failing comparison assertions in `starter-projects/priority-metrics-intelligence/test/compare.test.mjs` for MoM, YoY, zero baseline, and missing history.
+- [x] T011 [US1] Run `node --test starter-projects/priority-metrics-intelligence/test/compare.test.mjs` and verify it fails with `ERR_MODULE_NOT_FOUND` for `src/compare.mjs`.
+- [x] T012 [US1] Implement period indexing, exact changes, null percentage reasons, and stable ordering in `starter-projects/priority-metrics-intelligence/src/compare.mjs`.
+- [x] T013 [US1] Run `node --test starter-projects/priority-metrics-intelligence/test/compare.test.mjs` and verify the User Story 1 assertions pass.
+- [x] T014 [US1] Commit comparison math with `git add starter-projects/priority-metrics-intelligence/test/compare.test.mjs starter-projects/priority-metrics-intelligence/src/compare.mjs && git commit -m "feat: compare monthly priority metrics"`.
 
 Required comparison example:
 
