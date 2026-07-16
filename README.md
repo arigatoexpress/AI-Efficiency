@@ -182,7 +182,9 @@ and any action-taking stay gated behind FedEx governance until approved. The
 covers day one of pending enterprise access, and the
 [GCP activation runbook](docs/technology/gcp-activation-runbook.md) turns that
 day into a checklist: every step is a configuration change on code that is
-already merged, tested, and flag-gated — not a rebuild.
+already merged, tested, and flag-gated — not a rebuild. Building something
+new? [Building blocks](docs/building-blocks.md) maps the tested pieces —
+adapters, auth switch, metrics engine, agent template — you can lift into it.
 
 <p align="center">
   <img src="assets/architecture-diagram-adk.svg" alt="Forward-path architecture: public data → Cloud Run app → Gemini via Vertex AI / ADK agent → human review → governance-gated Foundry" width="90%">

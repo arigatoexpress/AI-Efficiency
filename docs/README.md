@@ -37,6 +37,7 @@ This folder contains guides, standards, and templates for the AI Efficiency Team
 | [Agentic AI for operations](technology/agentic-ai-for-operations.md) | The four-rung agency ladder — what "agentic" means and how much review each rung needs. | Everyone — managers first |
 | [Google Cloud + ADK integration](technology/google-cloud-adk-integration.md) | Forward path: Vertex AI, the Agent Development Kit, Agent Engine, Cloud Run. | Engineers, technically-curious managers |
 | [GCP activation runbook](technology/gcp-activation-runbook.md) | The exact day-one sequence when GCP access lands — every step gated, verified, and reversible. | Operators, reviewers |
+| [Building blocks](building-blocks.md) | The map of tested, liftable pieces for building new systems from this repo. | Builders |
 
 ## Planning and Architecture
 
