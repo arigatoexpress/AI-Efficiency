@@ -13,17 +13,18 @@
 A presenter can read straight down this page. Jump to any section:
 
 1. [For the District Call — the five-minute tour](#for-the-district-call)
-2. [Three Ways to Get Value in Five Minutes](#three-ways-to-get-value-in-five-minutes)
-3. [Why This Matters for FedEx](#why-this-matters-for-fedex)
-4. [Start Here — Pick By What You Need](#start-here--pick-by-what-you-need)
-5. [Featured Project: Logistics Intelligence System](#featured-project-logistics-intelligence-system)
-6. [Prompt Library at a Glance](#prompt-library-at-a-glance)
-7. [Forward Path: Google Cloud + Gemini + ADK](#forward-path-google-cloud--gemini--adk)
-8. [Presentation Deck and Kit](#presentation-deck-and-kit)
-9. [Starter Projects](#starter-projects)
-10. [How We Work Safely](#how-we-work-safely)
-11. [Repository Structure](#repository-structure)
-12. [What's New Since the June 4 Meeting](#whats-new-since-the-june-4-meeting) — the latest updates, at the end
+2. [How It Works — Real Systems, Real Runs](#how-it-works--real-systems-real-runs) — the proof, with diagrams
+3. [Three Ways to Get Value in Five Minutes](#three-ways-to-get-value-in-five-minutes)
+4. [Why This Matters for FedEx](#why-this-matters-for-fedex)
+5. [Start Here — Pick By What You Need](#start-here--pick-by-what-you-need)
+6. [Featured Project: Logistics Intelligence System](#featured-project-logistics-intelligence-system)
+7. [Prompt Library at a Glance](#prompt-library-at-a-glance)
+8. [Forward Path: Google Cloud + Gemini + ADK](#forward-path-google-cloud--gemini--adk)
+9. [Presentation Deck and Kit](#presentation-deck-and-kit)
+10. [Starter Projects](#starter-projects)
+11. [How We Work Safely](#how-we-work-safely)
+12. [Repository Structure](#repository-structure)
+13. [What's New Since the June 4 Meeting](#whats-new-since-the-june-4-meeting) — the latest updates, at the end
 
 ---
 
@@ -35,14 +36,65 @@ A presenter can read straight down this page. Jump to any section:
 | --- | --- | --- |
 | 1 | One hub for safe, useful AI in our operation — built by ops people, no coding required. | [Interactive hub page](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/index.html) |
 | 2 | It plugs into FedEx's own AI literacy push — public data only, and a human checks every output. | [Why this matters](#why-this-matters-for-fedex) |
-| 3 | Anyone can get value in five minutes — copy a prompt, read the plain-English guide, or open the live dashboard. | [Three ways to get value](#three-ways-to-get-value-in-five-minutes) |
-| 4 | Our most mature tool turns public weather and road risk into a shift brief you can edit. | [Live dashboard](https://fedex-logistics-intelligence-system-267358751314.us-east1.run.app) |
-| 5 | Own a weekly number? Two offline tools show whether a KPI move is real and which lever moved it. | [Signal Lab](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/starter-projects/dock-efficiency-signal-lab/app/index.html) · [TLH/SPH Explorer](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/starter-projects/tlh-sph-efficiency-explorer/app/index.html) |
-| 6 | 52 ready-to-use prompts for the work you already do — search, fill in the brackets, copy. | [Prompt Explorer](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/prompts/explorer.html) |
-| 7 | Where we're headed next, and the rules that keep it safe. | [Forward path](#forward-path-google-cloud--gemini--adk) · [How we work safely](#how-we-work-safely) |
-| 8 | Everything we've shipped since the June 4 meeting. | [What's new](#whats-new-since-the-june-4-meeting) |
+| 3 | Proof we actually built things: diagrams of the real systems plus captured runs and live requests. | [How It Works series](docs/how-it-works/README.md) |
+| 4 | Anyone can get value in five minutes — copy a prompt, read the plain-English guide, or open the live dashboard. | [Three ways to get value](#three-ways-to-get-value-in-five-minutes) |
+| 5 | Our most mature tool turns public weather and road risk into a shift brief you can edit. | [Live dashboard](https://fedex-logistics-intelligence-system-267358751314.us-east1.run.app) |
+| 6 | Own a weekly number? Two offline tools show whether a KPI move is real and which lever moved it. | [Signal Lab](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/starter-projects/dock-efficiency-signal-lab/app/index.html) · [TLH/SPH Explorer](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/starter-projects/tlh-sph-efficiency-explorer/app/index.html) |
+| 7 | 52 ready-to-use prompts for the work you already do — search, fill in the brackets, copy. | [Prompt Explorer](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/prompts/explorer.html) |
+| 8 | Where we're headed next, and the rules that keep it safe. | [Forward path](#forward-path-google-cloud--gemini--adk) · [How we work safely](#how-we-work-safely) |
+| 9 | Everything we've shipped since the June 4 meeting. | [What's new](#whats-new-since-the-june-4-meeting) |
 
 **Driving the screen?** Open the [presentation deck](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/assets/presentation-deck.html) (15 slides, arrow keys to advance) or the [presentation kit](docs/presentation-kit.md) for the deck, runbook, Q&A proof points, and pilot shortlist in one place.
+
+---
+
+## How It Works — Real Systems, Real Runs
+
+*"Has anyone actually built anything with AI?"* Yes. The **[How It Works series](docs/how-it-works/README.md)**
+proves it with real architecture diagrams, real commands, and real captured
+output — including a live production request and a passing guardrail test run.
+Nothing in it is a mockup.
+
+Here's the whole platform on one diagram (each layer has a full walkthrough):
+
+```text
+                          IDEAS COME IN THE DOOR
+                 pilot template · idea intake · CTO call
+                                   │
+      ┌────────────────────────────┼────────────────────────────┐
+      ▼                            ▼                            ▼
+ EVERYDAY LAYER          DECISION-SUPPORT LAYER            AGENT LAYER
+ (no install)            (real apps — no AI in            (AI with hard rails)
+                          the numbers)
+ 52 prompts +            Signal Lab ── "is the KPI        Logistics Intelligence
+ Prompt Explorer           move real?" (SPC rules)          Gemini drafts briefs on
+ + prompts.json          TLH/SPH Explorer ── "which         Cloud Run — LIVE today
+   for agents              lever moved it?" (exact        ADK Shift-Brief Agent
+ any model works           split)                           read-only tools,
+                         Priority Metrics CLI               CI-tested guardrails
+                           risk lineage · 94 tests
+      │                            │                            │
+      └──── deterministic math makes the FACTS; AI only drafts PROSE ────┘
+                                   │
+                                   ▼
+                       HUMAN REVIEW — ALWAYS
+             every output labeled "Needs manager verification."
+                                   │
+                                   ▼
+                           GOVERNANCE GATE
+          public/synthetic data only · CI checks on every PR ·
+          internal data and actions gated until FedEx approves
+```
+
+**The walkthroughs** — each shows the real thing running:
+
+| See it working | What you'll find |
+| --- | --- |
+| [A prompt, start to finish](docs/how-it-works/a-prompt-in-action.md) | Template → filled scenario → unedited AI output → the human step |
+| [The deployed dashboard](docs/how-it-works/logistics-intelligence-system.md) | A real captured request to the live Cloud Run service — and its safety fallback firing in production |
+| [The offline analytics duo](docs/how-it-works/signal-lab-and-efficiency-explorer.md) | The actual SPC rules and exact decomposition math, plus a passing verification run |
+| [The metrics CLI](docs/how-it-works/priority-metrics-intelligence.md) | A real end-to-end run: CSV in, risk lineage and manager brief out |
+| [Our first AI agent](docs/how-it-works/adk-shift-brief-agent.md) | The agent loop, five read-only tools, and the CI-enforced guardrail test run |
 
 ---
 
@@ -70,7 +122,7 @@ FedEx moves millions of packages daily across Express, Ground, and Freight netwo
 
 ### How it all connects
 
-Ideas come in the front door and become projects. Daily **prompts** power managers' routine drafts. Before a shift, **Station Ops Intelligence** turns public risk signals into reviewed briefs; after the week, the **Dock Efficiency Signal Lab** flags which dock-KPI moves are real and the **TLH/SPH Efficiency Explorer** shows which lever moved them. **Governance** gates everything, and a shared data model is the future state. See the diagram on the [interactive hub page](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/index.html).
+Ideas come in the front door and become projects. Daily **prompts** power managers' routine drafts. Before a shift, **Station Ops Intelligence** turns public risk signals into reviewed briefs; after the week, the **Dock Efficiency Signal Lab** flags which dock-KPI moves are real and the **TLH/SPH Efficiency Explorer** shows which lever moved them. **Governance** gates everything, and a shared data model is the future state. See the diagram on the [interactive hub page](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/index.html), or the full [How It Works series](docs/how-it-works/README.md) for the per-system walkthroughs with real captured runs.
 
 ---
 
@@ -78,6 +130,7 @@ Ideas come in the front door and become projects. Daily **prompts** power manage
 
 | I want to… | Start with | Best for |
 | --- | --- | --- |
+| See proof the systems actually work | [How It Works series](docs/how-it-works/README.md) | Skeptics and reviewers |
 | Understand AI basics, safely | [AI workplace user guide](docs/ai-workplace-user-guide.md) | Anyone new to AI |
 | See how this fits FedEx's AI program | [FedEx AI literacy guide](docs/fedex-ai-literacy-guide.md) | Everyone |
 | Get oriented in this repo | [Getting started](docs/getting-started.md) | New team members |
@@ -246,6 +299,13 @@ docs/
   foundry-integration-roadmap.md   ← Governance-gated Foundry export path
   teams-telegram-agent-roadmap.md  ← Planned intake-agent track
   fhe-zama-research.md             ← Privacy (FHE) research note
+  how-it-works/                    ← Real-system walkthroughs with diagrams + captured runs
+    README.md                      ← Platform map + series index
+    a-prompt-in-action.md
+    logistics-intelligence-system.md
+    signal-lab-and-efficiency-explorer.md
+    priority-metrics-intelligence.md
+    adk-shift-brief-agent.md
   governance/                      ← Checklists and policies
   technology/                      ← How-to guides for approved tools
     gemini-for-ops-managers.md
@@ -309,6 +369,8 @@ One week, sixteen merged pull requests — every CTO-review item closed, two new
 - **Copilot guidance refreshed for 2026** — updated the [Copilot + Teams playbook](docs/technology/copilot-teams-playbook.md) with current Microsoft 365 Copilot / Copilot Chat / GitHub Copilot distinctions, the four agent-building surfaces (SharePoint agents, Agent Builder, Copilot Studio, declarative agents), open standards (MCP and A2A), and a new [model-agnostic examples](docs/technology/copilot-model-agnostic-examples.md) page showing GitHub Copilot CLI BYOK and VS Code "OAI Compatible" provider setup for local/Ollama endpoints.
 
 - **Priority Metrics Intelligence shipped (July 2026)** — an offline, deterministic CLI ([starter project](starter-projects/priority-metrics-intelligence/README.md)) that validates synthetic monthly priority metrics, compares exact periods against targets, traces risk lineage, and publishes canonical JSON plus a manager brief — no network access, spec-driven with hardened input boundaries and error paths ([#45](https://github.com/arigatoexpress/AI-Efficiency/pull/45), [#46](https://github.com/arigatoexpress/AI-Efficiency/pull/46)).
+
+- **The How It Works series shipped (July 2026)** — five walkthroughs under [`docs/how-it-works/`](docs/how-it-works/README.md) that answer "has anyone actually built anything with AI?" with evidence: ASCII architecture diagrams of the real code, reproducible commands, and captured output — a real request to the live Cloud Run service (including its safety fallback firing in production), a full Priority Metrics CLI run, the exact SPC and decomposition math, the ADK agent's guardrail test run, and a prompt taken from template to unedited AI output.
 
 *Dependency hygiene: the four major-version Dependabot updates — Express 5, @google/genai 2.8, TypeScript 6, and @types/node 25 — have since been tested and merged; the logistics app installs, typechecks, and builds clean on all four (verified in CI).*
 
