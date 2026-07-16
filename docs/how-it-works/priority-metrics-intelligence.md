@@ -122,6 +122,21 @@ count one month correlates strongly (−0.79 over 12 month-pairs) with on-time
 percent the next month. The tool explicitly labels this a *candidate* — a lead
 for a manager to investigate, never a claimed cause.
 
+And `brief.md` opens with a plain-English summary derived from those exact
+facts (the canonical JSON evidence follows below it in the same file):
+
+```text
+## Where Each Metric Stands
+
+- SYNTH On-time percent: 91 percent in 2026-06 — at risk, distance -4;
+  -1 month-over-month (vs 2026-05), -6 year-over-year (vs 2025-06).
+
+## Active Risks
+
+- SYNTH On-time percent: risk ACTIVE — started 2026-04 at severity 2;
+  then 2026-05 worsened (severity 3), 2026-06 worsened (severity 4).
+```
+
 ## Where the Safety Lives
 
 - `--data-classification` is **required** and only accepts `synthetic` or
@@ -131,7 +146,7 @@ for a manager to investigate, never a claimed cause.
   operational identifiers.
 - Error messages are allowlisted (`errors.mjs`) so a failure can never echo raw
   data back to the console.
-- **94 automated tests** pin all of this down: `npm run verify:priority-metrics`
+- **95 automated tests** pin all of this down: `npm run verify:priority-metrics`
   from the repo root.
 
 ## Why It's Built This Way

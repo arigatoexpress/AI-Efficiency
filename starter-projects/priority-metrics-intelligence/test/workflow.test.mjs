@@ -274,9 +274,42 @@ test("renders only canonical analysis facts in the required Markdown sections", 
   assert.doesNotMatch(markdown, /cause|driver|guarantee/i);
   assert.equal(
     sha256(markdown),
-    "49fd103e3839fd4a6942bd901fab22adc4123bf15fd9c4db6313b9a011e30d67",
+    "7a836c4a57f1c79faabebe2e9a136f921da538bd0a7e4a442f711fbb1f473203",
   );
   assert.ok(markdown.endsWith("\n"));
+});
+
+test("summary prose is derived from the canonical facts it sits above", async () => {
+  const result = await analyzeFixture();
+  const markdown = renderMarkdown(result);
+  const summary = markdown.split("## Canonical Evidence")[0];
+
+  // Every compared metric appears in the standings with its exact value,
+  // period, and unit — prose can never drift from the numbers.
+  for (const comparison of result.comparisons) {
+    const definition = result.inputSummary.metricDefinitions.find(
+      (item) => item.metricId === comparison.metricId,
+    );
+    assert.ok(summary.includes(`**${definition.metricLabel}**`));
+    assert.ok(summary.includes(`${comparison.value} ${comparison.unit} in ${comparison.period}`));
+  }
+
+  // Only ACTIVE lineages are summarized as risks; resolved ones stay in the
+  // evidence appendix.
+  const activeCount = result.riskLineages.filter((item) => item.outcome === "active").length;
+  assert.equal((summary.match(/risk ACTIVE/g) ?? []).length, activeCount);
+  assert.doesNotMatch(summary, /risk recovered/);
+
+  // Associations are framed as review leads, never as confirmed relationships.
+  if (result.patterns.candidateAssociations.length > 0) {
+    assert.match(summary, /A lead for human review, not a confirmed relationship\./);
+  }
+
+  // Projections carry their method and target period.
+  for (const projection of result.projections) {
+    assert.ok(summary.includes(`for ${projection.targetPeriod} if recent drift continues`));
+    assert.ok(summary.includes(`method: ${projection.method}`));
+  }
 });
 
 test("is byte-deterministic across identical runs and input order", async () => {
