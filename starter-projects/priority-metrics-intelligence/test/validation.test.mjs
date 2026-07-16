@@ -34,6 +34,31 @@ test("quoted CSV maps to one canonical observation", () => {
   });
 });
 
+test("raw and canonical privacy scans report the same CSV row number", () => {
+  const canonical = {
+    period: "2026-06",
+    pillarId: "synth_service",
+    metricId: "synth_on_time_percent",
+    metricLabel: "user@example.com",
+    value: 96.2,
+    unit: "percent",
+    targetType: null,
+    targetMin: null,
+    targetMax: null,
+    warningMargin: 0,
+  };
+
+  // Both scans describe CSV rows: the first data row after the header is row 2.
+  assert.throws(() => assertPublicSafe([canonical]), {
+    code: "PRIVACY_DIRECT_IDENTIFIER",
+    rowNumber: 2,
+  });
+  assert.throws(
+    () => assertPublicSafe([{ ...canonical, metricLabel: "SYNTH On-time percent" }, canonical]),
+    { code: "PRIVACY_DIRECT_IDENTIFIER", rowNumber: 3 },
+  );
+});
+
 test("CSV rejects a dataset with zero observation rows at the parse boundary", () => {
   assert.throws(() => parseMetricsCsv(`${header}\n`), {
     code: "SCHEMA_EMPTY_INPUT",
