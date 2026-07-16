@@ -142,12 +142,8 @@ test("resource, release, chronology, window, and duration constraints are indepe
         value.plan.routes[0].visits[0].departureTime = "2026-07-16T13:30:00Z";
       },
     ],
-    [
-      "on_road_limit_exceeded",
-      (value) => {
-        value.resources.laborShifts[0].maxOnRoadMinutes = 60;
-      },
-    ],
+    ["route_duration_exceeded", (value) => (value.resources.vehicles[0].maxRouteMinutes = 60)],
+    ["labor_minutes_exceeded", (value) => (value.resources.laborShifts[0].maxOnRoadMinutes = 60)],
   ];
 
   for (const [expectedCode, mutate] of cases) {
@@ -207,5 +203,78 @@ test("plan normalization preserves supplied order, snapshots values, and freezes
   assert.throws(
     () => normalizePlans({ plans: [bundle().plan], snapshot: "2026-07-15T12:00:01Z" }),
     { code: "SCHEMA_PLAN_SNAPSHOT_MISMATCH" },
+  );
+});
+
+test("fractional RFC 3339 timestamps are compared chronologically, not lexically", () => {
+  const result = evaluate((value) => {
+    value.demandGroups[0].windowStart = "2026-07-16T07:00:00Z";
+    value.plan.routes[0].visits[0].arrivalTime = "2026-07-16T07:00:00.100Z";
+    return value;
+  });
+
+  assert.equal(result.status, "feasible");
+  assert.equal(
+    result.violations.some(({ constraintCode }) => constraintCode === "backwards_time"),
+    false,
+  );
+});
+
+test("declared service minutes are a hard lower bound", () => {
+  const result = evaluate((value) => {
+    value.plan.routes[0].visits[0].departureTime = "2026-07-16T08:45:00Z";
+    return value;
+  });
+
+  assert.ok(
+    result.violations.some(
+      ({ constraintCode, observed, limit, unit }) =>
+        constraintCode === "service_duration_insufficient" &&
+        observed === 15 &&
+        limit === 60 &&
+        unit === "minutes",
+    ),
+  );
+});
+
+test("overlapping routes cannot reuse the same vehicle or labor shift", () => {
+  const result = evaluate((value) => {
+    value.demandGroups.push({
+      ...value.demandGroups[0],
+      demandGroupId: "SYNTH-DEMAND-02",
+    });
+    value.plan.routes.push({
+      routeId: "SYNTH-ROUTE-02",
+      vehicleId: "SYNTH-VEHICLE-01",
+      shiftId: "SYNTH-SHIFT-01",
+      visits: [
+        {
+          sequence: 1,
+          demandGroupId: "SYNTH-DEMAND-02",
+          arrivalTime: "2026-07-16T09:00:00Z",
+          departureTime: "2026-07-16T10:00:00Z",
+        },
+      ],
+    });
+    return value;
+  });
+
+  assert.ok(result.violations.some(({ constraintCode }) => constraintCode === "vehicle_overlap"));
+  assert.ok(result.violations.some(({ constraintCode }) => constraintCode === "labor_overlap"));
+});
+
+test("violation ordering is total beyond code and entity", () => {
+  const result = evaluate((value) => {
+    value.plan.routes[0].vehicleId = "SYNTH-VEHICLE-99";
+    value.plan.routes[0].shiftId = "SYNTH-SHIFT-99";
+    return value;
+  });
+  const unknowns = result.violations.filter(
+    ({ constraintCode }) => constraintCode === "unknown_reference",
+  );
+
+  assert.deepEqual(
+    unknowns.map(({ unit }) => unit),
+    ["shift_id", "vehicle_id"],
   );
 });

@@ -1,5 +1,7 @@
+import { utcMillis } from "./time.mjs";
+
 function minutesBetween(start, end) {
-  return (Date.parse(end) - Date.parse(start)) / 60_000;
+  return (utcMillis(end) - utcMillis(start)) / 60_000;
 }
 
 function violation(constraintCode, entityId, observed, limit, unit) {
@@ -9,8 +11,39 @@ function violation(constraintCode, entityId, observed, limit, unit) {
 function compareViolations(left, right) {
   return (
     left.constraintCode.localeCompare(right.constraintCode) ||
-    left.entityId.localeCompare(right.entityId)
+    left.entityId.localeCompare(right.entityId) ||
+    left.unit.localeCompare(right.unit) ||
+    JSON.stringify(left.observed).localeCompare(JSON.stringify(right.observed)) ||
+    JSON.stringify(left.limit).localeCompare(JSON.stringify(right.limit))
   );
+}
+
+function recordUsage(usages, resourceId, interval) {
+  const current = usages.get(resourceId) ?? [];
+  current.push(interval);
+  usages.set(resourceId, current);
+}
+
+function addOverlapViolations(violations, usages, constraintCode, unit) {
+  for (const intervals of usages.values()) {
+    for (let rightIndex = 1; rightIndex < intervals.length; rightIndex += 1) {
+      const right = intervals[rightIndex];
+      for (let leftIndex = 0; leftIndex < rightIndex; leftIndex += 1) {
+        const left = intervals[leftIndex];
+        if (utcMillis(left.start) < utcMillis(right.end) && utcMillis(right.start) < utcMillis(left.end)) {
+          violations.push(
+            violation(
+              constraintCode,
+              right.routeId,
+              `${right.start}/${right.end}`,
+              `${left.routeId}:${left.start}/${left.end}`,
+              unit,
+            ),
+          );
+        }
+      }
+    }
+  }
 }
 
 export function evaluateFeasibility({ plan, resources, demandGroups, policy }) {
@@ -19,6 +52,8 @@ export function evaluateFeasibility({ plan, resources, demandGroups, policy }) {
   const shifts = new Map(resources.laborShifts.map((shift) => [shift.shiftId, shift]));
   const demand = new Map(demandGroups.map((group) => [group.demandGroupId, group]));
   const assignments = new Map();
+  const vehicleUsages = new Map();
+  const laborUsages = new Map();
 
   for (const group of demandGroups) {
     for (const [field, unit] of [
@@ -34,7 +69,7 @@ export function evaluateFeasibility({ plan, resources, demandGroups, policy }) {
     }
   }
 
-  if (plan.releaseTime < policy.earliestReleaseTime) {
+  if (utcMillis(plan.releaseTime) < utcMillis(policy.earliestReleaseTime)) {
     violations.push(
       violation(
         "release_before_allowed",
@@ -51,12 +86,24 @@ export function evaluateFeasibility({ plan, resources, demandGroups, policy }) {
     const shift = shifts.get(route.shiftId);
     if (vehicle === undefined) {
       violations.push(
-        violation("unknown_reference", route.routeId, null, null, "vehicle"),
+        violation(
+          "unknown_reference",
+          route.routeId,
+          route.vehicleId,
+          "known_vehicle",
+          "vehicle_id",
+        ),
       );
     }
     if (shift === undefined) {
       violations.push(
-        violation("unknown_reference", route.routeId, null, null, "labor_shift"),
+        violation(
+          "unknown_reference",
+          route.routeId,
+          route.shiftId,
+          "known_labor_shift",
+          "shift_id",
+        ),
       );
     }
 
@@ -82,36 +129,73 @@ export function evaluateFeasibility({ plan, resources, demandGroups, policy }) {
       const group = demand.get(visit.demandGroupId);
       if (group === undefined) {
         violations.push(
-          violation("unknown_reference", visit.demandGroupId, null, null, "demand_group"),
+          violation(
+            "unknown_reference",
+            visit.demandGroupId,
+            visit.demandGroupId,
+            "known_demand_group",
+            "demand_group_id",
+          ),
         );
       } else {
         routeCube += group.cubeUnits;
-        if (visit.arrivalTime < group.windowStart || visit.departureTime > group.windowEnd) {
+        if (
+          utcMillis(visit.arrivalTime) < utcMillis(group.windowStart) ||
+          utcMillis(visit.departureTime) > utcMillis(group.windowEnd)
+        ) {
           violations.push(
             violation(
               "service_window_miss",
               visit.demandGroupId,
-              visit.arrivalTime,
+              `${visit.arrivalTime}/${visit.departureTime}`,
               `${group.windowStart}/${group.windowEnd}`,
-              "timestamp",
+              "timestamp_interval",
+            ),
+          );
+        }
+        const serviceDuration = minutesBetween(
+          visit.arrivalTime,
+          visit.departureTime,
+        );
+        if (serviceDuration < group.serviceMinutes) {
+          violations.push(
+            violation(
+              "service_duration_insufficient",
+              visit.demandGroupId,
+              serviceDuration,
+              group.serviceMinutes,
+              "minutes",
             ),
           );
         }
       }
 
       if (
-        visit.departureTime < visit.arrivalTime ||
-        visit.arrivalTime < previousDeparture
+        utcMillis(visit.departureTime) < utcMillis(visit.arrivalTime) ||
+        utcMillis(visit.arrivalTime) < utcMillis(previousDeparture)
       ) {
         violations.push(
-          violation("backwards_time", route.routeId, null, null, "timestamp"),
+          violation(
+            "backwards_time",
+            route.routeId,
+            `${visit.arrivalTime}/${visit.departureTime}`,
+            `not_before/${previousDeparture}`,
+            "timestamp_order",
+          ),
         );
       }
       previousDeparture = visit.departureTime;
-      if (visit.departureTime > lastDeparture) lastDeparture = visit.departureTime;
+      if (utcMillis(visit.departureTime) > utcMillis(lastDeparture)) {
+        lastDeparture = visit.departureTime;
+      }
     }
 
     if (vehicle !== undefined) {
+      recordUsage(vehicleUsages, vehicle.vehicleId, {
+        routeId: route.routeId,
+        start: plan.releaseTime,
+        end: lastDeparture,
+      });
       if (routeCube > vehicle.capacityUnits) {
         violations.push(
           violation(
@@ -124,51 +208,83 @@ export function evaluateFeasibility({ plan, resources, demandGroups, policy }) {
         );
       }
       if (
-        plan.releaseTime < vehicle.availableStart ||
-        lastDeparture > vehicle.availableEnd
+        utcMillis(plan.releaseTime) < utcMillis(vehicle.availableStart) ||
+        utcMillis(lastDeparture) > utcMillis(vehicle.availableEnd)
       ) {
         violations.push(
           violation(
             "vehicle_unavailable",
             route.routeId,
-            null,
-            null,
-            "timestamp",
+            `${plan.releaseTime}/${lastDeparture}`,
+            `${vehicle.availableStart}/${vehicle.availableEnd}`,
+            "timestamp_interval",
           ),
         );
       }
     }
 
     if (shift !== undefined) {
-      if (plan.releaseTime < shift.startTime || lastDeparture > shift.endTime) {
+      recordUsage(laborUsages, shift.shiftId, {
+        routeId: route.routeId,
+        start: plan.releaseTime,
+        end: lastDeparture,
+      });
+      if (
+        utcMillis(plan.releaseTime) < utcMillis(shift.startTime) ||
+        utcMillis(lastDeparture) > utcMillis(shift.endTime)
+      ) {
         violations.push(
           violation(
             "labor_unavailable",
             route.routeId,
-            null,
-            null,
-            "timestamp",
+            `${plan.releaseTime}/${lastDeparture}`,
+            `${shift.startTime}/${shift.endTime}`,
+            "timestamp_interval",
           ),
         );
       }
       const onRoadMinutes = minutesBetween(plan.releaseTime, lastDeparture);
-      const limit = Math.min(
-        shift.maxOnRoadMinutes,
-        vehicle?.maxRouteMinutes ?? Number.POSITIVE_INFINITY,
-      );
-      if (onRoadMinutes > limit) {
+      if (onRoadMinutes > shift.maxOnRoadMinutes) {
         violations.push(
           violation(
-            "on_road_limit_exceeded",
+            "labor_minutes_exceeded",
             route.routeId,
             onRoadMinutes,
-            limit,
+            shift.maxOnRoadMinutes,
+            "minutes",
+          ),
+        );
+      }
+    }
+
+    if (vehicle !== undefined) {
+      const routeMinutes = minutesBetween(plan.releaseTime, lastDeparture);
+      if (routeMinutes > vehicle.maxRouteMinutes) {
+        violations.push(
+          violation(
+            "route_duration_exceeded",
+            route.routeId,
+            routeMinutes,
+            vehicle.maxRouteMinutes,
             "minutes",
           ),
         );
       }
     }
   }
+
+  addOverlapViolations(
+    violations,
+    vehicleUsages,
+    "vehicle_overlap",
+    "timestamp_interval",
+  );
+  addOverlapViolations(
+    violations,
+    laborUsages,
+    "labor_overlap",
+    "timestamp_interval",
+  );
 
   for (const group of demandGroups) {
     const count = assignments.get(group.demandGroupId) ?? 0;

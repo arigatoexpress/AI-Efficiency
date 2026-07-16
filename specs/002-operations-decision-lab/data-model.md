@@ -110,6 +110,7 @@ violations[]:
 Constraint codes are closed: `duplicate_assignment`, `missing_assignment`,
 `unknown_reference`, `vehicle_unavailable`, `labor_unavailable`, `capacity_exceeded`,
 `release_before_allowed`, `sequence_invalid`, `backwards_time`, `service_window_miss`,
+`service_duration_insufficient`, `vehicle_overlap`, `labor_overlap`,
 `route_duration_exceeded`, `labor_minutes_exceeded`, and
 `negative_quantity`. Violations sort by code then entity ID.
 
