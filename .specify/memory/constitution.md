@@ -21,6 +21,8 @@ Sync Impact Report
     prohibited unstructured free-text notes
   - II. Public-Safe Synthetic Data: distinguish stable entity IDs (`SYNTH-`)
     from closed synthetic metric-definition IDs (`synth_`)
+  - Engineering Constraints: scope offline execution to analytics/runtime;
+    Spec Kit authoring may inspect Git remote metadata but cannot enter runtime
 - Deferred items: none
 -->
 # AI Efficiency Constitution
@@ -79,8 +81,11 @@ add .` and `git add -A` are prohibited.
 
 ## Engineering Constraints
 
-- The default workflow MUST run offline and deterministically on macOS and the
-  Linux GitHub Actions runner using the repository-supported Node.js version.
+- The default analytics/runtime workflow MUST run offline and deterministically
+  on macOS and the Linux GitHub Actions runner using the repository-supported
+  Node.js version. Spec Kit authoring/scaffolding is developer tooling and MAY
+  inspect Git remote metadata; it MUST NOT become an analytics runtime path or
+  introduce a runtime network dependency.
 - JSON is the canonical machine-readable artifact. Markdown MAY render the same
   facts but MUST NOT introduce calculations or claims absent from JSON.
 - Randomized scenarios MUST accept an explicit seed. Golden outputs MUST not
