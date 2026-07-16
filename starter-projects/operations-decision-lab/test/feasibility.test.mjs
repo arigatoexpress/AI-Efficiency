@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { evaluateFeasibility } from "../src/feasibility.mjs";
+import { normalizePlans } from "../src/plan.mjs";
 
 function bundle() {
   return {
@@ -189,4 +190,22 @@ test("visit sequence is validated as supplied and is never silently repaired", (
     ),
   );
   assert.equal(result.status, "infeasible");
+});
+
+test("plan normalization preserves supplied order, snapshots values, and freezes records", () => {
+  const input = bundle();
+  const plans = normalizePlans({
+    plans: [input.plan],
+    snapshot: "2026-07-15T12:00:00Z",
+  });
+
+  input.plan.routes[0].visits[0].sequence = 99;
+  assert.equal(plans[0].routes[0].visits[0].sequence, 1);
+  assert.throws(() => {
+    plans[0].routes[0].visits[0].sequence = 2;
+  }, TypeError);
+  assert.throws(
+    () => normalizePlans({ plans: [bundle().plan], snapshot: "2026-07-15T12:00:01Z" }),
+    { code: "SCHEMA_PLAN_SNAPSHOT_MISMATCH" },
+  );
 });
