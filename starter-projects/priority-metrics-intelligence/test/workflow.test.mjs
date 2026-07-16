@@ -1,8 +1,19 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { readFile } from "node:fs/promises";
+import {
+  mkdir,
+  mkdtemp,
+  readFile,
+  readdir,
+  rename,
+  rm,
+  writeFile,
+} from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { basename, join } from "node:path";
 import { analyzeMetrics } from "../src/analyze.mjs";
+import { run } from "../src/cli.mjs";
 import { parseMetricsCsv, parsePolicyJson } from "../src/parse.mjs";
 import { renderMarkdown, stableJson } from "../src/render.mjs";
 
@@ -198,4 +209,279 @@ test("is byte-deterministic across identical runs and input order", async () => 
 
   assert.equal(stableJson(first), stableJson(second));
   assert.equal(renderMarkdown(first), renderMarkdown(second));
+});
+
+async function workspace(t, name) {
+  const directory = await mkdtemp(join(tmpdir(), `priority-metrics-${name}-`));
+  t.after(() => rm(directory, { recursive: true, force: true }));
+  return directory;
+}
+
+function cliHarness(overrides = {}) {
+  const stdout = [];
+  const stderr = [];
+  return {
+    stdout,
+    stderr,
+    io: {
+      readFile,
+      writeFile,
+      rename,
+      rm,
+      stdout: (line) => stdout.push(line),
+      stderr: (line) => stderr.push(line),
+      ...overrides,
+    },
+  };
+}
+
+function validArgs(outputDirectory, extra = []) {
+  return [
+    "--input",
+    new URL("../fixtures/synthetic-monthly-metrics.csv", import.meta.url).pathname,
+    "--policy",
+    new URL("../fixtures/synthetic-policy.json", import.meta.url).pathname,
+    "--output-dir",
+    outputDirectory,
+    "--data-classification",
+    "synthetic",
+    ...extra,
+  ];
+}
+
+test("runs the complete workflow and atomically publishes exactly both artifacts", async (t) => {
+  const directory = await workspace(t, "valid");
+  const outputDirectory = join(directory, "nested", "analysis");
+  const events = [];
+  const harness = cliHarness({
+    writeFile: async (path, contents, options) => {
+      events.push(`write:${basename(path)}`);
+      await writeFile(path, contents, options);
+    },
+    rename: async (source, destination) => {
+      events.push(`rename:${basename(source)}:${basename(destination)}`);
+      await rename(source, destination);
+    },
+  });
+
+  const code = await run(validArgs(outputDirectory), harness.io);
+
+  assert.equal(code, 0);
+  assert.deepEqual(harness.stderr, []);
+  assert.match(harness.stdout.join("\n"), /^OK priority-metrics-analysis:/);
+  assert.deepEqual(await readdir(outputDirectory), ["analysis.json", "brief.md"]);
+  assert.equal(
+    await readFile(join(outputDirectory, "analysis.json"), "utf8"),
+    await fixture("expected-analysis.json"),
+  );
+  assert.match(await readFile(join(outputDirectory, "brief.md"), "utf8"),
+    /^# Priority Metrics Brief\n/,
+  );
+  assert.deepEqual(events, [
+    "write:analysis.json",
+    "write:brief.md",
+    "rename:analysis.tmp:analysis",
+  ]);
+  await assert.rejects(readFile(`${outputDirectory}.tmp`, "utf8"), { code: "ENOENT" });
+});
+
+test("rejects unknown, positional, duplicate, missing, and invalid arguments before I/O", async () => {
+  const rejectedValue = "SYNTH-REJECTED-ARGV-998877";
+  const cases = [
+    [],
+    ["--unknown", rejectedValue],
+    [rejectedValue],
+    ["--input", rejectedValue, "--input", "other"],
+    ["--input"],
+    [
+      "--input",
+      "--policy",
+      "--output-dir",
+      "output",
+      "--data-classification",
+      "synthetic",
+    ],
+    [
+      "--input",
+      rejectedValue,
+      "--output-dir",
+      "output",
+      "--data-classification",
+      rejectedValue,
+    ],
+  ];
+
+  for (const args of cases) {
+    let reads = 0;
+    const harness = cliHarness({
+      readFile: async () => {
+        reads += 1;
+        throw new Error("must not read");
+      },
+    });
+
+    assert.equal(await run(args, harness.io), 2);
+    assert.deepEqual(harness.stdout, []);
+    assert.deepEqual(harness.stderr, ["ERROR CLI_USAGE: arguments"]);
+    assert.doesNotMatch(harness.stderr.join("\n"), /SYNTH-REJECTED-ARGV-998877/);
+    assert.equal(reads, 0);
+  }
+});
+
+test("uses stable schema, privacy, invariant, and file-I/O exit codes without echo", async (t) => {
+  const directory = await workspace(t, "exit-codes");
+  const input = join(directory, "metrics.csv");
+  const output = join(directory, "output");
+  const secret = "SYNTH-REJECTED-SECRET-998877";
+  const header =
+    "period,pillar_id,metric_id,metric_label,value,unit,target_type,target_min,target_max,warning_margin";
+  const args = (inputPath = input) => [
+    "--input",
+    inputPath,
+    "--output-dir",
+    output,
+    "--data-classification",
+    "scrubbed",
+  ];
+
+  const cases = [
+    {
+      expectedCode: 3,
+      expectedError: "ERROR SCHEMA_INVALID_CSV_HEADER: none",
+      contents: `${secret}\n`,
+    },
+    {
+      expectedCode: 3,
+      expectedError: "ERROR SCHEMA_INVALID_LABEL: metric_label",
+      contents: `${header}\n2026-06,service,on_time,Bad?label,96.2,percent,minimum,95,,1\n`,
+    },
+    {
+      expectedCode: 4,
+      expectedError: "ERROR PRIVACY_DIRECT_IDENTIFIER: metricLabel",
+      contents: `${header}\n2026-06,service,on_time,123 Secret Street,96.2,percent,minimum,95,,1\n`,
+    },
+    {
+      expectedCode: 5,
+      expectedError: "ERROR ANALYSIS_INVARIANT: analysis",
+      contents: `${header}\n`,
+    },
+  ];
+
+  for (const scenario of cases) {
+    await writeFile(input, scenario.contents, "utf8");
+    const harness = cliHarness();
+    assert.equal(await run(args(), harness.io), scenario.expectedCode);
+    assert.deepEqual(harness.stdout, []);
+    assert.deepEqual(harness.stderr, [scenario.expectedError]);
+    assert.doesNotMatch(harness.stderr.join("\n"), /SYNTH-REJECTED|123 Secret Street/);
+    await assert.rejects(readdir(output), { code: "ENOENT" });
+  }
+
+  const missingInput = join(directory, `${secret}.csv`);
+  const harness = cliHarness();
+  assert.equal(await run(args(missingInput), harness.io), 6);
+  assert.deepEqual(harness.stdout, []);
+  assert.deepEqual(harness.stderr, ["ERROR FILE_READ: input"]);
+  assert.doesNotMatch(harness.stderr.join("\n"), /SYNTH-REJECTED-SECRET-998877/);
+  await assert.rejects(readdir(output), { code: "ENOENT" });
+});
+
+test("rejects an existing output directory without changing it", async (t) => {
+  const directory = await workspace(t, "existing-output");
+  const outputDirectory = join(directory, "analysis");
+  await mkdir(outputDirectory);
+  await writeFile(join(outputDirectory, "sentinel.txt"), "keep", "utf8");
+  let renames = 0;
+  const harness = cliHarness({
+    rename: async () => {
+      renames += 1;
+    },
+  });
+
+  assert.equal(await run(validArgs(outputDirectory), harness.io), 6);
+  assert.deepEqual(harness.stdout, []);
+  assert.deepEqual(harness.stderr, ["ERROR OUTPUT_EXISTS: output-dir"]);
+  assert.deepEqual(await readdir(outputDirectory), ["sentinel.txt"]);
+  assert.equal(await readFile(join(outputDirectory, "sentinel.txt"), "utf8"), "keep");
+  assert.equal(renames, 0);
+  await assert.rejects(readdir(`${outputDirectory}.tmp`), { code: "ENOENT" });
+});
+
+test("cleans the sibling temporary directory after write and rename failures", async (t) => {
+  const directory = await workspace(t, "cleanup");
+  const secret = "SYNTH-REJECTED-FS-998877";
+
+  for (const failurePoint of ["write", "rename"]) {
+    const outputDirectory = join(directory, failurePoint);
+    let writes = 0;
+    let renames = 0;
+    const harness = cliHarness({
+      writeFile: async (path, contents, options) => {
+        writes += 1;
+        if (failurePoint === "write" && writes === 2) throw new Error(secret);
+        await writeFile(path, contents, options);
+      },
+      rename: async (source, destination) => {
+        renames += 1;
+        if (failurePoint === "rename") throw new Error(secret);
+        await rename(source, destination);
+      },
+    });
+
+    assert.equal(await run(validArgs(outputDirectory), harness.io), 6);
+    assert.deepEqual(harness.stdout, []);
+    assert.deepEqual(harness.stderr, ["ERROR FILE_WRITE: output-dir"]);
+    assert.doesNotMatch(harness.stderr.join("\n"), /SYNTH-REJECTED-FS-998877/);
+    await assert.rejects(readdir(outputDirectory), { code: "ENOENT" });
+    await assert.rejects(readdir(`${outputDirectory}.tmp`), { code: "ENOENT" });
+    assert.equal(renames, failurePoint === "rename" ? 1 : 0);
+  }
+});
+
+test("processes 10,000 valid rows through the CLI without a timing threshold", async (t) => {
+  const directory = await workspace(t, "smoke");
+  const input = join(directory, "metrics.csv");
+  const output = join(directory, "analysis");
+  const rows = [
+    "period,pillar_id,metric_id,metric_label,value,unit,target_type,target_min,target_max,warning_margin",
+  ];
+  for (let metric = 0; metric < 100; metric += 1) {
+    for (let offset = 0; offset < 100; offset += 1) {
+      const date = new Date(Date.UTC(2018, offset, 1));
+      const period = `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, "0")}`;
+      rows.push(
+        `${period},synthetic,metric_${String(metric).padStart(3, "0")},SYNTH Metric ${metric},${metric + offset},count,,,,0`,
+      );
+    }
+  }
+  await writeFile(input, `${rows.join("\n")}\n`, "utf8");
+  const harness = cliHarness();
+
+  const code = await run([
+    "--input",
+    input,
+    "--output-dir",
+    output,
+    "--data-classification",
+    "synthetic",
+  ], harness.io);
+
+  assert.equal(code, 0);
+  assert.deepEqual(harness.stderr, []);
+  const analysis = JSON.parse(await readFile(join(output, "analysis.json"), "utf8"));
+  assert.equal(analysis.inputSummary.observationCount, 10_000);
+  assert.deepEqual(await readdir(output), ["analysis.json", "brief.md"]);
+});
+
+test("source remains offline and excludes network and child-process interfaces", async () => {
+  const sourceDirectory = new URL("../src/", import.meta.url);
+  const files = (await readdir(sourceDirectory)).filter((name) => name.endsWith(".mjs"));
+  const source = (
+    await Promise.all(files.map((name) => readFile(new URL(name, sourceDirectory), "utf8")))
+  ).join("\n");
+
+  assert.doesNotMatch(
+    source,
+    /\b(?:fetch|XMLHttpRequest|WebSocket|sendBeacon|exec|execFile|spawn|fork)\b|\bchild_process\b|node:(?:http|https|net|tls|dgram)|https?:\/\/|\b(?:ollama|openai|anthropic)\b/i,
+  );
 });
