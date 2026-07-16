@@ -70,6 +70,9 @@ the public APIs.
    │     │  Open-Meteo   │ │  NWS active   │ │  USGS recent  │      │
    │     │  weather      │ │  alerts       │ │  earthquakes  │      │
    │     └───────────────┘ └───────────────┘ └───────────────┘      │
+   │  every enabled response adds health { state: ok | degraded,    │
+   │  freshness: live | cached, fetchedAt, sources[3] } — an empty  │
+   │  feed ("no alerts") stays ok; only a dead source is degraded   │
    │  flag off: { enabled:false } — zero upstream calls             │
    │                                                                │
    │  POST /api/compile-advice-draft                                │

@@ -144,3 +144,54 @@ export async function fetchLiveSignals(
 
   return { station: loc.name, fetchedAt: now.toISOString(), weather, alerts, quakes }
 }
+
+// --- Per-source health contract -------------------------------------------
+// Machine-readable summary of the three public feeds, derived from the same
+// LiveSignals payload the API already returns. A source is 'ok' when its
+// adapter produced a value — an empty-but-valid feed (no active alerts, no
+// recent quakes) is healthy, not an outage — and 'degraded' when its slot
+// carries an { error }. Freshness is reported separately from health: a cache
+// hit serves the fetch-time health with the original fetch timestamp, so a
+// cached degraded source stays visibly degraded.
+
+export type SourceHealthState = 'ok' | 'degraded'
+
+export interface SourceHealth {
+  /** Stable machine name of the public source. */
+  source: 'open-meteo' | 'nws' | 'usgs'
+  /** Human-readable source name for display. */
+  label: string
+  state: SourceHealthState
+  /** Preserved per-source error text; present only when degraded. */
+  error?: string
+}
+
+export interface LiveSignalsHealth {
+  /** 'degraded' when any single source is degraded — one dead feed never breaks the response, but it must be visible. */
+  state: SourceHealthState
+  /** 'live' when fetched on this request; 'cached' when served from the per-station cache. */
+  freshness: 'live' | 'cached'
+  /** ISO timestamp of the underlying fetch — preserved across cache hits. */
+  fetchedAt: string
+  sources: SourceHealth[]
+}
+
+export function summarizeLiveSignalsHealth(signals: LiveSignals, opts: { cached: boolean }): LiveSignalsHealth {
+  const sources: SourceHealth[] = [
+    'error' in signals.weather
+      ? { source: 'open-meteo', label: 'Open-Meteo', state: 'degraded', error: signals.weather.error }
+      : { source: 'open-meteo', label: 'Open-Meteo', state: 'ok' },
+    Array.isArray(signals.alerts)
+      ? { source: 'nws', label: 'NWS', state: 'ok' }
+      : { source: 'nws', label: 'NWS', state: 'degraded', error: signals.alerts.error },
+    Array.isArray(signals.quakes)
+      ? { source: 'usgs', label: 'USGS', state: 'ok' }
+      : { source: 'usgs', label: 'USGS', state: 'degraded', error: signals.quakes.error },
+  ]
+  return {
+    state: sources.some((s) => s.state === 'degraded') ? 'degraded' : 'ok',
+    freshness: opts.cached ? 'cached' : 'live',
+    fetchedAt: signals.fetchedAt,
+    sources,
+  }
+}

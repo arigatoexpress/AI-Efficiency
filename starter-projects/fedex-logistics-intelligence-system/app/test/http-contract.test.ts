@@ -153,6 +153,79 @@ test('second same-station request inside five minutes returns cached:true with n
   assert.equal(calls.length, callsAfterFirst)
 })
 
+// Shape of the additive per-source health block on /api/live-signals.
+interface HealthBody {
+  health: {
+    state: 'ok' | 'degraded'
+    freshness: 'live' | 'cached'
+    fetchedAt: string
+    sources: Array<{ source: string; label: string; state: 'ok' | 'degraded'; error?: string }>
+  }
+}
+
+test('live-signals response carries a machine-readable per-source health summary', async (t) => {
+  const { fetchFn } = countingFetch(LIVE_ROUTES)
+  const srv = await startApp({ env: { LIVE_SIGNALS: 'on' }, fetchFn, now: () => NOW })
+  t.after(srv.close)
+
+  const res = await fetch(`${srv.base}/api/live-signals?station=GUC`)
+  assert.equal(res.status, 200)
+  const body = (await res.json()) as { fetchedAt: string } & HealthBody
+  // NWS and USGS fixtures return empty feeds here: empty-but-valid stays ok.
+  assert.equal(body.health.state, 'ok')
+  assert.equal(body.health.freshness, 'live')
+  assert.equal(body.health.fetchedAt, body.fetchedAt)
+  assert.deepEqual(
+    body.health.sources.map((s) => s.source),
+    ['open-meteo', 'nws', 'usgs']
+  )
+  assert.deepEqual(
+    body.health.sources.map((s) => s.label),
+    ['Open-Meteo', 'NWS', 'USGS']
+  )
+  assert.ok(body.health.sources.every((s) => s.state === 'ok'))
+})
+
+test('a failed feed is degraded in the health summary with its error preserved, others stay ok', async (t) => {
+  const { fetchFn } = countingFetch({ ...LIVE_ROUTES, 'api.weather.gov': new Error('NWS down') })
+  const srv = await startApp({ env: { LIVE_SIGNALS: 'on' }, fetchFn, now: () => NOW })
+  t.after(srv.close)
+
+  const res = await fetch(`${srv.base}/api/live-signals?station=GUC`)
+  assert.equal(res.status, 200)
+  const body = (await res.json()) as HealthBody
+  assert.equal(body.health.state, 'degraded')
+  const bySource = Object.fromEntries(body.health.sources.map((s) => [s.source, s]))
+  assert.equal(bySource['open-meteo'].state, 'ok')
+  assert.equal(bySource.nws.state, 'degraded')
+  assert.match(bySource.nws.error ?? '', /alerts unavailable: NWS down/)
+  assert.equal(bySource.usgs.state, 'ok')
+})
+
+test('a cached response keeps fetch-time health and reports cached freshness', async (t) => {
+  const { fetchFn } = countingFetch({ ...LIVE_ROUTES, 'api.weather.gov': new Error('NWS down') })
+  let nowMs = NOW.getTime()
+  const srv = await startApp({ env: { LIVE_SIGNALS: 'on' }, fetchFn, now: () => new Date(nowMs) })
+  t.after(srv.close)
+
+  const first = (await (await fetch(`${srv.base}/api/live-signals?station=GUC`)).json()) as {
+    fetchedAt: string
+  } & HealthBody
+  assert.equal(first.health.state, 'degraded')
+  assert.equal(first.health.freshness, 'live')
+
+  nowMs += 60_000 // one minute later — inside the five-minute cache window
+  const second = (await (await fetch(`${srv.base}/api/live-signals?station=GUC`)).json()) as {
+    cached: boolean
+  } & HealthBody
+  assert.equal(second.cached, true)
+  assert.equal(second.health.freshness, 'cached')
+  assert.equal(second.health.state, 'degraded') // cache never resets health
+  assert.equal(second.health.fetchedAt, first.fetchedAt)
+  const nws = second.health.sources.find((s) => s.source === 'nws')
+  assert.match(nws?.error ?? '', /alerts unavailable: NWS down/)
+})
+
 test('draft POST with no Gemini client returns 200, source "fallback", and the manager-review footer', async (t) => {
   const srv = await startApp({ env: {}, genAI: null })
   t.after(srv.close)

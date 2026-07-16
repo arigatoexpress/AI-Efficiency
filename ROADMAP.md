@@ -89,9 +89,9 @@ Verification:
 ## Phase 3 - Public Data Layer
 
 Status: in progress — flag-gated live public adapters (Open-Meteo, NWS, USGS),
-five-minute cache, and the Live Public Signals panel shipped, all off by
-default until an operator sets `LIVE_SIGNALS=on`; record-hash persistence and
-the formal source-health contract still ahead
+five-minute cache, the Live Public Signals panel, and the machine-readable
+source-health contract shipped, all off by default until an operator sets
+`LIVE_SIGNALS=on`; record-hash persistence still ahead
 
 Goal: integrate as much useful public or licensed data as possible while keeping
 the rights envelope honest.
@@ -114,9 +114,10 @@ Deliverables:
   timestamps and per-value source labels; record-hash persistence still ahead;
 - cache/rate-limit behavior by source — shipped: five-minute per-station
   cache, per-source timeouts, and independent per-source degradation;
-- source-health panel in the app — partial: the Live Public Signals panel
-  shows per-source values and errors; a formal machine-readable health summary
-  is still ahead;
+- source-health panel in the app — shipped: the Live Public Signals panel
+  surfaces a machine-readable per-source health summary (ok / degraded plus
+  live / cached freshness, with timestamps and per-source errors preserved)
+  alongside the per-source values;
 - reproducible public-data fixtures for demos and tests — shipped for the app
   test suite via dependency-injected fetch fixtures.
 
