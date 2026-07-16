@@ -1,6 +1,6 @@
 # Operations Decision Lab — Feature Specification
 
-**Feature branch:** `spec/operations-intelligence-program`
+**Feature branch:** `002-operations-decision-lab`
 **Status:** Draft for user review
 **Created:** 2026-07-15
 **Parent design:** `specs/000-operations-intelligence-program/design.md`
