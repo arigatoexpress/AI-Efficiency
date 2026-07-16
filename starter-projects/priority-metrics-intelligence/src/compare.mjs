@@ -45,6 +45,33 @@ function compareText(left, right) {
   return 0;
 }
 
+export function evaluateTarget(observation) {
+  let distance;
+
+  if (observation.targetType === null) {
+    return { status: "no_target", distance: null };
+  }
+
+  if (observation.targetType === "minimum") {
+    distance = observation.value - observation.targetMin;
+  } else if (observation.targetType === "maximum") {
+    distance = observation.targetMax - observation.value;
+  } else {
+    distance = Math.min(
+      observation.value - observation.targetMin,
+      observation.targetMax - observation.value,
+    );
+  }
+
+  if (distance >= 0) {
+    return { status: "on_target", distance };
+  }
+  if (distance >= -observation.warningMargin) {
+    return { status: "warning", distance };
+  }
+  return { status: "at_risk", distance };
+}
+
 export function compareMetrics(records) {
   const observationsByPeriod = new Map(
     records.map((record) => [`${record.metricId}\u0000${record.period}`, record]),
@@ -61,5 +88,6 @@ export function compareMetrics(records) {
     unit: record.unit,
     mom: compareWithBaseline(record, offsetPeriod(record.period, -1), observationsByPeriod),
     yoy: compareWithBaseline(record, offsetPeriod(record.period, -12), observationsByPeriod),
+    target: evaluateTarget(record),
   }));
 }

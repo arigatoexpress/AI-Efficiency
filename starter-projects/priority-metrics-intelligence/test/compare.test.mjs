@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { compareMetrics } from "../src/compare.mjs";
+import { compareMetrics, evaluateTarget } from "../src/compare.mjs";
 import { parseMetricsCsv } from "../src/parse.mjs";
 
 const csvHeader =
@@ -129,6 +129,62 @@ test("sorts comparisons by metric ID then period and preserves units", () => {
       { metricId: "package_count", period: "2026-06", unit: "count" },
     ],
   );
+});
+
+test("evaluates target status and signed boundary distance", () => {
+  const cases = [
+    [
+      { value: 96, targetType: "minimum", targetMin: 95, warningMargin: 1 },
+      "on_target",
+      1,
+    ],
+    [
+      { value: 94.5, targetType: "minimum", targetMin: 95, warningMargin: 1 },
+      "warning",
+      -0.5,
+    ],
+    [
+      { value: 93, targetType: "minimum", targetMin: 95, warningMargin: 1 },
+      "at_risk",
+      -2,
+    ],
+    [
+      { value: 7, targetType: "maximum", targetMax: 5, warningMargin: 1 },
+      "at_risk",
+      -2,
+    ],
+    [
+      {
+        value: 12,
+        targetType: "range",
+        targetMin: 10,
+        targetMax: 20,
+        warningMargin: 2,
+      },
+      "on_target",
+      2,
+    ],
+    [
+      {
+        value: 12,
+        targetType: null,
+        targetMin: null,
+        targetMax: null,
+        warningMargin: 0,
+      },
+      "no_target",
+      null,
+    ],
+  ];
+
+  for (const [input, status, distance] of cases) {
+    const [result] = compareMetrics([
+      { ...observation({ period: "2026-06", value: input.value }), ...input },
+    ]);
+
+    assert.deepEqual(result.target, { status, distance });
+    assert.deepEqual(evaluateTarget(input), { status, distance });
+  }
 });
 
 test("rejects incompatible metric definitions at the parse boundary", () => {
