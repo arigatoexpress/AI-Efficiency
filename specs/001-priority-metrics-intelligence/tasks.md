@@ -245,11 +245,11 @@ and no partial artifacts.
 **Independent test:** Valid input writes both artifacts; malformed and privacy
 inputs write neither and never echo rejected values.
 
-- [ ] T040 [US6] Add failing argv, exit-code, privacy non-echo, atomic-directory-publication, existing-output rejection, 10,000-row smoke, and offline-source-scan assertions to `starter-projects/priority-metrics-intelligence/test/workflow.test.mjs`.
-- [ ] T041 [US6] Run the workflow test and verify it fails with `ERR_MODULE_NOT_FOUND` for `src/cli.mjs`.
-- [ ] T042 [US6] Implement closed arguments, safe stderr, file reads, orchestration, temporary output-directory writes, cleanup, and one final directory rename in `starter-projects/priority-metrics-intelligence/src/cli.mjs`.
-- [ ] T043 [US6] Run all priority-metrics tests and verify valid workflow, every exit code, no rejected-value echo, no partial artifacts, and offline scan pass.
-- [ ] T044 [US6] Commit the CLI with `git add starter-projects/priority-metrics-intelligence/test/workflow.test.mjs starter-projects/priority-metrics-intelligence/src/cli.mjs && git commit -m "feat: add offline priority metrics CLI"`.
+- [x] T040 [US6] Add failing argv, exit-code, privacy non-echo, atomic-directory-publication, existing-output rejection, 10,000-row smoke, and offline-source-scan assertions to `starter-projects/priority-metrics-intelligence/test/workflow.test.mjs`.
+- [x] T041 [US6] Run the workflow test and verify it fails with `ERR_MODULE_NOT_FOUND` for `src/cli.mjs`.
+- [x] T042 [US6] Implement closed arguments, safe stderr, file reads, orchestration, temporary output-directory writes, cleanup, and one final directory rename in `starter-projects/priority-metrics-intelligence/src/cli.mjs`.
+- [x] T043 [US6] Run all priority-metrics tests and verify valid workflow, every exit code, no rejected-value echo, no partial artifacts, and offline scan pass.
+- [x] T044 [US6] Commit the CLI with `git add starter-projects/priority-metrics-intelligence/test/workflow.test.mjs starter-projects/priority-metrics-intelligence/src/cli.mjs && git commit -m "feat: add offline priority metrics CLI"`.
 
 CLI test harness:
 
