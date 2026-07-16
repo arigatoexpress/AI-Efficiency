@@ -7,6 +7,15 @@ import { GoogleGenAI } from '@google/genai'
 import { createApp } from './lib/create-app'
 import { describeGeminiAuth, geminiClientOptions } from './lib/gemini-config'
 
+// Load a sibling .env (gitignored, see .env.example) into process.env — the
+// first-user flow every repo doc prescribes. Real environment variables win;
+// a missing file is fine, anything else (e.g. a malformed file) fails loudly.
+try {
+  process.loadEnvFile()
+} catch (err) {
+  if ((err as NodeJS.ErrnoException).code !== 'ENOENT') throw err
+}
+
 // Resolve client directory relative to the running script (works in ESM and CJS)
 const SCRIPT_DIR = path.dirname(process.argv[1] || '.')
 
