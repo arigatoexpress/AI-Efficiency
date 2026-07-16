@@ -7,10 +7,11 @@
     "test": "cd starter-projects/fedex-logistics-intelligence-system/app && npm run build",
     "verify:docs": "node scripts/check-docs.mjs && node scripts/build-prompt-index.mjs --check",
     "verify:priority-metrics": "node --test starter-projects/priority-metrics-intelligence/test/*.test.mjs",
+    "verify:decision-lab": "node --test starter-projects/operations-decision-lab/test/*.test.mjs",
     "verify:logistics": "cd starter-projects/fedex-logistics-intelligence-system/app && npm test",
     "verify:tlh-sph": "node starter-projects/tlh-sph-efficiency-explorer/test/run-checks.mjs",
     "verify:adk-agent": "python3 starter-projects/adk-shift-brief-agent/test/run_checks.py",
-    "verify": "npm run verify:docs && npm run verify:priority-metrics && npm run verify:logistics && npm run verify:tlh-sph && npm run verify:adk-agent && npm run test",
+    "verify": "npm run verify:docs && npm run verify:priority-metrics && npm run verify:decision-lab && npm run verify:logistics && npm run verify:tlh-sph && npm run verify:adk-agent && npm run test",
     "demo": "node scripts/demo.mjs"
   }
 }

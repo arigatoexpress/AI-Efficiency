@@ -22,6 +22,8 @@ jobs:
           node-version: 22
       - name: Priority Metrics Intelligence checks (privacy, analytics, workflow)
         run: node --test starter-projects/priority-metrics-intelligence/test/*.test.mjs
+      - name: Operations Decision Lab checks (privacy, forecasting, feasibility, workflow)
+        run: node --test starter-projects/operations-decision-lab/test/*.test.mjs
       - name: Check docs (links, prompt-count claims, HTML balance, CSP)
         run: node scripts/check-docs.mjs
       - name: Prompt index in sync (prompts.json + explorer match the markdown)

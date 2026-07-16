@@ -1,0 +1,60 @@
+{
+  "schemaVersion": "1.0.0",
+  "baseFixture": "synthetic-input.json",
+  "cases": [
+    {
+      "caseId": "SYNTH-CASE-01",
+      "caseType": "normal",
+      "forecastValueScale": 1,
+      "vehicleAvailableEnd": "2026-07-16T18:00:00Z",
+      "vehicleCapacityUnits": 500,
+      "futureAvailabilityOffsetSeconds": 0,
+      "expectedBoundary": "analysis_success"
+    },
+    {
+      "caseId": "SYNTH-CASE-02",
+      "caseType": "low_volume",
+      "forecastValueScale": 0.25,
+      "vehicleAvailableEnd": "2026-07-16T18:00:00Z",
+      "vehicleCapacityUnits": 500,
+      "futureAvailabilityOffsetSeconds": 0,
+      "expectedBoundary": "analysis_success"
+    },
+    {
+      "caseId": "SYNTH-CASE-03",
+      "caseType": "surge",
+      "forecastValueScale": 2,
+      "vehicleAvailableEnd": "2026-07-16T18:00:00Z",
+      "vehicleCapacityUnits": 500,
+      "futureAvailabilityOffsetSeconds": 0,
+      "expectedBoundary": "analysis_success"
+    },
+    {
+      "caseId": "SYNTH-CASE-04",
+      "caseType": "unavailable_vehicle",
+      "forecastValueScale": 1,
+      "vehicleAvailableEnd": "2026-07-16T08:00:00Z",
+      "vehicleCapacityUnits": 500,
+      "futureAvailabilityOffsetSeconds": 0,
+      "expectedBoundary": "analysis_infeasible"
+    },
+    {
+      "caseId": "SYNTH-CASE-05",
+      "caseType": "impossible_capacity",
+      "forecastValueScale": 1,
+      "vehicleAvailableEnd": "2026-07-16T18:00:00Z",
+      "vehicleCapacityUnits": 100,
+      "futureAvailabilityOffsetSeconds": 0,
+      "expectedBoundary": "analysis_infeasible"
+    },
+    {
+      "caseId": "SYNTH-CASE-06",
+      "caseType": "future_data_trap",
+      "forecastValueScale": 1,
+      "vehicleAvailableEnd": "2026-07-16T18:00:00Z",
+      "vehicleCapacityUnits": 500,
+      "futureAvailabilityOffsetSeconds": 1,
+      "expectedBoundary": "validation_rejection"
+    }
+  ]
+}
