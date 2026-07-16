@@ -139,6 +139,23 @@ test("owned temp and lock clean up after a coordinated publication failure", asy
   await rm(root, { recursive: true, force: true });
 });
 
+test("two concurrent publishers yield exactly one complete winner", async (context) => {
+  const root = await sandbox();
+  context.after(() => rm(root, { recursive: true, force: true }));
+  const outputPath = join(root, "result");
+  const first = capture();
+  const second = capture();
+  const results = await Promise.all([
+    run(argv(new URL(FIXTURE).pathname, outputPath), first.io),
+    run(argv(new URL(FIXTURE).pathname, outputPath), second.io),
+  ]);
+
+  assert.deepEqual(results.sort(), [0, 6]);
+  const names = (await (await import("node:fs/promises")).readdir(outputPath)).sort();
+  assert.deepEqual(names, ["analysis.json", "brief.md"]);
+  assert.equal(first.stdout.length + second.stdout.length, 1);
+});
+
 test("runtime source remains offline, advisory, clockless, and model-free", async () => {
   const sourceFiles = ["analyze.mjs", "backtest.mjs", "cli.mjs", "feasibility.mjs", "forecast.mjs", "plan.mjs", "render.mjs", "schema.mjs"];
   const source = (
