@@ -208,3 +208,15 @@ test("published input contract is nested-closed and preserves the exact forecast
   nestedMutation.plans[0].routes[0].visits[0].repair = true;
   assert.throws(() => parse(nestedMutation), { code: "SCHEMA_UNKNOWN_FIELD" });
 });
+
+test("duplicate JSON members cannot overwrite hidden unsafe values", () => {
+  const text = JSON.stringify(validInput()).replace(
+    '"entityId":"SYNTH-STATION-01"',
+    '"entityId":"contact@example.invalid","entity\\u0049d":"SYNTH-STATION-01"',
+  );
+  assert.throws(() => parseInputJson(text), (error) => {
+    assert.equal(error.code, "SCHEMA_DUPLICATE_JSON_MEMBER");
+    assert.doesNotMatch(error.message, /contact@example\.invalid/);
+    return true;
+  });
+});

@@ -71,6 +71,100 @@ function unique(values, fieldPath) {
   }
 }
 
+function rejectDuplicateJsonMembers(text) {
+  let index = 0;
+
+  const skipWhitespace = () => {
+    while (/\s/.test(text[index] ?? "")) index += 1;
+  };
+
+  const parseString = () => {
+    const start = index;
+    index += 1;
+    while (index < text.length) {
+      if (text[index] === "\\") {
+        index += text[index + 1] === "u" ? 6 : 2;
+      } else if (text[index] === '"') {
+        index += 1;
+        return JSON.parse(text.slice(start, index));
+      } else {
+        index += 1;
+      }
+    }
+    throw new SyntaxError("unterminated JSON string");
+  };
+
+  const parseValue = () => {
+    skipWhitespace();
+    if (text[index] === "{") {
+      parseObject();
+    } else if (text[index] === "[") {
+      parseArray();
+    } else if (text[index] === '"') {
+      parseString();
+    } else {
+      const start = index;
+      while (index < text.length && !/[\s,}\]]/.test(text[index])) index += 1;
+      if (index === start) throw new SyntaxError("invalid JSON value");
+    }
+  };
+
+  const parseObject = () => {
+    index += 1;
+    const memberNames = new Set();
+    skipWhitespace();
+    if (text[index] === "}") {
+      index += 1;
+      return;
+    }
+    while (index < text.length) {
+      skipWhitespace();
+      if (text[index] !== '"') throw new SyntaxError("invalid JSON member");
+      const memberName = parseString();
+      if (memberNames.has(memberName)) {
+        failInput("SCHEMA_DUPLICATE_JSON_MEMBER");
+      }
+      memberNames.add(memberName);
+      skipWhitespace();
+      if (text[index] !== ":") throw new SyntaxError("missing JSON colon");
+      index += 1;
+      parseValue();
+      skipWhitespace();
+      if (text[index] === "}") {
+        index += 1;
+        return;
+      }
+      if (text[index] !== ",") throw new SyntaxError("invalid JSON object");
+      index += 1;
+    }
+    throw new SyntaxError("unterminated JSON object");
+  };
+
+  const parseArray = () => {
+    index += 1;
+    skipWhitespace();
+    if (text[index] === "]") {
+      index += 1;
+      return;
+    }
+    while (index < text.length) {
+      parseValue();
+      skipWhitespace();
+      if (text[index] === "]") {
+        index += 1;
+        return;
+      }
+      if (text[index] !== ",") throw new SyntaxError("invalid JSON array");
+      index += 1;
+    }
+    throw new SyntaxError("unterminated JSON array");
+  };
+
+  parseValue();
+  skipWhitespace();
+  if (index !== text.length) throw new SyntaxError("trailing JSON content");
+}
+
 function validateProvenance(value) {
   const path = "provenance";
   closedObject(
@@ -279,8 +373,10 @@ export function parseInputJson(text) {
 
   let raw;
   try {
+    rejectDuplicateJsonMembers(text);
     raw = JSON.parse(text);
-  } catch {
+  } catch (error) {
+    if (error?.code === "SCHEMA_DUPLICATE_JSON_MEMBER") throw error;
     failInput("SCHEMA_INVALID_JSON");
   }
 
