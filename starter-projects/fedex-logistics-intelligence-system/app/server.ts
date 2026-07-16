@@ -12,6 +12,7 @@ import {
   type WeatherContext,
 } from './lib/drafts'
 import { fetchLiveSignals, type FetchLike, type LiveSignals } from './lib/live-signals'
+import { describeGeminiAuth, geminiClientOptions } from './lib/gemini-config'
 
 // Resolve client directory relative to the running script (works in ESM and CJS)
 const SCRIPT_DIR = path.dirname(process.argv[1] || '.')
@@ -20,9 +21,11 @@ const app = express()
 app.use(express.json())
 
 const PORT = Number(process.env.PORT || 3000)
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY
 
-const genAI = GEMINI_API_KEY ? new GoogleGenAI({ apiKey: GEMINI_API_KEY }) : null
+// Auth: Vertex AI (GCP forward path) when GOOGLE_GENAI_USE_VERTEXAI=true,
+// otherwise an AI Studio API key, otherwise deterministic fallback drafts.
+const geminiOptions = geminiClientOptions(process.env)
+const genAI = geminiOptions ? new GoogleGenAI(geminiOptions) : null
 
 // Live public-data adapters are opt-in: the deployed demo stays synthetic
 // unless the operator deliberately sets LIVE_SIGNALS=on.
@@ -103,5 +106,5 @@ app.get('/{*splat}', (_req, res) => {
 
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on http://0.0.0.0:${PORT}`)
-  console.log(`Gemini integration: ${genAI ? 'enabled' : 'disabled (set GEMINI_API_KEY)'}`)
+  console.log(`Gemini integration: ${describeGeminiAuth(geminiOptions)}`)
 })
