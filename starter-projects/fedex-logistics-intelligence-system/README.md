@@ -62,7 +62,8 @@ npm install
 cp .env.example .env
 # Add GEMINI_API_KEY to .env (optional — app works without it)
 npm run dev
-# Open http://localhost:5173
+# npm run dev starts only the Express API server: curl http://localhost:3000/api/health
+# For the full UI: npm run build && npm start, then open http://localhost:3000
 ```
 
 See [`app/README.md`](app/README.md) for full build, deploy, and environment details.
