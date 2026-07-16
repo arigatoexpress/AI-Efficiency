@@ -1,6 +1,6 @@
 # Priority Metrics Intelligence — Feature Specification
 
-**Feature branch:** `spec/operations-intelligence-program`
+**Feature branch:** `001-priority-metrics-intelligence`
 **Status:** Implemented; review fixes verified
 **Created:** 2026-07-15
 **Source request:** AI Meeting Notes received 2026-07-15

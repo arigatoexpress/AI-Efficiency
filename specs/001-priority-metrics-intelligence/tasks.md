@@ -38,7 +38,7 @@ import { assertPublicSafe } from "../src/privacy.mjs";
 
 const valid = [
   "period,pillar_id,metric_id,metric_label,value,unit,target_type,target_min,target_max,warning_margin",
-  '2026-06,service,on_time,"On-time percent",96.2,percent,minimum,95,,1',
+  '2026-06,synth_service,synth_on_time_percent,"SYNTH On-time percent",96.2,percent,minimum,95,,1',
 ].join("\n");
 
 test("quoted CSV maps to one canonical observation", () => {
@@ -153,7 +153,7 @@ State-machine assertion:
 
 ```js
 assert.deepEqual(traceRiskLineages(comparisons), [{
-  metricId: "on_time",
+  metricId: "synth_on_time_percent",
   originPeriod: "2026-01",
   originSeverity: 2,
   events: [
@@ -186,8 +186,8 @@ Association contract:
 ```js
 assert.deepEqual(result.candidateAssociations[0], {
   type: "candidate_association",
-  sourceMetricId: "late_inbound",
-  outcomeMetricId: "on_time",
+  sourceMetricId: "synth_late_inbound_count",
+  outcomeMetricId: "synth_on_time_percent",
   lagMonths: 1,
   observationCount: 6,
   coefficient: -1,
@@ -227,7 +227,7 @@ Projection test:
 
 ```js
 const values = [10, 11, 12, 100, 101, 102];
-const result = projectBaselines(monthly("metric_a", values), {
+const result = projectBaselines(monthly("synth_late_inbound_count", values), {
   projectionWindow: 6,
 });
 // differences [1, 1, 88, 1, 1] -> median 1

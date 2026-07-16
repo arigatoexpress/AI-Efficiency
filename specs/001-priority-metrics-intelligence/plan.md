@@ -35,7 +35,7 @@ JSON, GitHub Actions.
 
 ---
 
-**Branch:** `spec/operations-intelligence-program`
+**Branch:** `001-priority-metrics-intelligence`
 **Date:** 2026-07-15
 **Spec:** `specs/001-priority-metrics-intelligence/spec.md`
 
