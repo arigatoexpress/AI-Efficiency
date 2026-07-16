@@ -188,7 +188,7 @@ export function analyzeMetrics({ records, policy, analyzerVersion })
 
 // render.mjs
 export function stableJson(value)
-// -> string ending in one newline; floating noise rounded at 12 decimals
+// -> string ending in one newline; finite values normalized to 15 significant digits
 export function renderMarkdown(analysis)
 // -> string ending in one newline, facts sourced only from AnalysisResult
 
@@ -231,7 +231,7 @@ absolute distance beyond the applicable target boundary in the metric's unit.
 - It enforces continuity on each metric's exact latest 13 periods, while
   retaining up to `max(13, minimumObservations + lagMonths)` trailing periods
   for aligned evidence within the 60-period scope.
-- It uses scaled Pearson correlation on aligned finite observations, returns
+- It uses anchor-first scaled Pearson correlation on aligned finite observations, returns
   the exact periods and count, and labels the result `candidate_association`.
 - Fewer than `minimumObservations`, zero variance, or period gaps produce an
   explicit limitation rather than a numeric result. Unexpected non-finite
@@ -261,8 +261,9 @@ calibrated forecast. Missing consecutive history returns a limitation.
   observations; `minimumObservations + lagMonths` cannot exceed 60.
 - Safe errors contain only code, field name, and one-based row number.
 - Sort comparisons by metric ID then period and other metric collections by
-  metric ID. Round floating noise only at canonical serialization to 12 decimal
-  places; non-computable values are `null` plus a reason code.
+  metric ID. Normalize finite values only at canonical serialization to 15
+  significant digits without rounding nonzero status evidence to zero;
+  non-computable values are `null` plus a reason code.
 
 ## File and Commit Boundaries
 

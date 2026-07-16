@@ -11,7 +11,7 @@ function offsetPeriod(period, monthOffset) {
   const absoluteMonth = year * 12 + month - 1 + monthOffset;
   const offsetYear = Math.floor(absoluteMonth / 12);
   const offsetMonth = (absoluteMonth % 12) + 1;
-  return `${offsetYear}-${String(offsetMonth).padStart(2, "0")}`;
+  return `${String(offsetYear).padStart(4, "0")}-${String(offsetMonth).padStart(2, "0")}`;
 }
 
 function hasPeriodGap(records) {
@@ -30,13 +30,22 @@ function pearson(sourceValues, outcomeValues) {
   ) {
     return { coefficient: null, limitation: "numeric_overflow" };
   }
-  const sourceScale = Math.max(...sourceValues.map(Math.abs));
-  const outcomeScale = Math.max(...outcomeValues.map(Math.abs));
-  if (sourceScale === 0 || outcomeScale === 0) {
+  const anchorAndScale = (values) => {
+    const anchor = values[0];
+    let anchored = values.map((value) => value - anchor);
+    if (anchored.some((value) => !Number.isFinite(value))) {
+      const rawScale = Math.max(...values.map(Math.abs));
+      if (rawScale === 0) return null;
+      anchored = values.map((value) => value / rawScale - anchor / rawScale);
+    }
+    const scale = Math.max(...anchored.map(Math.abs));
+    return scale === 0 ? null : anchored.map((value) => value / scale);
+  };
+  const scaledSource = anchorAndScale(sourceValues);
+  const scaledOutcome = anchorAndScale(outcomeValues);
+  if (scaledSource === null || scaledOutcome === null) {
     return { coefficient: null, limitation: "zero_variance" };
   }
-  const scaledSource = sourceValues.map((value) => value / sourceScale);
-  const scaledOutcome = outcomeValues.map((value) => value / outcomeScale);
   const sourceMean =
     scaledSource.reduce((sum, value) => sum + value, 0) / scaledSource.length;
   const outcomeMean =

@@ -109,6 +109,13 @@ test("marks exact missing comparison periods as insufficient history", () => {
   });
 });
 
+test("zero-pads derived comparison years at the supported lower boundary", () => {
+  const [current] = compareMetrics([observation({ period: "0001-01", value: 99 })]);
+
+  assert.equal(current.mom.baselinePeriod, "0000-12");
+  assert.equal(current.yoy.baselinePeriod, "0000-01");
+});
+
 test("sorts comparisons by metric ID then period and preserves units", () => {
   const comparisons = compareMetrics([
     observation({ period: "2026-06", value: 99 }),

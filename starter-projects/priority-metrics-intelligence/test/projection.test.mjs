@@ -30,6 +30,20 @@ test("projects the latest value with median recent drift", () => {
   });
 });
 
+test("zero-pads projected periods at the supported lower boundary", () => {
+  const [result] = projectBaselines(
+    [
+      { metricId: "metric_a", period: "0001-01", value: 1 },
+      { metricId: "metric_a", period: "0001-02", value: 2 },
+      { metricId: "metric_a", period: "0001-03", value: 3 },
+    ],
+    { projectionWindow: 3 },
+  );
+
+  assert.equal(result.limitation, null);
+  assert.equal(result.targetPeriod, "0001-04");
+});
+
 test("averages two distinct middle drifts for an even difference count", () => {
   const [result] = projectBaselines(monthly("metric_a", [10, 12, 16]), {
     projectionWindow: 3,

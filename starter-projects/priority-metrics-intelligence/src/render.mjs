@@ -1,11 +1,11 @@
-function roundFloatingNoise(value) {
+function normalizeFiniteNumber(value) {
   if (!Number.isFinite(value)) throw new RangeError("NON_FINITE_NUMBER");
-  const rounded = Number(value.toFixed(12));
+  const rounded = Number(value.toPrecision(15));
   return Object.is(rounded, -0) ? 0 : rounded;
 }
 
 function canonicalValue(value) {
-  if (typeof value === "number") return roundFloatingNoise(value);
+  if (typeof value === "number") return normalizeFiniteNumber(value);
   if (Array.isArray(value)) return value.map(canonicalValue);
   if (value !== null && typeof value === "object") {
     return Object.fromEntries(

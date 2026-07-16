@@ -11,7 +11,7 @@ function offsetPeriod(period, monthOffset) {
   const absoluteMonth = year * 12 + month - 1 + monthOffset;
   const offsetYear = Math.floor(absoluteMonth / 12);
   const offsetMonth = (absoluteMonth % 12) + 1;
-  return `${offsetYear}-${String(offsetMonth).padStart(2, "0")}`;
+  return `${String(offsetYear).padStart(4, "0")}-${String(offsetMonth).padStart(2, "0")}`;
 }
 
 function hasPeriodGap(records) {

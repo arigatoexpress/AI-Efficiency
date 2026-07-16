@@ -172,7 +172,7 @@ Allowed fields:
 
 | Field | Type | Required | Meaning |
 | --- | --- | --- | --- |
-| `period` | `YYYY-MM` | Yes | Monthly reporting period |
+| `period` | `YYYY-MM` | Yes | Monthly reporting period; year `0001`-`9998` |
 | `pillar_id` | catalog value | Yes | Source-controlled synthetic performance pillar |
 | `metric_id` | catalog value | Yes | Source-controlled `synth_` metric alias |
 | `metric_label` | catalog value | Yes | Exact controlled synthetic display label |
@@ -255,8 +255,10 @@ by `metric_id` then `period`; lineage and projection arrays are sorted by
 absolute and target distances are percentage points while `percentage_change`
 is the relative percent change from the prior value. Non-computable numeric
 values are JSON `null` with a reason code. Calculations use full precision and
-canonical serialization rounds only floating noise beyond 12 decimal places.
-Pearson calculation scales each aligned series before centering. An unexpected
+canonical serialization normalizes finite values to 15 significant digits,
+matching the accepted input precision without rounding a nonzero status-bearing
+value to zero. Pearson calculation anchors each aligned series before scaling
+and centering. An unexpected
 non-finite correlation result is suppressed as `null` with
 `numeric_overflow`; it never aborts canonical publication.
 

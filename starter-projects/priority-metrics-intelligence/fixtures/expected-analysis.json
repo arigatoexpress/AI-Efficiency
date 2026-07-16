@@ -7,7 +7,7 @@
         "absoluteChange": -0.4,
         "baselinePeriod": "2026-05",
         "baselineValue": 2.2,
-        "percentageChange": -18.181818181818,
+        "percentageChange": -18.1818181818182,
         "reason": null
       },
       "period": "2026-06",
@@ -55,7 +55,7 @@
         "absoluteChange": -1,
         "baselinePeriod": "2026-05",
         "baselineValue": 92,
-        "percentageChange": -1.086956521739,
+        "percentageChange": -1.08695652173913,
         "reason": null
       },
       "period": "2026-06",
@@ -69,7 +69,7 @@
         "absoluteChange": -6,
         "baselinePeriod": "2025-06",
         "baselineValue": 97,
-        "percentageChange": -6.185567010309,
+        "percentageChange": -6.18556701030928,
         "reason": null
       }
     }
@@ -125,7 +125,7 @@
   "patterns": {
     "candidateAssociations": [
       {
-        "coefficient": -0.790205694956,
+        "coefficient": -0.79020569495634,
         "lagMonths": 1,
         "limitation": null,
         "observationCount": 12,

@@ -47,6 +47,12 @@ const MINIMUM_NONZERO_ABSOLUTE_NUMBER = 1e-12;
 const MAXIMUM_SIGNIFICANT_DIGITS = 15;
 const MAXIMUM_INPUT_PERIODS = 60;
 
+function isSupportedInputPeriod(value) {
+  if (!/^\d{4}-(0[1-9]|1[0-2])$/.test(value)) return false;
+  const year = Number(value.slice(0, 4));
+  return year >= 1 && year <= 9998;
+}
+
 const METRIC_CATALOG = new Map(
   [
     {
@@ -219,6 +225,7 @@ export function validateMetricRows(rawRecords) {
   const observations = [];
   const observationKeys = new Set();
   const definitions = new Map();
+  const periods = new Set();
 
   for (const [index, raw] of rawRecords.entries()) {
     const rowNumber = index + 2;
@@ -230,8 +237,12 @@ export function validateMetricRows(rawRecords) {
     const rawTargetType = raw.target_type.trim();
     const targetType = rawTargetType === "" ? null : rawTargetType;
 
-    if (!/^\d{4}-(0[1-9]|1[0-2])$/.test(period)) {
+    if (!isSupportedInputPeriod(period)) {
       fail("SCHEMA_INVALID_PERIOD", ["period"], rowNumber);
+    }
+    periods.add(period);
+    if (periods.size > MAXIMUM_INPUT_PERIODS) {
+      fail("SCHEMA_INPUT_SCOPE_EXCEEDED", ["period"], rowNumber);
     }
     validateSlug(pillarId, "pillar_id", 48, rowNumber);
     validateSlug(metricId, "metric_id", 64, rowNumber);
@@ -329,7 +340,7 @@ export function isCanonicalMetricObservation(record) {
 
   return (
     typeof record.period === "string" &&
-    /^\d{4}-(0[1-9]|1[0-2])$/.test(record.period) &&
+    isSupportedInputPeriod(record.period) &&
     typeof record.pillarId === "string" &&
     record.pillarId.length <= 48 &&
     /^[a-z][a-z0-9]*(?:[_-][a-z0-9]+)*$/.test(record.pillarId) &&

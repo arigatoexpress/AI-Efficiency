@@ -88,64 +88,92 @@
         "end": { "$ref": "#/$defs/period" }
       }
     },
-    "rateSemanticDefinition": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["kind", "numerator", "denominator", "timeBasis"],
-      "properties": {
-        "kind": { "type": "string", "const": "rate" },
-        "numerator": {
-          "type": "string",
-          "pattern": "^[a-z][a-z0-9]*(?:_[a-z0-9]+)*$"
-        },
-        "denominator": {
-          "type": "string",
-          "pattern": "^[a-z][a-z0-9]*(?:_[a-z0-9]+)*$"
-        },
-        "timeBasis": { "type": "string", "const": "monthly_aggregate" }
-      }
-    },
-    "measureSemanticDefinition": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["kind", "measure", "timeBasis"],
-      "properties": {
-        "kind": { "type": "string", "const": "measure" },
-        "measure": {
-          "type": "string",
-          "pattern": "^[a-z][a-z0-9]*(?:_[a-z0-9]+)*$"
-        },
-        "timeBasis": { "type": "string", "const": "monthly_aggregate" }
-      }
-    },
-    "semanticDefinition": {
-      "oneOf": [
-        { "$ref": "#/$defs/rateSemanticDefinition" },
-        { "$ref": "#/$defs/measureSemanticDefinition" }
-      ]
-    },
     "metricDefinition": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "metricId",
-        "metricLabel",
-        "pillarId",
-        "semanticDefinition",
-        "unit"
-      ],
-      "properties": {
-        "metricId": { "$ref": "#/$defs/metricId" },
-        "metricLabel": {
-          "type": "string",
-          "minLength": 1,
-          "maxLength": 80,
-          "pattern": "^SYNTH [A-Za-z0-9 ()/%+\\-]+$"
+      "oneOf": [
+        {
+          "const": {
+            "metricId": "synth_damage_percent",
+            "metricLabel": "SYNTH Damage percent",
+            "pillarId": "synth_quality",
+            "semanticDefinition": {
+              "denominator": "packages_handled",
+              "kind": "rate",
+              "numerator": "damaged_packages",
+              "timeBasis": "monthly_aggregate"
+            },
+            "unit": "percent"
+          }
         },
-        "pillarId": { "$ref": "#/$defs/pillarId" },
-        "semanticDefinition": { "$ref": "#/$defs/semanticDefinition" },
-        "unit": { "$ref": "#/$defs/unit" }
-      }
+        {
+          "const": {
+            "metricId": "synth_late_inbound_count",
+            "metricLabel": "SYNTH Late inbound count",
+            "pillarId": "synth_flow",
+            "semanticDefinition": {
+              "kind": "measure",
+              "measure": "late_inbound_packages",
+              "timeBasis": "monthly_aggregate"
+            },
+            "unit": "count"
+          }
+        },
+        {
+          "const": {
+            "metricId": "synth_on_time_percent",
+            "metricLabel": "SYNTH On-time percent",
+            "pillarId": "synth_service",
+            "semanticDefinition": {
+              "denominator": "eligible_packages",
+              "kind": "rate",
+              "numerator": "packages_delivered_on_time",
+              "timeBasis": "monthly_aggregate"
+            },
+            "unit": "percent"
+          }
+        },
+        {
+          "const": {
+            "metricId": "synth_packages_per_paid_hour",
+            "metricLabel": "SYNTH Packages per paid hour",
+            "pillarId": "synth_flow",
+            "semanticDefinition": {
+              "denominator": "paid_hours",
+              "kind": "rate",
+              "numerator": "packages_delivered",
+              "timeBasis": "monthly_aggregate"
+            },
+            "unit": "ratio"
+          }
+        },
+        {
+          "const": {
+            "metricId": "synth_packages_per_stop",
+            "metricLabel": "SYNTH Packages per stop",
+            "pillarId": "synth_route",
+            "semanticDefinition": {
+              "denominator": "stops_completed",
+              "kind": "rate",
+              "numerator": "packages_delivered",
+              "timeBasis": "monthly_aggregate"
+            },
+            "unit": "ratio"
+          }
+        },
+        {
+          "const": {
+            "metricId": "synth_stops_per_on_road_hour",
+            "metricLabel": "SYNTH Stops per on-road hour",
+            "pillarId": "synth_route",
+            "semanticDefinition": {
+              "denominator": "on_road_hours",
+              "kind": "rate",
+              "numerator": "stops_completed",
+              "timeBasis": "monthly_aggregate"
+            },
+            "unit": "ratio"
+          }
+        }
+      ]
     },
     "inputSummary": {
       "type": "object",

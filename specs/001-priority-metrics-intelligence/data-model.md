@@ -6,7 +6,7 @@ One synthetic/public-safe metric value for one monthly period.
 
 | Field | Type | Rules |
 | --- | --- | --- |
-| `period` | string | Exact `YYYY-MM`; valid calendar month |
+| `period` | string | Exact `YYYY-MM`; valid calendar month in year `0001`-`9998` |
 | `pillarId` | string | Exact value from the source-controlled catalog |
 | `metricId` | string | Exact lowercase `synth_` catalog alias |
 | `metricLabel` | string | Exact controlled catalog label |
@@ -94,7 +94,7 @@ Event classifications are `persisted`, `worsened`, `improved_at_risk`,
 aligned period pairs, coefficient or null, and limitation code. No field uses
 causal language. The exact latest 13 periods enforce continuity; the evidence
 window retains up to `max(13, minimumObservations + lagMonths)` trailing
-periods. Pearson is scaled before centering. Unexpected non-finite arithmetic
+periods. Pearson is anchored before scaling and centering. Unexpected non-finite arithmetic
 returns a null coefficient with `numeric_overflow`.
 
 ## BaselineProjection
@@ -129,8 +129,9 @@ The result's `inputSummary.analysisPeriod` is the dataset-wide latest period.
 `inputSummary.metricDefinitions` contains the exact catalog identity and
 structured semantic definition for every observed metric.
 Canonical serialization sorts comparisons by metric ID then period, other
-metric-keyed arrays by metric ID, and rounds floating noise beyond 12 decimal
-places. A missing numeric value is `null` paired with a stable reason code.
+metric-keyed arrays by metric ID, and normalizes finite values to 15 significant
+digits without erasing nonzero status evidence. A missing numeric value is
+`null` paired with a stable reason code.
 
 ## State Transitions
 

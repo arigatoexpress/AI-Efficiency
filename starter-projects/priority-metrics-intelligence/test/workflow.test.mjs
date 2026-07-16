@@ -180,7 +180,7 @@ test("canonical evidence preserves the closed semantic metric definitions", asyn
   ]);
 });
 
-test("recursively sorts keys and rounds only floating noise to 12 decimals", () => {
+test("recursively sorts keys and normalizes finite numbers to 15 significant digits", () => {
   assert.equal(
     stableJson({ z: 0.1234567890126, a: { z: 1, a: 2 }, c: [0.1 + 0.2] }),
     [
@@ -192,11 +192,24 @@ test("recursively sorts keys and rounds only floating noise to 12 decimals", () 
       '  "c": [',
       "    0.3",
       "  ],",
-      '  "z": 0.123456789013',
+      '  "z": 0.1234567890126',
       "}",
       "",
     ].join("\n"),
   );
+});
+
+test("canonical normalization preserves accepted inputs and nonzero risk evidence", () => {
+  const value = 1;
+  const target = 1.0000000000001;
+  const distance = value - target;
+  const normalized = JSON.parse(
+    stableJson({ distance, status: "at_risk", target, value }),
+  );
+
+  assert.equal(normalized.target, target);
+  assert.ok(normalized.distance < 0);
+  assert.notEqual(normalized.distance, 0);
 });
 
 test("rejects unexpected non-finite numbers during canonical normalization", () => {
@@ -241,7 +254,7 @@ test("renders only canonical analysis facts in the required Markdown sections", 
   assert.doesNotMatch(markdown, /cause|driver|guarantee/i);
   assert.equal(
     sha256(markdown),
-    "84e4c450aaecc84caeca05c8c6f447fb241075967e0e6c987e19b9aa2133ccf6",
+    "49fd103e3839fd4a6942bd901fab22adc4123bf15fd9c4db6313b9a011e30d67",
   );
   assert.ok(markdown.endsWith("\n"));
 });

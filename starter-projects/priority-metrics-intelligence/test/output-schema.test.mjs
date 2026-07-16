@@ -201,6 +201,24 @@ test("nested output shapes reject missing, malformed, and additional fields", ()
   }
 });
 
+test("metric definitions enforce exact source-controlled catalog tuples", () => {
+  const mutations = [
+    ["mismatched catalog label", (definition) => (definition.metricLabel = "SYNTH Other percent")],
+    ["mismatched catalog pillar", (definition) => (definition.pillarId = "synth_service")],
+    [
+      "mismatched catalog numerator",
+      (definition) => (definition.semanticDefinition.numerator = "packages_delivered"),
+    ],
+    ["mismatched catalog unit", (definition) => (definition.unit = "ratio")],
+  ];
+
+  for (const [label, mutate] of mutations) {
+    const candidate = clone(golden);
+    mutate(candidate.inputSummary.metricDefinitions[0]);
+    assertInvalid(candidate, label);
+  }
+});
+
 test("nullability branches accept explicit limited forms and reject mixed forms", () => {
   const limited = clone(golden);
   limited.comparisons[0].mom = {

@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { traceRiskLineages } from "../src/risk-lineage.mjs";
 import { findPatterns } from "../src/patterns.mjs";
+import { parseMetricsCsv } from "../src/parse.mjs";
 
 function comparison(metricId, period, status, distance) {
   return {
@@ -466,6 +467,64 @@ function consecutivePeriods(count, startYear = 2024, startMonth = 1) {
     return `${year}-${String(month).padStart(2, "0")}`;
   });
 }
+
+test("Pearson is translation-stable for accepted high-offset parsed values", () => {
+  const periods = consecutivePeriods(14);
+  const sourceTokens = [
+    "999999999999.005",
+    "999999999999.004",
+    "999999999999.006",
+    "999999999999.004",
+    "999999999999.003",
+    "999999999999.005",
+    "999999999999.005",
+    "999999999999.005",
+    "999999999999.008",
+    "999999999999.002",
+    "999999999999.006",
+    "999999999999.002",
+    "999999999999.006",
+    "999999999999.006",
+  ];
+  const outcomeTokens = [
+    "999999999999.000",
+    "999999999999.000",
+    "999999999999.000",
+    "999999999999.007",
+    "999999999999.005",
+    "999999999999.004",
+    "999999999999.000",
+    "999999999999.004",
+    "999999999999.004",
+    "999999999999.009",
+    "999999999999.008",
+    "999999999999.001",
+    "999999999999.006",
+    "999999999999.008",
+  ];
+  const header =
+    "period,pillar_id,metric_id,metric_label,value,unit,target_type,target_min,target_max,warning_margin";
+  const rows = periods.flatMap((period, index) => [
+    `${period},synth_flow,synth_late_inbound_count,SYNTH Late inbound count,${sourceTokens[index]},count,,,,`,
+    `${period},synth_flow,synth_packages_per_paid_hour,SYNTH Packages per paid hour,${outcomeTokens[index]},ratio,,,,`,
+  ]);
+  const records = parseMetricsCsv([header, ...rows].join("\n"));
+  const [result] = findPatterns(records, [], {
+    minimumRecurrences: 3,
+    candidateAssociations: [
+      {
+        sourceMetricId: "synth_late_inbound_count",
+        outcomeMetricId: "synth_packages_per_paid_hour",
+        lagMonths: 1,
+        minimumObservations: 13,
+      },
+    ],
+  }).candidateAssociations;
+
+  assert.equal(result.limitation, null);
+  assert.equal(result.observationCount, 13);
+  assert.ok(Math.abs(result.coefficient - 0.07429456977961686) <= 1e-12);
+});
 
 test("retains enough aligned history for a lag-eight association after the latest 13-month gate", () => {
   const periods = consecutivePeriods(14);

@@ -326,6 +326,10 @@ the smallest corresponding fixes without reopening a task:
   digit tracking-shaped tokens before analytics or writes;
 - constrained decimal magnitude and significant digits and made Pearson scaled
   and fail-safe with `numeric_overflow`;
+- anchored Pearson before scaling for translation stability, preserved nonzero
+  numeric evidence at 15 significant digits, and bounded input years/periods;
+- bound output metric definitions to six exact catalog tuples in the published
+  JSON Schema and adversarially rejected tuple mutations;
 - raised recurrence policy minimum to three, rejected absent metric references
   and infeasible evidence windows, and retained sufficient history for lags 8
   and 12 while keeping the exact latest 13-period continuity gate; and

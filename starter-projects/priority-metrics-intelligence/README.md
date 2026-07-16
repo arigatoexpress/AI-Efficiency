@@ -75,7 +75,7 @@ The required UTF-8 CSV header is exact and uses snake_case fields:
 period,pillar_id,metric_id,metric_label,value,unit,target_type,target_min,target_max,warning_margin
 ```
 
-Each row is one aggregate metric for one `YYYY-MM` period. See
+Each row is one aggregate metric for one `YYYY-MM` period in year `0001`-`9998`. See
 [`fixtures/synthetic-monthly-metrics.csv`](fixtures/synthetic-monthly-metrics.csv)
 for the synthetic example. The closed schema and metric-definition rules are
 documented in the approved [feature specification](../../specs/001-priority-metrics-intelligence/spec.md).
@@ -119,6 +119,7 @@ window, three recurrences, and no candidate-association search.
 lags are 1-12 months, and `minimumObservations + lagMonths` cannot exceed the
 60-period scope. The latest 13 periods enforce continuity; a longer trailing
 window is retained when a valid lag and observation requirement needs it.
+Inputs spanning more than 60 distinct monthly periods are rejected.
 
 ## How To Start
 

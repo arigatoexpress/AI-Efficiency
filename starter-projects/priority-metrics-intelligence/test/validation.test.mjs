@@ -69,6 +69,31 @@ test("CSV rejects duplicate observation keys and unstable metric definitions", (
   );
 });
 
+test("CSV rejects more than 60 distinct monthly periods", () => {
+  const rows = Array.from({ length: 61 }, (_, index) => {
+    const monthIndex = 5 + index;
+    const year = 2021 + Math.floor(monthIndex / 12);
+    const month = String((monthIndex % 12) + 1).padStart(2, "0");
+    return `${year}-${month},synth_service,synth_on_time_percent,SYNTH On-time percent,96.2,percent,minimum,95,,1`;
+  });
+
+  assert.throws(() => parseMetricsCsv(csv(...rows)), {
+    code: "SCHEMA_INPUT_SCOPE_EXCEEDED",
+  });
+});
+
+test("CSV rejects boundary years that cannot produce four-digit derived periods", () => {
+  for (const period of ["0000-01", "9999-12"]) {
+    assert.throws(
+      () =>
+        parseMetricsCsv(
+          csv(`${period},synth_service,synth_on_time_percent,SYNTH On-time percent,96.2,percent,minimum,95,,1`),
+        ),
+      { code: "SCHEMA_INVALID_PERIOD" },
+    );
+  }
+});
+
 test("CSV rejects malformed target definitions", () => {
   assert.throws(
     () =>
