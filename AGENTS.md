@@ -9,7 +9,7 @@ The repo turns operational friction into reusable AI assets: prompts for manager
 ## Scope & Evals (Verification)
 - **Repo Nature:** A documentation hub with focused offline analytics starters and one React/Vite/Express application under `starter-projects/fedex-logistics-intelligence-system/app`.
 - **Evals & Build:** Run the focused commands listed below plus the application typecheck/build before handoff.
-- **CI:** `.github/workflows/ci.yml` runs Priority Metrics Intelligence, documentation, prompt-index, TLH/SPH, ADK, typecheck, and application-build gates on pushes and pull requests.
+- **CI:** `.github/workflows/ci.yml` runs Priority Metrics Intelligence, Operations Decision Lab, documentation, prompt-index, TLH/SPH, ADK, typecheck, and application-build gates on pushes and pull requests.
 - **Constraints:** Avoid introducing root-level runtime dependencies or lockfiles. Keep changes highly surgical.
 
 ## Key directories and files
@@ -36,6 +36,7 @@ The repo turns operational friction into reusable AI assets: prompts for manager
 | `starter-projects/dock-efficiency-signal-lab/` | Offline SPC + TA + forecasting on weekly dock KPIs (is the move real?) |
 | `starter-projects/tlh-sph-efficiency-explorer/` | Offline TLH/SPH decomposition (which lever moved?) — companion to the Signal Lab |
 | `starter-projects/priority-metrics-intelligence/` | Offline monthly metric comparisons, risk lineage, configured patterns, and deterministic baseline outlook |
+| `starter-projects/operations-decision-lab/` | Offline leakage-safe volume baselines plus an independent hard-constraint oracle for supplied synthetic plans (advisory only; no route generation or dispatch) |
 | `starter-projects/fhe-private-scoring-spike/` | Executed Phase 7 research benchmark: encrypted scoring with Concrete ML (synthetic, local) |
 | `starter-projects/forecast-foundation-model-spike/` | Executed Phase 5 benchmark: Chronos-Bolt vs the Signal Lab ensemble (ensemble won) |
 | `starter-projects/adk-shift-brief-agent/` | First ADK agent (offline-tested starter kit) — read-only tools, synthetic signals, Gemini Enterprise-ready |
@@ -58,6 +59,7 @@ This repo is primarily documentation; there is no unified dev server.
 
 - `node scripts/check-docs.mjs` — relative links, raw.githack paths, prompt-count claims, HTML balance, offline CSP.
 - `node --test starter-projects/priority-metrics-intelligence/test/*.test.mjs` — closed input/privacy, comparison math, target status, lineage, patterns, projection, canonical rendering, and atomic workflow publication.
+- `node --test starter-projects/operations-decision-lab/test/*.test.mjs` — closed input/privacy, leakage-safe rolling-origin baselines, sequential quantile calibration, hard-constraint feasibility, canonical output schema, and atomic CLI publication.
 - `node starter-projects/tlh-sph-efficiency-explorer/test/run-checks.mjs` — the explorer's exact-decomposition identity, validation cases, demo stories, CSV intake, offline guarantees.
 - `python3 starter-projects/adk-shift-brief-agent/test/run_checks.py` — the ADK kit's tools, safety gate, offline guarantee, and (if google-adk is installed) agent wiring.
 - `node scripts/build-prompt-index.mjs --check` — prompts.json and the Prompt Explorer's embedded data match the prompt markdown (regenerate without `--check` after editing prompts).
@@ -115,5 +117,5 @@ Active. Presentation-ready for the regional AI Efficiency group standup.
 Before feature work, read `.specify/memory/constitution.md` and the applicable
 `spec.md`, `plan.md`, and `tasks.md`. The constitution is binding; the feature
 artifacts provide the exact technologies, structure, commands, and eval gates.
-Current approved plan: `specs/001-priority-metrics-intelligence/plan.md`.
+Current approved plan: `specs/002-operations-decision-lab/plan.md`.
 <!-- SPECKIT END -->
