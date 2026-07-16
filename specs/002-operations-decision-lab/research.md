@@ -94,6 +94,23 @@ Canonical names remain operational. Each sensitivity records units, bump size,
 seed, scenario IDs, feasibility, and whether the preferred plan changed. These
 are simulation derivatives, not causal effects or financial Greeks.
 
+## Adjacent delivery-markets reuse boundary
+
+The existing `fedex-delivery-markets` prototype already implements an LMSR
+paper-market quote with a cutoff-dependent liquidity/spread schedule. Its own
+math note correctly says that schedule is not Black-Scholes theta: it models
+late information asymmetry for a synthetic quote. The operations lab therefore
+does not copy its AMM, price, inventory, tracking, wallet, or settlement domain.
+It reuses only two durable design lessons:
+
+1. time-to-lock must have an explicit operational meaning and disclosure; and
+2. synthetic/paper evidence must remain isolated from live routing, tracking,
+   trading, and settlement.
+
+This keeps the repositories complementary. Delivery Markets Lab remains a
+paper-only market-design demo; Operations Decision Lab evaluates aggregate
+forecast and supplied-plan evidence for manager review.
+
 ## Synthetic and scrubbed data boundary
 
 Tracked fixtures use declared `SYNTH-` entity IDs and no coordinates, names,
