@@ -17,10 +17,16 @@ in how the system is designed to fail safely.
 The dashboard's risk signals — weather, road status, seismic — are **synthetic
 demo values hardcoded in the app** (`app/src/data/stations.ts`, 4 stations).
 Each value is labeled with the *real public feed it stands in for* (Open-Meteo,
-USGS earthquakes, cotrip.org), but in this prototype nothing is fetched live.
-That is deliberate: the architecture is proven end to end with data we fully
-control, and swapping in the real public feeds is a contained, reviewable step.
-Every screen says so.
+USGS earthquakes, cotrip.org). That is deliberate: the architecture is proven
+end to end with data we fully control, and every screen says so.
+
+The real-feed swap is now built and tested: the server ships live adapters for
+Open-Meteo, NWS active alerts, and USGS earthquakes (`app/lib/live-signals.ts`,
+served at `GET /api/live-signals`), **off by default** — an operator has to set
+`LIVE_SIGNALS=on` deliberately. Each source degrades independently (one dead
+feed never breaks the response), every value carries a `LIVE public data:`
+label, and responses are cached for five minutes per station to stay polite to
+the public APIs.
 
 ## The Whole System in One Diagram
 
