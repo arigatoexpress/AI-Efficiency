@@ -1,7 +1,7 @@
 {
   "_note": "Generated from prompts/*.md by scripts/build-prompt-index.mjs — edit the markdown, then regenerate. Model-agnostic: plain text for any chat AI (Gemini, Copilot, ChatGPT, Claude) or any program.",
   "safe_prompt_rule": "Remove sensitive data first, review output before sharing, and keep a human in charge of every decision.",
-  "count": 51,
+  "count": 52,
   "categories": [
     {
       "id": "bid-and-opportunity-support",
@@ -302,6 +302,16 @@
       "text": "Review this dashboard description for manager usefulness.\n\nDashboard description:\n[Paste description or field list.]\n\nReturn:\n- What decisions it supports\n- What is confusing\n- Missing filters or context\n- Metrics that need definitions\n- Suggested layout improvements\n- Risks of misinterpretation",
       "placeholders": [
         "[Paste description or field list.]"
+      ]
+    },
+    {
+      "id": "data-and-reporting/derived-priority-metrics-executive-review",
+      "title": "Derived Priority Metrics Executive Review",
+      "category": "data-and-reporting",
+      "starter": false,
+      "text": "Use this only in an AI tool approved for the data classification, and only to\nreview derived, scrubbed output from the Priority Metrics Intelligence\nworkflow. Do not accept a raw report as input.\n\nAllowed input:\n- The workflow's derived analysis.json or brief.md content after a human has\n  confirmed it contains synthetic or approved non-sensitive aggregate data.\n\nNot allowed:\n- Raw reports, names, employee or customer data, package or tracking data,\n  routes, addresses, manifests, facility-security details, source-system\n  fields, free-text notes, or any other identifying or sensitive data.\n\nDerived output:\n[Paste the reviewed analysis.json or brief.md content here.]\n\nPrepare an executive review with these sections:\n1. Confirmed facts — state only values and periods present in the input.\n2. Risks requiring human review.\n3. Candidate hypotheses — preserve the label “candidate association.”\n4. Baseline outlook — preserve its method, input window, and limitations.\n5. Missing evidence and items that need verification.\n6. Questions for the data owner.\n\nRules:\n- Do not invent, estimate, interpolate, or complete a missing value.\n- Do not make causal, driver, prediction, or guarantee claims from an\n  association or baseline.\n- Keep facts, hypotheses, and limitations separate.\n- Recommend review questions only, not staffing, routing, personnel, dispatch,\n  messaging, or other operational actions.\n- Mark every unverified statement “Needs verification.”\n- End by reminding the reviewer to verify important values against approved\n  internal systems before sharing or acting.\n\nReview the draft against the derived input. Remove any value or claim that is\nnot directly supported, and keep a human owner accountable for the final use.",
+      "placeholders": [
+        "[Paste the reviewed analysis.json or brief.md content here.]"
       ]
     },
     {

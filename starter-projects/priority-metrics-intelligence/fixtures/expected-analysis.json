@@ -1,0 +1,404 @@
+{
+  "analyzerVersion": "0.1.0",
+  "comparisons": [
+    {
+      "metricId": "synth_damage_percent",
+      "mom": {
+        "absoluteChange": -0.4,
+        "baselinePeriod": "2026-05",
+        "baselineValue": 2.2,
+        "percentageChange": -18.1818181818182,
+        "reason": null
+      },
+      "period": "2026-06",
+      "target": {
+        "distance": 0.2,
+        "status": "on_target"
+      },
+      "unit": "percent",
+      "value": 1.8,
+      "yoy": {
+        "absoluteChange": 0.3,
+        "baselinePeriod": "2025-06",
+        "baselineValue": 1.5,
+        "percentageChange": 20,
+        "reason": null
+      }
+    },
+    {
+      "metricId": "synth_late_inbound_count",
+      "mom": {
+        "absoluteChange": 1,
+        "baselinePeriod": "2026-05",
+        "baselineValue": 25,
+        "percentageChange": 4,
+        "reason": null
+      },
+      "period": "2026-06",
+      "target": {
+        "distance": -6,
+        "status": "at_risk"
+      },
+      "unit": "count",
+      "value": 26,
+      "yoy": {
+        "absoluteChange": 14,
+        "baselinePeriod": "2025-06",
+        "baselineValue": 12,
+        "percentageChange": 116.666666666667,
+        "reason": null
+      }
+    },
+    {
+      "metricId": "synth_on_time_percent",
+      "mom": {
+        "absoluteChange": -1,
+        "baselinePeriod": "2026-05",
+        "baselineValue": 92,
+        "percentageChange": -1.08695652173913,
+        "reason": null
+      },
+      "period": "2026-06",
+      "target": {
+        "distance": -4,
+        "status": "at_risk"
+      },
+      "unit": "percent",
+      "value": 91,
+      "yoy": {
+        "absoluteChange": -6,
+        "baselinePeriod": "2025-06",
+        "baselineValue": 97,
+        "percentageChange": -6.18556701030928,
+        "reason": null
+      }
+    }
+  ],
+  "inputSummary": {
+    "analysisPeriod": "2026-06",
+    "metricCount": 3,
+    "metricDefinitions": [
+      {
+        "metricId": "synth_damage_percent",
+        "metricLabel": "SYNTH Damage percent",
+        "pillarId": "synth_quality",
+        "semanticDefinition": {
+          "denominator": "packages_handled",
+          "kind": "rate",
+          "numerator": "damaged_packages",
+          "timeBasis": "monthly_aggregate"
+        },
+        "unit": "percent"
+      },
+      {
+        "metricId": "synth_late_inbound_count",
+        "metricLabel": "SYNTH Late inbound count",
+        "pillarId": "synth_flow",
+        "semanticDefinition": {
+          "kind": "measure",
+          "measure": "late_inbound_packages",
+          "timeBasis": "monthly_aggregate"
+        },
+        "unit": "count"
+      },
+      {
+        "metricId": "synth_on_time_percent",
+        "metricLabel": "SYNTH On-time percent",
+        "pillarId": "synth_service",
+        "semanticDefinition": {
+          "denominator": "eligible_packages",
+          "kind": "rate",
+          "numerator": "packages_delivered_on_time",
+          "timeBasis": "monthly_aggregate"
+        },
+        "unit": "percent"
+      }
+    ],
+    "observationCount": 39,
+    "periodRange": {
+      "end": "2026-06",
+      "start": "2025-06"
+    },
+    "validationResult": "passed"
+  },
+  "limitations": [],
+  "patterns": {
+    "candidateAssociations": [
+      {
+        "coefficient": -0.79020569495634,
+        "lagMonths": 1,
+        "limitation": null,
+        "observationCount": 12,
+        "outcomeMetricId": "synth_on_time_percent",
+        "periodPairs": [
+          {
+            "outcomePeriod": "2025-07",
+            "sourcePeriod": "2025-06"
+          },
+          {
+            "outcomePeriod": "2025-08",
+            "sourcePeriod": "2025-07"
+          },
+          {
+            "outcomePeriod": "2025-09",
+            "sourcePeriod": "2025-08"
+          },
+          {
+            "outcomePeriod": "2025-10",
+            "sourcePeriod": "2025-09"
+          },
+          {
+            "outcomePeriod": "2025-11",
+            "sourcePeriod": "2025-10"
+          },
+          {
+            "outcomePeriod": "2025-12",
+            "sourcePeriod": "2025-11"
+          },
+          {
+            "outcomePeriod": "2026-01",
+            "sourcePeriod": "2025-12"
+          },
+          {
+            "outcomePeriod": "2026-02",
+            "sourcePeriod": "2026-01"
+          },
+          {
+            "outcomePeriod": "2026-03",
+            "sourcePeriod": "2026-02"
+          },
+          {
+            "outcomePeriod": "2026-04",
+            "sourcePeriod": "2026-03"
+          },
+          {
+            "outcomePeriod": "2026-05",
+            "sourcePeriod": "2026-04"
+          },
+          {
+            "outcomePeriod": "2026-06",
+            "sourcePeriod": "2026-05"
+          }
+        ],
+        "sourceMetricId": "synth_late_inbound_count",
+        "type": "candidate_association"
+      }
+    ],
+    "recurrences": [
+      {
+        "eventCount": 3,
+        "metricId": "synth_damage_percent",
+        "periods": [
+          "2025-11",
+          "2026-03",
+          "2026-04"
+        ]
+      },
+      {
+        "eventCount": 4,
+        "metricId": "synth_late_inbound_count",
+        "periods": [
+          "2025-11",
+          "2026-02",
+          "2026-05",
+          "2026-06"
+        ]
+      },
+      {
+        "eventCount": 4,
+        "metricId": "synth_on_time_percent",
+        "periods": [
+          "2025-11",
+          "2026-04",
+          "2026-05",
+          "2026-06"
+        ]
+      }
+    ]
+  },
+  "projections": [
+    {
+      "inputPeriods": [
+        "2026-01",
+        "2026-02",
+        "2026-03",
+        "2026-04",
+        "2026-05",
+        "2026-06"
+      ],
+      "limitation": null,
+      "method": "median_recent_drift",
+      "metricId": "synth_damage_percent",
+      "projectedValue": 1.7,
+      "targetPeriod": "2026-07"
+    },
+    {
+      "inputPeriods": [
+        "2026-01",
+        "2026-02",
+        "2026-03",
+        "2026-04",
+        "2026-05",
+        "2026-06"
+      ],
+      "limitation": null,
+      "method": "median_recent_drift",
+      "metricId": "synth_late_inbound_count",
+      "projectedValue": 27,
+      "targetPeriod": "2026-07"
+    },
+    {
+      "inputPeriods": [
+        "2026-01",
+        "2026-02",
+        "2026-03",
+        "2026-04",
+        "2026-05",
+        "2026-06"
+      ],
+      "limitation": null,
+      "method": "median_recent_drift",
+      "metricId": "synth_on_time_percent",
+      "projectedValue": 90,
+      "targetPeriod": "2026-07"
+    }
+  ],
+  "provenance": {
+    "dataClassification": "synthetic",
+    "methods": [
+      "configured_pearson_correlation",
+      "exact_period_comparison",
+      "median_recent_drift",
+      "risk_lineage_state_machine",
+      "target_boundary_distance"
+    ],
+    "periodRange": {
+      "end": "2026-06",
+      "start": "2025-06"
+    }
+  },
+  "riskLineages": [
+    {
+      "events": [
+        {
+          "classification": "improved_at_risk",
+          "period": "2025-12",
+          "severity": 0.4
+        },
+        {
+          "classification": "recovered",
+          "period": "2026-01",
+          "severity": 0
+        }
+      ],
+      "metricId": "synth_damage_percent",
+      "originPeriod": "2025-11",
+      "originSeverity": 0.6,
+      "outcome": "recovered"
+    },
+    {
+      "events": [
+        {
+          "classification": "worsened",
+          "period": "2026-04",
+          "severity": 0.8
+        },
+        {
+          "classification": "improved_at_risk",
+          "period": "2026-05",
+          "severity": 0.2
+        },
+        {
+          "classification": "recovered",
+          "period": "2026-06",
+          "severity": 0
+        }
+      ],
+      "metricId": "synth_damage_percent",
+      "originPeriod": "2026-03",
+      "originSeverity": 0.7,
+      "outcome": "recovered"
+    },
+    {
+      "events": [
+        {
+          "classification": "recovered",
+          "period": "2025-12",
+          "severity": 0
+        }
+      ],
+      "metricId": "synth_late_inbound_count",
+      "originPeriod": "2025-11",
+      "originSeverity": 3,
+      "outcome": "recovered"
+    },
+    {
+      "events": [
+        {
+          "classification": "improved_at_risk",
+          "period": "2026-03",
+          "severity": 2
+        },
+        {
+          "classification": "recovered",
+          "period": "2026-04",
+          "severity": 0
+        }
+      ],
+      "metricId": "synth_late_inbound_count",
+      "originPeriod": "2026-02",
+      "originSeverity": 4,
+      "outcome": "recovered"
+    },
+    {
+      "events": [
+        {
+          "classification": "worsened",
+          "period": "2026-06",
+          "severity": 6
+        }
+      ],
+      "metricId": "synth_late_inbound_count",
+      "originPeriod": "2026-05",
+      "originSeverity": 5,
+      "outcome": "active"
+    },
+    {
+      "events": [
+        {
+          "classification": "improved_at_risk",
+          "period": "2025-12",
+          "severity": 1
+        },
+        {
+          "classification": "recovered",
+          "period": "2026-01",
+          "severity": 0
+        }
+      ],
+      "metricId": "synth_on_time_percent",
+      "originPeriod": "2025-11",
+      "originSeverity": 2,
+      "outcome": "recovered"
+    },
+    {
+      "events": [
+        {
+          "classification": "worsened",
+          "period": "2026-05",
+          "severity": 3
+        },
+        {
+          "classification": "worsened",
+          "period": "2026-06",
+          "severity": 4
+        }
+      ],
+      "metricId": "synth_on_time_percent",
+      "originPeriod": "2026-04",
+      "originSeverity": 2,
+      "outcome": "active"
+    }
+  ],
+  "schemaVersion": "1.0.0"
+}

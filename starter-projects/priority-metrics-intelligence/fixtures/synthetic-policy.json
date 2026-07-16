@@ -1,0 +1,12 @@
+{
+  "projectionWindow": 6,
+  "minimumRecurrences": 3,
+  "candidateAssociations": [
+    {
+      "sourceMetricId": "synth_late_inbound_count",
+      "outcomeMetricId": "synth_on_time_percent",
+      "lagMonths": 1,
+      "minimumObservations": 6
+    }
+  ]
+}

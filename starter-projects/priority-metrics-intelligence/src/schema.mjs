@@ -1,0 +1,467 @@
+import { SafeInputError } from "./errors.mjs";
+
+export const CSV_FIELDS = Object.freeze([
+  "period",
+  "pillar_id",
+  "metric_id",
+  "metric_label",
+  "value",
+  "unit",
+  "target_type",
+  "target_min",
+  "target_max",
+  "warning_margin",
+]);
+
+export const METRIC_FIELDS = Object.freeze([
+  "period",
+  "pillarId",
+  "metricId",
+  "metricLabel",
+  "value",
+  "unit",
+  "targetType",
+  "targetMin",
+  "targetMax",
+  "warningMargin",
+]);
+
+const UNITS = new Set(["count", "percent", "minutes", "hours", "index", "ratio"]);
+const TARGET_TYPES = new Set(["minimum", "maximum", "range"]);
+const POLICY_FIELDS = new Set([
+  "projectionWindow",
+  "minimumRecurrences",
+  "candidateAssociations",
+]);
+const ASSOCIATION_FIELDS = new Set([
+  "sourceMetricId",
+  "outcomeMetricId",
+  "lagMonths",
+  "minimumObservations",
+]);
+const IDENTIFIER_SLUG =
+  /(?:employee|customer|tracking|manifest|address|route|source[_-]?system)[_-]?id(?:[_-]|$)|\d{4,}/;
+const DECIMAL_NUMBER = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/;
+const MAXIMUM_ABSOLUTE_NUMBER = 1e12;
+const MINIMUM_NONZERO_ABSOLUTE_NUMBER = 1e-12;
+const MAXIMUM_SIGNIFICANT_DIGITS = 15;
+const MAXIMUM_INPUT_PERIODS = 60;
+
+function isSupportedInputPeriod(value) {
+  if (!/^\d{4}-(0[1-9]|1[0-2])$/.test(value)) return false;
+  const year = Number(value.slice(0, 4));
+  return year >= 1 && year <= 9998;
+}
+
+const METRIC_CATALOG = new Map(
+  [
+    {
+      metricId: "synth_damage_percent",
+      metricLabel: "SYNTH Damage percent",
+      pillarId: "synth_quality",
+      unit: "percent",
+      semanticDefinition: {
+        denominator: "packages_handled",
+        kind: "rate",
+        numerator: "damaged_packages",
+        timeBasis: "monthly_aggregate",
+      },
+    },
+    {
+      metricId: "synth_late_inbound_count",
+      metricLabel: "SYNTH Late inbound count",
+      pillarId: "synth_flow",
+      unit: "count",
+      semanticDefinition: {
+        kind: "measure",
+        measure: "late_inbound_packages",
+        timeBasis: "monthly_aggregate",
+      },
+    },
+    {
+      metricId: "synth_on_time_percent",
+      metricLabel: "SYNTH On-time percent",
+      pillarId: "synth_service",
+      unit: "percent",
+      semanticDefinition: {
+        denominator: "eligible_packages",
+        kind: "rate",
+        numerator: "packages_delivered_on_time",
+        timeBasis: "monthly_aggregate",
+      },
+    },
+    {
+      metricId: "synth_packages_per_paid_hour",
+      metricLabel: "SYNTH Packages per paid hour",
+      pillarId: "synth_flow",
+      unit: "ratio",
+      semanticDefinition: {
+        denominator: "paid_hours",
+        kind: "rate",
+        numerator: "packages_delivered",
+        timeBasis: "monthly_aggregate",
+      },
+    },
+    {
+      metricId: "synth_packages_per_stop",
+      metricLabel: "SYNTH Packages per stop",
+      pillarId: "synth_route",
+      unit: "ratio",
+      semanticDefinition: {
+        denominator: "stops_completed",
+        kind: "rate",
+        numerator: "packages_delivered",
+        timeBasis: "monthly_aggregate",
+      },
+    },
+    {
+      metricId: "synth_stops_per_on_road_hour",
+      metricLabel: "SYNTH Stops per on-road hour",
+      pillarId: "synth_route",
+      unit: "ratio",
+      semanticDefinition: {
+        denominator: "on_road_hours",
+        kind: "rate",
+        numerator: "stops_completed",
+        timeBasis: "monthly_aggregate",
+      },
+    },
+  ].map((definition) => [definition.metricId, Object.freeze(definition)]),
+);
+
+function fail(code, fields, rowNumber = null) {
+  throw new SafeInputError(code, fields, rowNumber);
+}
+
+function significantDigitCount(value) {
+  const significand = value.replace(/^-/, "").split(/[eE]/, 1)[0].replace(".", "");
+  return significand.replace(/^0+/, "").length || 1;
+}
+
+function isSafeNumericValue(value) {
+  if (!Number.isFinite(value)) return false;
+  const magnitude = Math.abs(value);
+  return (
+    magnitude <= MAXIMUM_ABSOLUTE_NUMBER &&
+    (magnitude === 0 || magnitude >= MINIMUM_NONZERO_ABSOLUTE_NUMBER)
+  );
+}
+
+function parseNumber(value, field, rowNumber, { optional = false, minimum = null } = {}) {
+  if (optional && value === "") return null;
+  if (
+    !DECIMAL_NUMBER.test(value) ||
+    significantDigitCount(value) > MAXIMUM_SIGNIFICANT_DIGITS
+  ) {
+    fail("SCHEMA_INVALID_NUMBER", [field], rowNumber);
+  }
+
+  const parsed = Number(value);
+  if (!isSafeNumericValue(parsed) || (minimum !== null && parsed < minimum)) {
+    fail("SCHEMA_INVALID_NUMBER", [field], rowNumber);
+  }
+  return parsed;
+}
+
+function matchesCatalogDefinition({ pillarId, metricId, metricLabel, unit }) {
+  const catalogDefinition = METRIC_CATALOG.get(metricId);
+  return (
+    catalogDefinition !== undefined &&
+    catalogDefinition.pillarId === pillarId &&
+    catalogDefinition.metricLabel === metricLabel &&
+    catalogDefinition.unit === unit
+  );
+}
+
+export function metricDefinitionsFor(metricIds) {
+  return [...new Set(metricIds)]
+    .sort()
+    .flatMap((metricId) => {
+      const definition = METRIC_CATALOG.get(metricId);
+      return definition === undefined ? [] : [definition];
+    });
+}
+
+function validateSlug(value, field, maximumLength, rowNumber, code = "SCHEMA_INVALID_SLUG") {
+  if (
+    value.length < 1 ||
+    value.length > maximumLength ||
+    !/^[a-z][a-z0-9]*(?:[_-][a-z0-9]+)*$/.test(value) ||
+    IDENTIFIER_SLUG.test(value)
+  ) {
+    fail(code, [field], rowNumber);
+  }
+  return value;
+}
+
+function validateLabel(value, rowNumber) {
+  if (
+    value.length < 1 ||
+    value.length > 80 ||
+    !/^[\p{L}\d ()/%+\-]+$/u.test(value) ||
+    /\d{4,}/.test(value)
+  ) {
+    fail("SCHEMA_INVALID_LABEL", ["metric_label"], rowNumber);
+  }
+  return value;
+}
+
+function validateTarget(targetType, targetMin, targetMax, rowNumber) {
+  const valid =
+    (targetType === null && targetMin === null && targetMax === null) ||
+    (targetType === "minimum" && targetMin !== null && targetMax === null) ||
+    (targetType === "maximum" && targetMin === null && targetMax !== null) ||
+    (targetType === "range" &&
+      targetMin !== null &&
+      targetMax !== null &&
+      targetMin <= targetMax);
+
+  if (!valid) {
+    fail("SCHEMA_INVALID_TARGET", ["target_type", "target_min", "target_max"], rowNumber);
+  }
+}
+
+export function validateMetricRows(rawRecords) {
+  const observations = [];
+  const observationKeys = new Set();
+  const definitions = new Map();
+  const periods = new Set();
+
+  for (const [index, raw] of rawRecords.entries()) {
+    const rowNumber = index + 2;
+    const period = raw.period.trim();
+    const pillarId = raw.pillar_id.trim();
+    const metricId = raw.metric_id.trim();
+    const metricLabel = raw.metric_label.trim();
+    const unit = raw.unit.trim();
+    const rawTargetType = raw.target_type.trim();
+    const targetType = rawTargetType === "" ? null : rawTargetType;
+
+    if (!isSupportedInputPeriod(period)) {
+      fail("SCHEMA_INVALID_PERIOD", ["period"], rowNumber);
+    }
+    periods.add(period);
+    if (periods.size > MAXIMUM_INPUT_PERIODS) {
+      fail("SCHEMA_INPUT_SCOPE_EXCEEDED", ["period"], rowNumber);
+    }
+    validateSlug(pillarId, "pillar_id", 48, rowNumber);
+    validateSlug(metricId, "metric_id", 64, rowNumber);
+    validateLabel(metricLabel, rowNumber);
+    if (!UNITS.has(unit)) fail("SCHEMA_INVALID_UNIT", ["unit"], rowNumber);
+    if (targetType !== null && !TARGET_TYPES.has(targetType)) {
+      fail("SCHEMA_INVALID_TARGET", ["target_type"], rowNumber);
+    }
+    if (!matchesCatalogDefinition({ pillarId, metricId, metricLabel, unit })) {
+      fail(
+        "PRIVACY_UNAPPROVED_DEFINITION",
+        ["pillar_id", "metric_id", "metric_label", "unit"],
+        rowNumber,
+      );
+    }
+
+    const value = parseNumber(raw.value, "value", rowNumber);
+    const targetMin = parseNumber(raw.target_min, "target_min", rowNumber, {
+      optional: true,
+    });
+    const targetMax = parseNumber(raw.target_max, "target_max", rowNumber, {
+      optional: true,
+    });
+    const warningMargin =
+      raw.warning_margin === ""
+        ? 0
+        : parseNumber(raw.warning_margin, "warning_margin", rowNumber, { minimum: 0 });
+    validateTarget(targetType, targetMin, targetMax, rowNumber);
+
+    const observationKey = `${period}\u0000${metricId}`;
+    if (observationKeys.has(observationKey)) {
+      fail("SCHEMA_DUPLICATE_OBSERVATION", ["period", "metric_id"], rowNumber);
+    }
+    observationKeys.add(observationKey);
+
+    const definition = JSON.stringify([
+      pillarId,
+      metricLabel,
+      unit,
+      targetType,
+      targetMin,
+      targetMax,
+      warningMargin,
+    ]);
+    if (definitions.has(metricId) && definitions.get(metricId) !== definition) {
+      fail("SCHEMA_UNSTABLE_METRIC", ["metric_id"], rowNumber);
+    }
+    definitions.set(metricId, definition);
+
+    observations.push({
+      period,
+      pillarId,
+      metricId,
+      metricLabel,
+      value,
+      unit,
+      targetType,
+      targetMin,
+      targetMax,
+      warningMargin,
+    });
+  }
+
+  return observations;
+}
+
+export function isCanonicalMetricObservation(record) {
+  if (
+    record === null ||
+    Array.isArray(record) ||
+    typeof record !== "object" ||
+    METRIC_FIELDS.some((field) => !Object.hasOwn(record, field))
+  ) {
+    return false;
+  }
+
+  const targetTypeValid =
+    record.targetType === null || TARGET_TYPES.has(record.targetType);
+  const numericOrNull = (value) => value === null || isSafeNumericValue(value);
+  const targetValid =
+    targetTypeValid &&
+    numericOrNull(record.targetMin) &&
+    numericOrNull(record.targetMax) &&
+    ((record.targetType === null && record.targetMin === null && record.targetMax === null) ||
+      (record.targetType === "minimum" &&
+        record.targetMin !== null &&
+        record.targetMax === null) ||
+      (record.targetType === "maximum" &&
+        record.targetMin === null &&
+        record.targetMax !== null) ||
+      (record.targetType === "range" &&
+        record.targetMin !== null &&
+        record.targetMax !== null &&
+        record.targetMin <= record.targetMax));
+
+  return (
+    typeof record.period === "string" &&
+    isSupportedInputPeriod(record.period) &&
+    typeof record.pillarId === "string" &&
+    record.pillarId.length <= 48 &&
+    /^[a-z][a-z0-9]*(?:[_-][a-z0-9]+)*$/.test(record.pillarId) &&
+    !IDENTIFIER_SLUG.test(record.pillarId) &&
+    typeof record.metricId === "string" &&
+    record.metricId.length <= 64 &&
+    /^[a-z][a-z0-9]*(?:[_-][a-z0-9]+)*$/.test(record.metricId) &&
+    !IDENTIFIER_SLUG.test(record.metricId) &&
+    typeof record.metricLabel === "string" &&
+    record.metricLabel.length >= 1 &&
+    record.metricLabel.length <= 80 &&
+    /^[\p{L}\d ()/%+\-]+$/u.test(record.metricLabel) &&
+    !/\d{4,}/.test(record.metricLabel) &&
+    matchesCatalogDefinition(record) &&
+    isSafeNumericValue(record.value) &&
+    UNITS.has(record.unit) &&
+    targetValid &&
+    isSafeNumericValue(record.warningMargin) &&
+    record.warningMargin >= 0
+  );
+}
+
+function integerInRange(value, minimum, maximum) {
+  return Number.isInteger(value) && value >= minimum && value <= maximum;
+}
+
+export function validatePolicy(raw) {
+  if (raw === null || Array.isArray(raw) || typeof raw !== "object") {
+    fail("SCHEMA_INVALID_POLICY", ["policy"]);
+  }
+
+  const unknownFields = Object.keys(raw).filter((field) => !POLICY_FIELDS.has(field));
+  if (unknownFields.length > 0) {
+    fail("SCHEMA_UNKNOWN_POLICY_FIELD", unknownFields);
+  }
+
+  const projectionWindow = Object.hasOwn(raw, "projectionWindow")
+    ? raw.projectionWindow
+    : 6;
+  const minimumRecurrences = Object.hasOwn(raw, "minimumRecurrences")
+    ? raw.minimumRecurrences
+    : 3;
+  const candidateAssociations = Object.hasOwn(raw, "candidateAssociations")
+    ? raw.candidateAssociations
+    : [];
+  if (
+    !integerInRange(projectionWindow, 3, 24) ||
+    !integerInRange(minimumRecurrences, 3, 12) ||
+    !Array.isArray(candidateAssociations) ||
+    candidateAssociations.length > 50
+  ) {
+    fail("SCHEMA_INVALID_POLICY_VALUE", [
+      "projectionWindow",
+      "minimumRecurrences",
+      "candidateAssociations",
+    ]);
+  }
+
+  const associationKeys = new Set();
+  const validatedAssociations = candidateAssociations.map((association, index) => {
+    if (association === null || Array.isArray(association) || typeof association !== "object") {
+      fail("SCHEMA_INVALID_POLICY_VALUE", ["candidateAssociations"], index + 1);
+    }
+    const unknown = Object.keys(association).filter(
+      (field) => !ASSOCIATION_FIELDS.has(field),
+    );
+    if (unknown.length > 0) fail("SCHEMA_UNKNOWN_ASSOCIATION_FIELD", unknown, index + 1);
+    if ([...ASSOCIATION_FIELDS].some((field) => !(field in association))) {
+      fail("SCHEMA_INVALID_POLICY_VALUE", ["candidateAssociations"], index + 1);
+    }
+
+    const { sourceMetricId, outcomeMetricId, lagMonths, minimumObservations } = association;
+    if (typeof sourceMetricId !== "string" || typeof outcomeMetricId !== "string") {
+      fail("SCHEMA_INVALID_POLICY_VALUE", ["candidateAssociations"], index + 1);
+    }
+    validateSlug(
+      sourceMetricId,
+      "sourceMetricId",
+      64,
+      index + 1,
+      "SCHEMA_INVALID_POLICY_VALUE",
+    );
+    validateSlug(
+      outcomeMetricId,
+      "outcomeMetricId",
+      64,
+      index + 1,
+      "SCHEMA_INVALID_POLICY_VALUE",
+    );
+    if (
+      sourceMetricId === outcomeMetricId ||
+      !integerInRange(lagMonths, 1, 12) ||
+      !integerInRange(minimumObservations, 6, 60) ||
+      lagMonths + minimumObservations > MAXIMUM_INPUT_PERIODS
+    ) {
+      fail("SCHEMA_INVALID_POLICY_VALUE", ["candidateAssociations"], index + 1);
+    }
+
+    const associationKey = `${sourceMetricId}\u0000${outcomeMetricId}\u0000${lagMonths}`;
+    if (associationKeys.has(associationKey)) {
+      fail("SCHEMA_DUPLICATE_ASSOCIATION", ["candidateAssociations"], index + 1);
+    }
+    associationKeys.add(associationKey);
+    return { sourceMetricId, outcomeMetricId, lagMonths, minimumObservations };
+  });
+
+  return {
+    projectionWindow,
+    minimumRecurrences,
+    candidateAssociations: validatedAssociations,
+  };
+}
+
+export function validatePolicyMetricReferences(policy, records) {
+  const observedMetricIds = new Set(records.map(({ metricId }) => metricId));
+  const hasUnknownReference = policy.candidateAssociations.some(
+    ({ sourceMetricId, outcomeMetricId }) =>
+      !observedMetricIds.has(sourceMetricId) || !observedMetricIds.has(outcomeMetricId),
+  );
+  if (hasUnknownReference) {
+    fail("SCHEMA_UNKNOWN_METRIC_REFERENCE", ["metricId"]);
+  }
+  return policy;
+}

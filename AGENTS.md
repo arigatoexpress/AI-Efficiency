@@ -7,9 +7,10 @@ This repository is a public-safe documentation and starter-project hub for an op
 The repo turns operational friction into reusable AI assets: prompts for managers, starter projects for developers, and checklists for governance reviewers. Everything is designed for non-technical readers first, with technical depth available in the starter projects.
 
 ## Scope & Evals (Verification)
-- **Repo Nature:** A documentation hub with one React/Vite/Express application under `starter-projects/fedex-logistics-intelligence-system/app`.
-- **Evals & Build:** Run `npm run build` inside `starter-projects/fedex-logistics-intelligence-system/app` to verify type safety and compilation.
-- **Constraints:** No CI/CD workflows exist for this repo at this time. Avoid introducing root-level Node packages, scripts, or lockfiles. Keep changes highly surgical.
+- **Repo Nature:** A documentation hub with focused offline analytics starters and one React/Vite/Express application under `starter-projects/fedex-logistics-intelligence-system/app`.
+- **Evals & Build:** Run the focused commands listed below plus the application typecheck/build before handoff.
+- **CI:** `.github/workflows/ci.yml` runs Priority Metrics Intelligence, documentation, prompt-index, TLH/SPH, ADK, typecheck, and application-build gates on pushes and pull requests.
+- **Constraints:** Avoid introducing root-level runtime dependencies or lockfiles. Keep changes highly surgical.
 
 ## Key directories and files
 
@@ -24,13 +25,14 @@ The repo turns operational friction into reusable AI assets: prompts for manager
 | `docs/demo-script.md` | Script for presenting the repo and prototype to leadership |
 | `docs/documentation-standard.md` | Style guide for all repo docs and starter projects |
 | `prompts/` | Copy-paste prompt library organized by operational area |
-| `prompts/README.md` | Index of 51 prompts across 10 categories |
+| `prompts/README.md` | Index of 52 prompts across 10 categories |
 | `prompts/explorer.html` | Offline search-and-fill Prompt Explorer (data injected by the build script) |
 | `prompts/prompts.json` | Machine-readable prompt index — generated; edit the markdown, then run `scripts/build-prompt-index.mjs` |
 | `starter-projects/` | Runnable prototypes (React/Vite, AI Studio, Cloud Run) |
 | `starter-projects/fedex-logistics-intelligence-system/` | Most mature prototype — public-data ops dashboard with multi-station scenarios |
 | `starter-projects/dock-efficiency-signal-lab/` | Offline SPC + TA + forecasting on weekly dock KPIs (is the move real?) |
 | `starter-projects/tlh-sph-efficiency-explorer/` | Offline TLH/SPH decomposition (which lever moved?) — companion to the Signal Lab |
+| `starter-projects/priority-metrics-intelligence/` | Offline monthly metric comparisons, risk lineage, configured patterns, and deterministic baseline outlook |
 | `starter-projects/fhe-private-scoring-spike/` | Executed Phase 7 research benchmark: encrypted scoring with Concrete ML (synthetic, local) |
 | `starter-projects/forecast-foundation-model-spike/` | Executed Phase 5 benchmark: Chronos-Bolt vs the Signal Lab ensemble (ensemble won) |
 | `starter-projects/adk-shift-brief-agent/` | First ADK agent (offline-tested starter kit) — read-only tools, synthetic signals, Gemini Enterprise-ready |
@@ -52,6 +54,7 @@ This repo is primarily documentation; there is no unified dev server.
 ### Verification (run by CI on every PR — run locally before handing back)
 
 - `node scripts/check-docs.mjs` — relative links, raw.githack paths, prompt-count claims, HTML balance, offline CSP.
+- `node --test starter-projects/priority-metrics-intelligence/test/*.test.mjs` — closed input/privacy, comparison math, target status, lineage, patterns, projection, canonical rendering, and atomic workflow publication.
 - `node starter-projects/tlh-sph-efficiency-explorer/test/run-checks.mjs` — the explorer's exact-decomposition identity, validation cases, demo stories, CSV intake, offline guarantees.
 - `python3 starter-projects/adk-shift-brief-agent/test/run_checks.py` — the ADK kit's tools, safety gate, offline guarantee, and (if google-adk is installed) agent wiring.
 - `node scripts/build-prompt-index.mjs --check` — prompts.json and the Prompt Explorer's embedded data match the prompt markdown (regenerate without `--check` after editing prompts).
@@ -79,7 +82,7 @@ This repo is primarily documentation; there is no unified dev server.
 Active. Presentation-ready for the regional AI Efficiency group standup.
 
 - ✅ Root README with compelling narrative and quick-start paths
-- ✅ 51 FedEx-specific prompts across 10 categories
+- ✅ 52 FedEx-specific prompts across 10 categories
 - ✅ FedEx AI literacy guide aligned with enterprise AI Education program
 - ✅ Pilot program template and demo script
 - ✅ Logistics Intelligence System with 4 multi-station scenarios
@@ -104,3 +107,10 @@ Active. Presentation-ready for the regional AI Efficiency group standup.
 - Never use `git add .` or `git add -A` — stage changed files by explicit path (avoids sweeping in WIP or secrets).
 - Never commit secrets; `.env*` stays gitignored (except `.env.example`).
 - Treat anything outward-facing or irreversible as draft-then-confirm.
+
+<!-- SPECKIT START -->
+Before feature work, read `.specify/memory/constitution.md` and the applicable
+`spec.md`, `plan.md`, and `tasks.md`. The constitution is binding; the feature
+artifacts provide the exact technologies, structure, commands, and eval gates.
+Current approved plan: `specs/001-priority-metrics-intelligence/plan.md`.
+<!-- SPECKIT END -->
