@@ -91,6 +91,13 @@ For a visual overview of how the pieces connect, open the
 (this repo's `index.html`; it also opens directly from a downloaded copy and
 works fully offline).
 
+Cloned the repo? Two commands (Node 22+):
+
+```bash
+npm run demo     # builds and serves the dashboard locally, prints every entry point
+npm run verify   # runs every check CI runs: docs/links, prompt index, all test suites
+```
+
 New team members: [getting started](docs/getting-started.md) ·
 running a shift with AI support: [daily operations playbook](docs/daily-ops-playbook.md) ·
 proposing an experiment: [pilot template](docs/pilot-program-template.md) ·
