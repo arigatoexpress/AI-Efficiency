@@ -60,9 +60,11 @@ Verify locally before deploying:
 
 ```bash
 cd starter-projects/fedex-logistics-intelligence-system/app
-npm install && npm test          # 22 tests must pass
+npm install && npm test          # 28 tests must pass
 GOOGLE_GENAI_USE_VERTEXAI=true GOOGLE_CLOUD_PROJECT=<PROJECT_ID> npm run dev
-# then: curl -s -X POST localhost:5173/api/compile-advice-draft \
+# npm run dev starts only the Express API server, on port 3000 (Vite's 5173
+# dev server is a separate command and is not needed for these curls)
+# then: curl -s -X POST localhost:3000/api/compile-advice-draft \
 #   -H 'Content-Type: application/json' -d '{"station":"Gunnison, CO"}'
 # expect: "source":"gemini"
 ```

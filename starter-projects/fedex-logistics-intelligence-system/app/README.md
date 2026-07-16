@@ -18,13 +18,21 @@ npm install
 cp .env.example .env
 # Edit .env and set GEMINI_API_KEY=your_key_here
 
-# 3. Run the dev server
+# 3. Run the dev server (Express API only, port 3000)
 npm run dev
 
-# 4. Open http://localhost:5173
+# 4. Check the API
+curl http://localhost:3000/api/health
 ```
 
-The dev proxy forwards `/api` calls to the Express server on port 3000.
+`npm run dev` starts only the Express API server (port 3000); it does not
+build or serve the React UI. To run the full app locally, either:
+
+- serve the production build: `npm run build && npm start`, then open
+  http://localhost:3000, or
+- in a second terminal run the Vite dev server: `npx vite`, then open
+  http://localhost:5173 — its dev proxy forwards `/api` calls to the Express
+  server on port 3000.
 
 ## Build for Production
 
