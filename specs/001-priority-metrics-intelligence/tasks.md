@@ -212,16 +212,16 @@ assert.deepEqual(result.candidateAssociations[0], {
 **Independent test:** Median-drift math and exact golden JSON/Markdown facts are
 stable over two identical runs.
 
-- [ ] T030 [P] [US5] Write failing median-drift, extreme-change, gap, and insufficient-history cases in `starter-projects/priority-metrics-intelligence/test/projection.test.mjs`.
-- [ ] T031 [P] [US5] Create at least 13 months of public-safe synthetic observations and a closed policy in `starter-projects/priority-metrics-intelligence/fixtures/synthetic-monthly-metrics.csv` and `starter-projects/priority-metrics-intelligence/fixtures/synthetic-policy.json`.
-- [ ] T032 [US5] Run the projection test and verify it fails with `ERR_MODULE_NOT_FOUND` for `src/project.mjs`.
-- [ ] T033 [US5] Implement consecutive-window median recent drift in `starter-projects/priority-metrics-intelligence/src/project.mjs`.
-- [ ] T034 [US5] Implement orchestration and canonical result ordering in `starter-projects/priority-metrics-intelligence/src/analyze.mjs`.
-- [ ] T035 [US5] Write failing stable JSON, Markdown fact-parity, and byte-determinism assertions in `starter-projects/priority-metrics-intelligence/test/workflow.test.mjs`.
-- [ ] T036 [US5] Implement recursive key sorting and evidence-only Markdown sections in `starter-projects/priority-metrics-intelligence/src/render.mjs`.
-- [ ] T037 [US5] Generate and review the exact golden result in `starter-projects/priority-metrics-intelligence/fixtures/expected-analysis.json`.
-- [ ] T038 [US5] Run projection and workflow tests twice and verify both runs pass with byte-identical JSON.
-- [ ] T039 [US5] Commit analysis/rendering with `git add starter-projects/priority-metrics-intelligence/test/projection.test.mjs starter-projects/priority-metrics-intelligence/test/workflow.test.mjs starter-projects/priority-metrics-intelligence/fixtures/synthetic-monthly-metrics.csv starter-projects/priority-metrics-intelligence/fixtures/synthetic-policy.json starter-projects/priority-metrics-intelligence/fixtures/expected-analysis.json starter-projects/priority-metrics-intelligence/src/project.mjs starter-projects/priority-metrics-intelligence/src/analyze.mjs starter-projects/priority-metrics-intelligence/src/render.mjs && git commit -m "feat: render deterministic priority metrics evidence"`.
+- [x] T030 [P] [US5] Write failing median-drift, extreme-change, gap, and insufficient-history cases in `starter-projects/priority-metrics-intelligence/test/projection.test.mjs`.
+- [x] T031 [P] [US5] Create at least 13 months of public-safe synthetic observations and a closed policy in `starter-projects/priority-metrics-intelligence/fixtures/synthetic-monthly-metrics.csv` and `starter-projects/priority-metrics-intelligence/fixtures/synthetic-policy.json`.
+- [x] T032 [US5] Run the projection test and verify it fails with `ERR_MODULE_NOT_FOUND` for `src/project.mjs`.
+- [x] T033 [US5] Implement consecutive-window median recent drift in `starter-projects/priority-metrics-intelligence/src/project.mjs`.
+- [x] T034 [US5] Implement orchestration and canonical result ordering in `starter-projects/priority-metrics-intelligence/src/analyze.mjs`.
+- [x] T035 [US5] Write failing stable JSON, Markdown fact-parity, and byte-determinism assertions in `starter-projects/priority-metrics-intelligence/test/workflow.test.mjs`.
+- [x] T036 [US5] Implement recursive key sorting and evidence-only Markdown sections in `starter-projects/priority-metrics-intelligence/src/render.mjs`.
+- [x] T037 [US5] Generate and review the exact golden result in `starter-projects/priority-metrics-intelligence/fixtures/expected-analysis.json`.
+- [x] T038 [US5] Run projection and workflow tests twice and verify both runs pass with byte-identical JSON.
+- [x] T039 [US5] Commit analysis/rendering with `git add starter-projects/priority-metrics-intelligence/test/projection.test.mjs starter-projects/priority-metrics-intelligence/test/workflow.test.mjs starter-projects/priority-metrics-intelligence/fixtures/synthetic-monthly-metrics.csv starter-projects/priority-metrics-intelligence/fixtures/synthetic-policy.json starter-projects/priority-metrics-intelligence/fixtures/expected-analysis.json starter-projects/priority-metrics-intelligence/src/project.mjs starter-projects/priority-metrics-intelligence/src/analyze.mjs starter-projects/priority-metrics-intelligence/src/render.mjs && git commit -m "feat: render deterministic priority metrics evidence"`.
 
 Projection test:
 
