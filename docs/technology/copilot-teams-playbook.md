@@ -1,12 +1,20 @@
 # Microsoft Copilot + Teams Playbook for Operations
 
-Last reviewed: 2026-06-11
+Last reviewed: 2026-06-20
 
 Our organization mostly works in Microsoft tools — Teams, Outlook, Excel, and
 Copilot. This playbook is the operations-specific guide to using them well with
 the repo's prompt library: which Copilot you actually have, how Microsoft says
 to prompt it, what each level of the operation should use it for, and how to
 grow from first prompt to power user.
+
+> **GitHub Copilot vs. Microsoft 365 Copilot:** they share a name but serve
+> different jobs. *GitHub Copilot* helps write and understand code inside VS
+> Code and the terminal. *Microsoft 365 Copilot* helps with email, meetings,
+> documents, and chats inside Outlook, Teams, Word, Excel, and PowerPoint. This
+> playbook focuses on the Microsoft 365 work tools; the repo also stays
+> model-agnostic, so code examples show how to point GitHub Copilot at
+> OpenAI-compatible local endpoints where appropriate.
 
 **Who this is for:** every level, package handler to managing director — the
 role guide below is organized by job. **What not to do:** never paste work
@@ -21,16 +29,17 @@ Companion pages: [prompt library](../../prompts/README.md) ·
 
 ## Which Copilot Do You Have?
 
-Three products share the name. Knowing yours prevents the most common mistakes.
+Four products share the Copilot name. Knowing yours prevents the most common mistakes.
 
 | Tier | What it is | What it can see | Use it for |
 | --- | --- | --- | --- |
 | **Consumer Copilot** (free, personal) | copilot.microsoft.com on a personal account | Public web only; **no enterprise protection** | Nothing work-related. Ever. |
 | **Microsoft 365 Copilot Chat** (included with M365) | The Copilot app in Teams/Edge/m365copilot.com with your work account | Web + files you upload; enterprise data protection; **not** your email/chats/calendar | All of this repo's prompts — paste the prompt, paste scrubbed context, go |
-| **Microsoft 365 Copilot** (paid license) | Copilot inside Word, Excel, Outlook, Teams meetings | Everything above **plus** your work emails, files, meetings, and chats ("Work mode") | Same prompts with less pasting — reference files and threads directly |
+| **Microsoft 365 Copilot** (paid license) | Copilot inside Word, Excel, Outlook, Teams meetings | Everything above **plus** your work emails, files, meetings, and chats via Microsoft Graph ("Work mode") | Same prompts with less pasting — reference files, meetings, and threads directly |
+| **GitHub Copilot** (coding assistant) | AI pair-programming in VS Code, JetBrains, Vim/Neovim, and the terminal | Public code plus your open codebase; optional BYOK/local endpoints | Writing, explaining, and reviewing code; see the model-agnostic examples below |
 
 Practical test: if Copilot can summarize a meeting you didn't paste in, you have
-the paid license. If not, you have Copilot Chat — every prompt in our library
+the paid Microsoft 365 Copilot license. If not, you have Copilot Chat — every prompt in our library
 still works, because they carry their context inside the brackets.
 
 ## Prompt Like Microsoft Says To
@@ -60,6 +69,70 @@ box to reference a specific file, email, or meeting instead of pasting
 (Context IQ), and scope Copilot to a Teams channel to ask about that
 workstream's history. The bracket versions remain the portable fallback that
 works everywhere — including Gemini and ChatGPT.
+
+## Model-Agnostic Use: GitHub Copilot With Local Or BYOK Endpoints
+
+Microsoft 365 Copilot runs on Microsoft's managed models and does not let users
+point it at a local Ollama instance. But *GitHub Copilot* has opened
+model-agnostic wiring for developers, which keeps the coding side of the stack
+from locking into one provider. These are developer-only options; they do not
+change what general managers do in Outlook or Teams.
+
+### GitHub Copilot CLI (terminal) — BYOK / OpenAI-compatible
+
+GitHub Copilot CLI now supports **bring-your-own-key (BYOK)** endpoints that
+speak the OpenAI Chat Completions API. That means a local Ollama instance,
+vLLM, Azure OpenAI, or another OpenAI-compatible gateway can back Copilot CLI.
+
+Required environment variables:
+
+```bash
+export COPILOT_PROVIDER_BASE_URL="http://localhost:11434/v1"   # Ollama OpenAI-compatible endpoint
+export COPILOT_PROVIDER_TYPE="openai"                          # openai | azure | anthropic
+export COPILOT_PROVIDER_API_KEY="unused"                       # Ollama ignores this by default
+export COPILOT_MODEL="qwen2.5-coder:14b"                       # must support tool calling + streaming
+```
+
+Then run `copilot` commands as usual. Models must support **tool calling** and
+**streaming**; for best results use a model with at least a 128K context window.
+See GitHub's `copilot help providers` for provider-specific examples.
+
+### VS Code Copilot Chat — "OAI Compatible" provider
+
+VS Code Copilot Chat now supports adding an **OAI Compatible** provider. This
+lets you route chat requests to an OpenAI-compatible base URL such as a local
+Ollama server or an internal gateway.
+
+Quick path:
+
+1. Open Copilot Chat (`Ctrl+Shift+I` / `Cmd+Shift+I`).
+2. Click the model picker → **Manage Models...**
+3. Choose **OAI Compatible**.
+4. Enter the base URL (`http://localhost:11434/v1` for local Ollama), an API
+   key (any string for default Ollama), and the model ID.
+
+For repeatable configuration, add the provider to VS Code settings:
+
+```json
+{
+  "oaicopilot.baseUrl": "http://localhost:11434/v1",
+  "oaicopilot.models": [
+    {
+      "id": "qwen2.5-coder:14b",
+      "owned_by": "ollama",
+      "apiMode": "ollama",
+      "context_length": 128000,
+      "max_tokens": 4096,
+      "temperature": 0
+    }
+  ]
+}
+```
+
+> **Enterprise note:** local/BYOK wiring is for local development and approved
+> internal gateways only. Do not redirect work-managed Copilot clients to
+> personal or unapproved endpoints, and do not use local models for confidential
+> FedEx code or data without IT/security review.
 
 ## Where Copilot Lives In Your Day
 
@@ -122,13 +195,23 @@ session.
 
 ## Agents: The Microsoft Path And Ours
 
-In the Microsoft ecosystem, custom agents are built in **Copilot Studio** and
-governed centrally (agent registry, admin controls, DLP). Copilot Studio
-supports the open **MCP** and **A2A** protocols — the same open standards
-Google's ecosystem speaks — which means our
+Microsoft now offers four agent-building surfaces, from business-user to
+pro-developer:
+
+| Surface | Best for | How it extends Copilot |
+| --- | --- | --- |
+| **SharePoint agents** | Teams/SharePoint content | Answer questions grounded in a SharePoint site or document library. |
+| **Microsoft 365 Agent Builder** (formerly Copilot Studio agent builder) | Business users | Build agents with natural-language instructions and a web UI. |
+| **Copilot Studio** | Low-code / IT pros | Build governed agents, add connectors, publish to Teams and M365 Copilot. Now supports **MCP apps** for tool access and the **A2A protocol** for multi-agent coordination. |
+| **Declarative agents** (Microsoft 365 Agents Toolkit + VS Code) | Pro-developers | JSON/YAML agents with version control, granular knowledge sources, 90+ connectors, and direct Git-based lifecycle. |
+
+**What changed in 2026:** the agent story has shifted from "Copilot Studio only"
+to a spectrum. **Declarative agents** are the pro-developer path and can use the
+same open standards as Google's ecosystem: **MCP** (Model Context Protocol) for
+tools and **A2A** (Agent-to-Agent Protocol) for coordination. That means our
 [ADK shift-brief agent](../../starter-projects/adk-shift-brief-agent/README.md)
-has a documented interop path rather than a platform bet. Whichever side hosts
-the first governed agent, the rules from the
+has a documented interop path rather than a platform bet. Whichever surface
+hosts the first governed agent, the rules from the
 [agency ladder](agentic-ai-for-operations.md) apply unchanged: supervised
 rungs only, tools are the control surface, human review on every output.
 
@@ -142,8 +225,11 @@ actually on. FedEx role descriptions summarize public careers material, not
 internal policy.
 
 Key references:
-[Which Copilot is right for you](https://learn.microsoft.com/en-us/microsoft-365/copilot/which-copilot-for-your-organization) ·
-[Learn about Copilot prompts](https://support.microsoft.com/en-us/topic/learn-about-copilot-prompts-f6c3b467-f07c-4db1-ae54-ffac96184dd5) ·
-[Microsoft 365 for frontline workers](https://learn.microsoft.com/en-us/microsoft-365/frontline/flw-overview) ·
+[Microsoft 365 Copilot overview](https://learn.microsoft.com/en-us/copilot/microsoft-365/microsoft-365-copilot-overview) ·
+[Microsoft 365 Copilot extensibility](https://learn.microsoft.com/en-us/microsoft-365/copilot/extensibility/) ·
+[Extend Copilot with declarative agents](https://learn.microsoft.com/en-us/microsoft-365/copilot/extensibility/overview-declarative-agent) ·
+[Copilot Studio overview](https://learn.microsoft.com/en-us/microsoft-copilot-studio/fundamentals-what-is-copilot-studio) ·
+[GitHub Copilot supported AI models](https://docs.github.com/en/copilot/using-github-copilot/ai-models/supported-ai-models-in-copilot) ·
+[GitHub Copilot CLI BYOK providers](https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot/use-byok-models) ·
 [Copilot Prompt Gallery](https://learn.microsoft.com/en-us/copilot/microsoft-365/copilot-prompt-gallery) ·
 [Copilot Success Kit](https://adoption.microsoft.com/en-us/copilot/success-kit/)

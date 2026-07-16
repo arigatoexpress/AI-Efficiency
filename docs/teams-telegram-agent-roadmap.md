@@ -1,6 +1,6 @@
 # Teams And Telegram Agent Roadmap
 
-Last reviewed: 2026-05-23
+Last reviewed: 2026-06-20
 
 The intake agent is a later phase. It should not be built as a self-training
 bot that silently absorbs employee feedback. It should be a governed intake
@@ -10,7 +10,13 @@ packets.
 ## Preferred First Channel
 
 Microsoft Teams or Microsoft 365 Copilot should be the first enterprise path if
-FedEx IT confirms it is approved for this use.
+FedEx IT confirms it is approved for this use. Agents can be built as
+**declarative agents** (Microsoft 365 Agents Toolkit + VS Code), in **Copilot
+Studio**, or via the **Agent Builder** for business users; all three publish
+into Teams and Microsoft 365 Copilot. Copilot Studio and declarative agents now
+speak open standards (**MCP** for tools, **A2A** for agent-to-agent
+coordination), so the same integration patterns also apply to the Google ADK
+side of our stack.
 
 Telegram should remain a dry-run prototype unless FedEx explicitly approves it
 for the team.

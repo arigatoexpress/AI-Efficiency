@@ -213,6 +213,9 @@ pilot packets.
 Default channel:
 
 - Microsoft Teams or Copilot first if that is the approved enterprise path.
+  Prefer declarative agents (Microsoft 365 Agents Toolkit + VS Code) or
+  Copilot Studio for the governed build surface; both now support MCP for tools
+  and A2A for multi-agent coordination.
 - Telegram remains a dry-run or personal prototype until explicitly approved.
 
 Deliverables:
