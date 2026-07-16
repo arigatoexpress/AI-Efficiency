@@ -1,6 +1,10 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { compareMetrics } from "../src/compare.mjs";
+import { parseMetricsCsv } from "../src/parse.mjs";
+
+const csvHeader =
+  "period,pillar_id,metric_id,metric_label,value,unit,target_type,target_min,target_max,warning_margin";
 
 function observation({ period, value, metricId = "on_time", unit = "percent" }) {
   return {
@@ -125,4 +129,50 @@ test("sorts comparisons by metric ID then period and preserves units", () => {
       { metricId: "package_count", period: "2026-06", unit: "count" },
     ],
   );
+});
+
+test("rejects incompatible metric definitions at the parse boundary", () => {
+  const incompatibleDefinitions = [
+    csvHeader,
+    "2026-05,service,on_time,On-time percent,90,percent,,,,0",
+    "2026-06,service,on_time,On-time percent,99,count,,,,0",
+  ].join("\n");
+
+  assert.throws(() => parseMetricsCsv(incompatibleDefinitions), {
+    code: "SCHEMA_UNSTABLE_METRIC",
+  });
+});
+
+test("does not substitute the previous available observation for a missing month", () => {
+  const comparisons = compareMetrics(
+    observationsFrom(new Map([
+      ["2026-04", 80],
+      ["2026-06", 99],
+    ])),
+  );
+
+  assert.deepEqual(comparisons[1].mom, {
+    baselinePeriod: "2026-05",
+    baselineValue: null,
+    absoluteChange: null,
+    percentageChange: null,
+    reason: "insufficient_history",
+  });
+});
+
+test("looks up December as the previous month for January", () => {
+  const comparisons = compareMetrics(
+    observationsFrom(new Map([
+      ["2025-12", 90],
+      ["2026-01", 99],
+    ])),
+  );
+
+  assert.deepEqual(comparisons[1].mom, {
+    baselinePeriod: "2025-12",
+    baselineValue: 90,
+    absoluteChange: 9,
+    percentageChange: 10,
+    reason: null,
+  });
 });
