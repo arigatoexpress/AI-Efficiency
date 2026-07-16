@@ -12,6 +12,13 @@ const STATION_CODES: Record<string, string> = {
 interface LiveWeather { tempF: number | null; windMph: number | null; snowfallIn: number | null; label: string }
 interface LiveAlert { event: string; severity: string; headline: string; label: string }
 interface LiveQuake { magnitude: number; place: string; time: string; label: string }
+interface SourceHealth { source: string; label: string; state: 'ok' | 'degraded'; error?: string }
+interface LiveSignalsHealth {
+  state: 'ok' | 'degraded'
+  freshness: 'live' | 'cached'
+  fetchedAt: string
+  sources: SourceHealth[]
+}
 interface LiveResponse {
   enabled: boolean
   cached?: boolean
@@ -20,6 +27,7 @@ interface LiveResponse {
   weather?: LiveWeather | { error: string }
   alerts?: LiveAlert[] | { error: string }
   quakes?: LiveQuake[] | { error: string }
+  health?: LiveSignalsHealth
 }
 
 interface Props {
@@ -64,6 +72,16 @@ export default function LiveSignalsPanel({ station, enabled }: Props) {
         still needs manager verification before any operational decision.
       </p>
       {!data && <p>Loading live signals…</p>}
+      {data?.health && (
+        <p>
+          <strong>Source health:</strong>{' '}
+          {data.health.state === 'ok'
+            ? 'all public sources responding'
+            : 'degraded — a public source is unreachable; verify live values before relying on them'}
+          {' '}({data.health.sources.map((s) => `${s.label} ${s.state}`).join(' · ')})
+          {data.health.freshness === 'cached' ? ' — cached snapshot, health as of fetch time' : ''}.
+        </p>
+      )}
       {data && (
         <ul>
           <li>

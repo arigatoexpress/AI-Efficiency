@@ -27,7 +27,7 @@ import {
   type SeismicContext,
   type WeatherContext,
 } from './drafts'
-import { fetchLiveSignals, type FetchLike, type LiveSignals } from './live-signals'
+import { fetchLiveSignals, summarizeLiveSignalsHealth, type FetchLike, type LiveSignals } from './live-signals'
 
 // The slice of the Gemini SDK the draft endpoint uses. Structural on purpose:
 // the real GoogleGenAI satisfies it, and tests inject a stub (or null to pin
@@ -90,7 +90,9 @@ export function createApp(options: CreateAppOptions = {}): Express {
   })
 
   // Live public signals (Open-Meteo, NWS alerts, USGS quakes) for one station.
-  // Cached per station to stay polite to the public APIs.
+  // Cached per station to stay polite to the public APIs. Every enabled
+  // response adds the machine-readable per-source health summary; cache hits
+  // report freshness:"cached" while keeping the fetch-time health.
   const liveCache = new Map<string, { at: number; payload: LiveSignals }>()
 
   app.get('/api/live-signals', async (req, res) => {
@@ -100,14 +102,14 @@ export function createApp(options: CreateAppOptions = {}): Express {
     const station = String(req.query.station || 'GUC')
     const cached = liveCache.get(station)
     if (cached && now().getTime() - cached.at < liveCacheMs) {
-      return res.json({ enabled: true, cached: true, ...cached.payload })
+      return res.json({ enabled: true, cached: true, ...cached.payload, health: summarizeLiveSignalsHealth(cached.payload, { cached: true }) })
     }
     const signals = await fetchLiveSignals(station, fetchFn, now())
     if (!signals) {
       return res.status(400).json({ enabled: true, error: `unknown station code: ${station}` })
     }
     liveCache.set(station, { at: now().getTime(), payload: signals })
-    res.json({ enabled: true, cached: false, ...signals })
+    res.json({ enabled: true, cached: false, ...signals, health: summarizeLiveSignalsHealth(signals, { cached: false }) })
   })
 
   // Compile advisory draft with Gemini, falling back to the deterministic
