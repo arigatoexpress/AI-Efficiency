@@ -439,8 +439,8 @@ test("uses stable schema, privacy, invariant, and file-I/O exit codes without ec
       contents: `${header}\n2026-06,synth_service,synth_on_time_percent,123 Secret Street,96.2,percent,minimum,95,,1\n`,
     },
     {
-      expectedCode: 5,
-      expectedError: "ERROR ANALYSIS_INVARIANT: analysis",
+      expectedCode: 3,
+      expectedError: "ERROR SCHEMA_EMPTY_INPUT: input",
       contents: `${header}\n`,
     },
   ];

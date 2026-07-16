@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { existsSync, mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { SafeInputError } from "../src/errors.mjs";
 import { parseMetricsCsv, parsePolicyJson } from "../src/parse.mjs";
 import { assertPublicSafe } from "../src/privacy.mjs";
 
@@ -32,6 +33,90 @@ test("quoted CSV maps to one canonical observation", () => {
     targetMax: null,
     warningMargin: 1,
   });
+});
+
+test("CSV parsing rejects structurally malformed quoting and line endings", () => {
+  const row = (label) =>
+    `2026-06,synth_service,synth_on_time_percent,${label},96.2,percent,minimum,95,,1`;
+
+  // Unterminated quoted field.
+  assert.throws(() => parseMetricsCsv(csv(row('"SYNTH On-time percent'))), {
+    code: "CSV_MALFORMED",
+  });
+  // Bare quote inside an unquoted field.
+  assert.throws(() => parseMetricsCsv(csv(row('SY"NTH'))), { code: "CSV_MALFORMED" });
+  // Trailing characters after a closing quote.
+  assert.throws(() => parseMetricsCsv(csv(row('"SYNTH On-time percent"x'))), {
+    code: "CSV_MALFORMED",
+  });
+  // A lone carriage return is not a line terminator.
+  assert.throws(() => parseMetricsCsv(`${header}\r\r\n`), { code: "CSV_MALFORMED" });
+  // Non-string input is rejected before any parsing.
+  for (const input of [null, undefined, 42, Buffer.from(header)]) {
+    assert.throws(() => parseMetricsCsv(input), { code: "CSV_INVALID_INPUT" });
+  }
+  // CRLF line endings and escaped quotes remain accepted.
+  const windows = `${header}\r\n${row('"SYNTH On-time percent"')}\r\n`;
+  assert.equal(parseMetricsCsv(windows).length, 1);
+});
+
+test("control characters smuggled inside quoted fields are privacy-rejected", () => {
+  const row = (label) =>
+    `2026-06,synth_service,synth_on_time_percent,${label},96.2,percent,minimum,95,,1`;
+
+  assert.throws(() => parseMetricsCsv(csv(row('"SYNTH\nOn-time"'))), {
+    code: "PRIVACY_DIRECT_IDENTIFIER",
+  });
+  assert.throws(() => parseMetricsCsv(csv(row('"SYNTH\u0000On-time"'))), {
+    code: "PRIVACY_DIRECT_IDENTIFIER",
+  });
+});
+
+test("SafeInputError sanitizes untrusted codes, fields, and row numbers", () => {
+  const hostile = new SafeInputError("inject: $(rm -rf /)", ["metric_label", "EVIL\nfield"], 0);
+  assert.equal(hostile.code, "SAFE_INPUT_ERROR");
+  assert.deepEqual(hostile.fieldNames, ["input", "metric_label"]);
+  assert.equal(hostile.rowNumber, null);
+  assert.equal(hostile.message, "SAFE_INPUT_ERROR; fields=input,metric_label");
+
+  // Non-positive and non-integer row numbers are dropped, not echoed.
+  for (const row of [0, -3, 3.5, Number.NaN, "7"]) {
+    assert.equal(new SafeInputError("SCHEMA_X", [], row).rowNumber, null);
+  }
+  assert.equal(new SafeInputError("SCHEMA_X", [], 7).message, "SCHEMA_X; row=7");
+});
+
+test("raw and canonical privacy scans report the same CSV row number", () => {
+  const canonical = {
+    period: "2026-06",
+    pillarId: "synth_service",
+    metricId: "synth_on_time_percent",
+    metricLabel: "user@example.com",
+    value: 96.2,
+    unit: "percent",
+    targetType: null,
+    targetMin: null,
+    targetMax: null,
+    warningMargin: 0,
+  };
+
+  // Both scans describe CSV rows: the first data row after the header is row 2.
+  assert.throws(() => assertPublicSafe([canonical]), {
+    code: "PRIVACY_DIRECT_IDENTIFIER",
+    rowNumber: 2,
+  });
+  assert.throws(
+    () => assertPublicSafe([{ ...canonical, metricLabel: "SYNTH On-time percent" }, canonical]),
+    { code: "PRIVACY_DIRECT_IDENTIFIER", rowNumber: 3 },
+  );
+});
+
+test("CSV rejects a dataset with zero observation rows at the parse boundary", () => {
+  assert.throws(() => parseMetricsCsv(`${header}\n`), {
+    code: "SCHEMA_EMPTY_INPUT",
+    message: "SCHEMA_EMPTY_INPUT; fields=input",
+  });
+  assert.throws(() => parseMetricsCsv(header), { code: "SCHEMA_EMPTY_INPUT" });
 });
 
 test("CSV schema rejects unknown, reordered, and duplicate headers", () => {

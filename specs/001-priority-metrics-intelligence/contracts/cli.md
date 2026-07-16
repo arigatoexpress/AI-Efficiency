@@ -36,7 +36,8 @@ than 15 significant digits, nonzero absolute magnitude below `1e-12` or above
 `1e12`, or non-finite), a recurrence threshold below 3, an infeasible
 `minimumObservations + lagMonths > 60`, and configured metric references absent
 from the observations. It also covers inputs spanning more than 60 distinct
-monthly periods.
+monthly periods and inputs with a valid header but zero observation rows
+(`SCHEMA_EMPTY_INPUT`).
 
 `--data-classification scrubbed` does not widen the input contract. A local
 preparer must map approved aggregate source columns to exact catalog aliases

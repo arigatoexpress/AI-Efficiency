@@ -188,6 +188,8 @@ export function parseMetricsCsv(text) {
     throw new SafeInputError("SCHEMA_INVALID_CSV_HEADER");
   }
 
+  if (rows.length === 1) throw new SafeInputError("SCHEMA_EMPTY_INPUT", ["input"]);
+
   const rawRecords = rows.slice(1).map((values, index) => {
     if (values.length !== CSV_FIELDS.length) {
       throw new SafeInputError("SCHEMA_INVALID_COLUMN_COUNT", [], index + 2);

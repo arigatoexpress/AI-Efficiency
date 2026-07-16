@@ -29,7 +29,7 @@ export function assertPublicSafe(records) {
   }
 
   records.forEach((record, index) => {
-    const rowNumber = index + 1;
+    const rowNumber = index + 2;
     if (record === null || Array.isArray(record) || typeof record !== "object") {
       throw new SafeInputError("PRIVACY_INVALID_RECORD", [], rowNumber);
     }
