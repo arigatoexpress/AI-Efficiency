@@ -276,15 +276,15 @@ assert.match(stdout.join("\n"), /^OK priority-metrics-analysis:/);
 **Goal:** Document the synthetic workflow, add the prompt-library entry, and
 make the focused eval a root/CI gate.
 
-- [ ] T045 Write audience, safety, input, run, interpretation, demo, and governance guidance in `starter-projects/priority-metrics-intelligence/README.md`, `starter-projects/priority-metrics-intelligence/demo-script.md`, and `starter-projects/priority-metrics-intelligence/governance-review.md`.
-- [ ] T046 Add a derived-output-only executive review prompt to `prompts/data-and-reporting.md` that forbids raw reports, invented values, and causal claims.
-- [ ] T047 Update every exact prompt-count claim found by `rg -n "51 prompts|51 FedEx-specific|across 10 categories" README.md index.html AGENTS.md assets prompts`, then regenerate `prompts/prompts.json` and `prompts/explorer.html` with `node scripts/build-prompt-index.mjs`.
-- [ ] T048 Add `verify:priority-metrics` and include it in `verify` in `package.json` without adding a dependency.
-- [ ] T049 Add the focused priority-metrics command to `.github/workflows/ci.yml` and update the CI inventory in `AGENTS.md`.
-- [ ] T050 Run `node --test starter-projects/priority-metrics-intelligence/test/*.test.mjs` and verify zero failures.
-- [ ] T051 Run `node scripts/check-docs.mjs`, `node scripts/build-prompt-index.mjs --check`, the TLH/SPH eval, ADK eval, and `npm test`; record exact results in the pull-request draft.
-- [ ] T052 Run `git diff --check` and a repository scan confirming no forbidden identifiers, network interfaces, unresolved placeholders, or untracked output artifacts.
-- [ ] T053 Commit integration with `git add starter-projects/priority-metrics-intelligence/README.md starter-projects/priority-metrics-intelligence/demo-script.md starter-projects/priority-metrics-intelligence/governance-review.md prompts/data-and-reporting.md prompts/prompts.json prompts/explorer.html package.json .github/workflows/ci.yml AGENTS.md README.md index.html && git commit -m "docs: integrate priority metrics intelligence"`; add another exact claim-bearing path only if T047's `rg` output proves it changed.
+- [x] T045 Write audience, safety, input, run, interpretation, demo, and governance guidance in `starter-projects/priority-metrics-intelligence/README.md`, `starter-projects/priority-metrics-intelligence/demo-script.md`, and `starter-projects/priority-metrics-intelligence/governance-review.md`.
+- [x] T046 Add a derived-output-only executive review prompt to `prompts/data-and-reporting.md` that forbids raw reports, invented values, and causal claims.
+- [x] T047 Update every exact prompt-count claim found by `rg -n "51 prompts|51 FedEx-specific|across 10 categories" README.md index.html AGENTS.md assets prompts`, then regenerate `prompts/prompts.json` and `prompts/explorer.html` with `node scripts/build-prompt-index.mjs`.
+- [x] T048 Add `verify:priority-metrics` and include it in `verify` in `package.json` without adding a dependency.
+- [x] T049 Add the focused priority-metrics command to `.github/workflows/ci.yml` and update the CI inventory in `AGENTS.md`.
+- [x] T050 Run `node --test starter-projects/priority-metrics-intelligence/test/*.test.mjs` and verify zero failures.
+- [x] T051 Run `node scripts/check-docs.mjs`, `node scripts/build-prompt-index.mjs --check`, the TLH/SPH eval, ADK eval, and `npm test`; record exact results in the pull-request draft.
+- [x] T052 Run `git diff --check` and a repository scan confirming no forbidden identifiers, network interfaces, unresolved placeholders, or untracked output artifacts.
+- [x] T053 Commit integration with `git add starter-projects/priority-metrics-intelligence/README.md starter-projects/priority-metrics-intelligence/demo-script.md starter-projects/priority-metrics-intelligence/governance-review.md prompts/data-and-reporting.md prompts/prompts.json prompts/explorer.html package.json .github/workflows/ci.yml AGENTS.md README.md index.html && git commit -m "docs: integrate priority metrics intelligence"`; add another exact claim-bearing path only if T047's `rg` output proves it changed.
 
 ## Dependencies and parallel opportunities
 
