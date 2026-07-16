@@ -119,6 +119,26 @@ test("uses the dataset-wide latest period and discloses a missing current metric
   assert.equal(result.provenance.dataClassification, "scrubbed");
 });
 
+test("missing-current lineage closure zero-pads a lower-boundary period", () => {
+  const records = parseMetricsCsv(
+    [
+      "period,pillar_id,metric_id,metric_label,value,unit,target_type,target_min,target_max,warning_margin",
+      "0001-01,synth_service,synth_on_time_percent,SYNTH On-time percent,90,percent,minimum,95,,0",
+      "0001-01,synth_flow,synth_late_inbound_count,SYNTH Late inbound count,1,count,,,,",
+      "0001-02,synth_flow,synth_late_inbound_count,SYNTH Late inbound count,2,count,,,,",
+    ].join("\n"),
+  );
+  const result = analyzeMetrics({
+    records,
+    policy: parsePolicyJson("{}"),
+    analyzerVersion: "0.1.0",
+  });
+
+  assert.deepEqual(result.riskLineages[0].events, [
+    { period: "0001-02", classification: "gap", severity: null },
+  ]);
+});
+
 test("keeps semantic result order and emits exact canonical golden JSON", async () => {
   const result = await analyzeFixture();
   const expected = await fixture("expected-analysis.json");

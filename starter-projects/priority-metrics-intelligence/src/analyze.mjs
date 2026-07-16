@@ -24,8 +24,8 @@ function compareLineages(left, right) {
 
 function nextPeriod(period) {
   const [year, month] = period.split("-").map(Number);
-  if (month === 12) return `${year + 1}-01`;
-  return `${year}-${String(month + 1).padStart(2, "0")}`;
+  if (month === 12) return `${String(year + 1).padStart(4, "0")}-01`;
+  return `${String(year).padStart(4, "0")}-${String(month + 1).padStart(2, "0")}`;
 }
 
 function closeMissingCurrentLineages(lineages, missingMetricIds) {
