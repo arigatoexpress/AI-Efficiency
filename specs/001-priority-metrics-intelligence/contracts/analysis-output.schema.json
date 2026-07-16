@@ -16,22 +16,518 @@
     "provenance"
   ],
   "properties": {
-    "schemaVersion": { "const": "1.0.0" },
-    "analyzerVersion": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
-    "inputSummary": { "type": "object" },
-    "comparisons": { "type": "array", "items": { "type": "object" } },
-    "riskLineages": { "type": "array", "items": { "type": "object" } },
-    "patterns": { "type": "object" },
-    "projections": { "type": "array", "items": { "type": "object" } },
-    "limitations": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+    "schemaVersion": {
+      "type": "string",
+      "const": "1.0.0"
+    },
+    "analyzerVersion": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$"
+    },
+    "inputSummary": { "$ref": "#/$defs/inputSummary" },
+    "comparisons": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/comparison" },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "riskLineages": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/riskLineage" },
+      "uniqueItems": true
+    },
+    "patterns": { "$ref": "#/$defs/patterns" },
+    "projections": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/projection" },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^missing_current_period:synth_[a-z0-9]+(?:_[a-z0-9]+)*$"
+      },
+      "uniqueItems": true
+    },
+    "provenance": { "$ref": "#/$defs/provenance" }
+  },
+  "$defs": {
+    "period": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])$"
+    },
+    "metricId": {
+      "type": "string",
+      "pattern": "^synth_[a-z0-9]+(?:_[a-z0-9]+)*$",
+      "enum": [
+        "synth_damage_percent",
+        "synth_late_inbound_count",
+        "synth_on_time_percent",
+        "synth_packages_per_paid_hour",
+        "synth_packages_per_stop",
+        "synth_stops_per_on_road_hour"
+      ]
+    },
+    "pillarId": {
+      "type": "string",
+      "pattern": "^synth_[a-z0-9]+(?:_[a-z0-9]+)*$",
+      "enum": ["synth_flow", "synth_quality", "synth_route", "synth_service"]
+    },
+    "unit": {
+      "type": "string",
+      "enum": ["count", "percent", "minutes", "hours", "index", "ratio"]
+    },
+    "periodRange": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["start", "end"],
+      "properties": {
+        "start": { "$ref": "#/$defs/period" },
+        "end": { "$ref": "#/$defs/period" }
+      }
+    },
+    "rateSemanticDefinition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "numerator", "denominator", "timeBasis"],
+      "properties": {
+        "kind": { "type": "string", "const": "rate" },
+        "numerator": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9]*(?:_[a-z0-9]+)*$"
+        },
+        "denominator": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9]*(?:_[a-z0-9]+)*$"
+        },
+        "timeBasis": { "type": "string", "const": "monthly_aggregate" }
+      }
+    },
+    "measureSemanticDefinition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "measure", "timeBasis"],
+      "properties": {
+        "kind": { "type": "string", "const": "measure" },
+        "measure": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9]*(?:_[a-z0-9]+)*$"
+        },
+        "timeBasis": { "type": "string", "const": "monthly_aggregate" }
+      }
+    },
+    "semanticDefinition": {
+      "oneOf": [
+        { "$ref": "#/$defs/rateSemanticDefinition" },
+        { "$ref": "#/$defs/measureSemanticDefinition" }
+      ]
+    },
+    "metricDefinition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "metricId",
+        "metricLabel",
+        "pillarId",
+        "semanticDefinition",
+        "unit"
+      ],
+      "properties": {
+        "metricId": { "$ref": "#/$defs/metricId" },
+        "metricLabel": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80,
+          "pattern": "^SYNTH [A-Za-z0-9 ()/%+\\-]+$"
+        },
+        "pillarId": { "$ref": "#/$defs/pillarId" },
+        "semanticDefinition": { "$ref": "#/$defs/semanticDefinition" },
+        "unit": { "$ref": "#/$defs/unit" }
+      }
+    },
+    "inputSummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "analysisPeriod",
+        "observationCount",
+        "metricCount",
+        "metricDefinitions",
+        "periodRange",
+        "validationResult"
+      ],
+      "properties": {
+        "analysisPeriod": { "$ref": "#/$defs/period" },
+        "observationCount": { "type": "integer", "minimum": 1 },
+        "metricCount": { "type": "integer", "minimum": 1, "maximum": 6 },
+        "metricDefinitions": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/metricDefinition" },
+          "minItems": 1,
+          "maxItems": 6,
+          "uniqueItems": true
+        },
+        "periodRange": { "$ref": "#/$defs/periodRange" },
+        "validationResult": { "type": "string", "const": "passed" }
+      }
+    },
+    "availableChange": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "absoluteChange",
+        "baselinePeriod",
+        "baselineValue",
+        "percentageChange",
+        "reason"
+      ],
+      "properties": {
+        "absoluteChange": { "type": "number" },
+        "baselinePeriod": { "$ref": "#/$defs/period" },
+        "baselineValue": { "type": "number" },
+        "percentageChange": { "type": "number" },
+        "reason": { "type": "null", "const": null }
+      }
+    },
+    "zeroBaselineChange": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "absoluteChange",
+        "baselinePeriod",
+        "baselineValue",
+        "percentageChange",
+        "reason"
+      ],
+      "properties": {
+        "absoluteChange": { "type": "number" },
+        "baselinePeriod": { "$ref": "#/$defs/period" },
+        "baselineValue": { "type": "number", "const": 0 },
+        "percentageChange": { "type": "null", "const": null },
+        "reason": { "type": "string", "const": "zero_baseline" }
+      }
+    },
+    "insufficientHistoryChange": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "absoluteChange",
+        "baselinePeriod",
+        "baselineValue",
+        "percentageChange",
+        "reason"
+      ],
+      "properties": {
+        "absoluteChange": { "type": "null", "const": null },
+        "baselinePeriod": { "$ref": "#/$defs/period" },
+        "baselineValue": { "type": "null", "const": null },
+        "percentageChange": { "type": "null", "const": null },
+        "reason": { "type": "string", "const": "insufficient_history" }
+      }
+    },
+    "change": {
+      "oneOf": [
+        { "$ref": "#/$defs/availableChange" },
+        { "$ref": "#/$defs/zeroBaselineChange" },
+        { "$ref": "#/$defs/insufficientHistoryChange" }
+      ]
+    },
+    "evaluatedTarget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["distance", "status"],
+      "properties": {
+        "distance": { "type": "number" },
+        "status": {
+          "type": "string",
+          "enum": ["on_target", "warning", "at_risk"]
+        }
+      }
+    },
+    "noTarget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["distance", "status"],
+      "properties": {
+        "distance": { "type": "null", "const": null },
+        "status": { "type": "string", "const": "no_target" }
+      }
+    },
+    "target": {
+      "oneOf": [
+        { "$ref": "#/$defs/evaluatedTarget" },
+        { "$ref": "#/$defs/noTarget" }
+      ]
+    },
+    "comparison": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["metricId", "mom", "period", "target", "unit", "value", "yoy"],
+      "properties": {
+        "metricId": { "$ref": "#/$defs/metricId" },
+        "mom": { "$ref": "#/$defs/change" },
+        "period": { "$ref": "#/$defs/period" },
+        "target": { "$ref": "#/$defs/target" },
+        "unit": { "$ref": "#/$defs/unit" },
+        "value": { "type": "number" },
+        "yoy": { "$ref": "#/$defs/change" }
+      }
+    },
+    "riskEvidenceEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["classification", "period", "severity"],
+      "properties": {
+        "classification": {
+          "type": "string",
+          "enum": ["persisted", "worsened", "improved_at_risk", "recovered"]
+        },
+        "period": { "$ref": "#/$defs/period" },
+        "severity": { "type": "number", "minimum": 0 }
+      }
+    },
+    "riskGapEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["classification", "period", "severity"],
+      "properties": {
+        "classification": { "type": "string", "const": "gap" },
+        "period": { "$ref": "#/$defs/period" },
+        "severity": { "type": "null", "const": null }
+      }
+    },
+    "riskEvent": {
+      "oneOf": [
+        { "$ref": "#/$defs/riskEvidenceEvent" },
+        { "$ref": "#/$defs/riskGapEvent" }
+      ]
+    },
+    "riskLineage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["events", "metricId", "originPeriod", "originSeverity", "outcome"],
+      "properties": {
+        "events": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/riskEvent" },
+          "uniqueItems": true
+        },
+        "metricId": { "$ref": "#/$defs/metricId" },
+        "originPeriod": { "$ref": "#/$defs/period" },
+        "originSeverity": { "type": "number", "minimum": 0 },
+        "outcome": {
+          "type": "string",
+          "enum": ["active", "recovered", "untraceable"]
+        }
+      }
+    },
+    "recurrence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["eventCount", "metricId", "periods"],
+      "properties": {
+        "eventCount": { "type": "integer", "minimum": 3 },
+        "metricId": { "$ref": "#/$defs/metricId" },
+        "periods": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/period" },
+          "minItems": 3,
+          "uniqueItems": true
+        }
+      }
+    },
+    "periodPair": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["outcomePeriod", "sourcePeriod"],
+      "properties": {
+        "outcomePeriod": { "$ref": "#/$defs/period" },
+        "sourcePeriod": { "$ref": "#/$defs/period" }
+      }
+    },
+    "availableAssociation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "coefficient",
+        "lagMonths",
+        "limitation",
+        "observationCount",
+        "outcomeMetricId",
+        "periodPairs",
+        "sourceMetricId",
+        "type"
+      ],
+      "properties": {
+        "coefficient": { "type": "number", "minimum": -1, "maximum": 1 },
+        "lagMonths": { "type": "integer", "minimum": 1, "maximum": 12 },
+        "limitation": { "type": "null", "const": null },
+        "observationCount": { "type": "integer", "minimum": 6, "maximum": 60 },
+        "outcomeMetricId": { "$ref": "#/$defs/metricId" },
+        "periodPairs": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/periodPair" },
+          "minItems": 6,
+          "uniqueItems": true
+        },
+        "sourceMetricId": { "$ref": "#/$defs/metricId" },
+        "type": { "type": "string", "const": "candidate_association" }
+      }
+    },
+    "limitedAssociation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "coefficient",
+        "lagMonths",
+        "limitation",
+        "observationCount",
+        "outcomeMetricId",
+        "periodPairs",
+        "sourceMetricId",
+        "type"
+      ],
+      "properties": {
+        "coefficient": { "type": "null", "const": null },
+        "lagMonths": { "type": "integer", "minimum": 1, "maximum": 12 },
+        "limitation": {
+          "type": "string",
+          "enum": [
+            "insufficient_history",
+            "period_gap",
+            "insufficient_observations",
+            "zero_variance",
+            "numeric_overflow"
+          ]
+        },
+        "observationCount": { "type": "integer", "minimum": 0, "maximum": 60 },
+        "outcomeMetricId": { "$ref": "#/$defs/metricId" },
+        "periodPairs": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/periodPair" },
+          "uniqueItems": true
+        },
+        "sourceMetricId": { "$ref": "#/$defs/metricId" },
+        "type": { "type": "string", "const": "candidate_association" }
+      }
+    },
+    "association": {
+      "oneOf": [
+        { "$ref": "#/$defs/availableAssociation" },
+        { "$ref": "#/$defs/limitedAssociation" }
+      ]
+    },
+    "patterns": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["candidateAssociations", "recurrences"],
+      "properties": {
+        "candidateAssociations": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/association" },
+          "uniqueItems": true
+        },
+        "recurrences": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/recurrence" },
+          "uniqueItems": true
+        }
+      }
+    },
+    "availableProjection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "inputPeriods",
+        "limitation",
+        "method",
+        "metricId",
+        "projectedValue",
+        "targetPeriod"
+      ],
+      "properties": {
+        "inputPeriods": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/period" },
+          "minItems": 3,
+          "maxItems": 24,
+          "uniqueItems": true
+        },
+        "limitation": { "type": "null", "const": null },
+        "method": { "type": "string", "const": "median_recent_drift" },
+        "metricId": { "$ref": "#/$defs/metricId" },
+        "projectedValue": { "type": "number" },
+        "targetPeriod": { "$ref": "#/$defs/period" }
+      }
+    },
+    "limitedProjection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "inputPeriods",
+        "limitation",
+        "method",
+        "metricId",
+        "projectedValue",
+        "targetPeriod"
+      ],
+      "properties": {
+        "inputPeriods": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/period" },
+          "minItems": 1,
+          "maxItems": 24,
+          "uniqueItems": true
+        },
+        "limitation": {
+          "type": "string",
+          "enum": [
+            "insufficient_history",
+            "period_gap",
+            "numeric_overflow",
+            "missing_current_period"
+          ]
+        },
+        "method": { "type": "string", "const": "median_recent_drift" },
+        "metricId": { "$ref": "#/$defs/metricId" },
+        "projectedValue": { "type": "null", "const": null },
+        "targetPeriod": { "$ref": "#/$defs/period" }
+      }
+    },
+    "projection": {
+      "oneOf": [
+        { "$ref": "#/$defs/availableProjection" },
+        { "$ref": "#/$defs/limitedProjection" }
+      ]
+    },
     "provenance": {
       "type": "object",
       "additionalProperties": false,
       "required": ["dataClassification", "periodRange", "methods"],
       "properties": {
-        "dataClassification": { "enum": ["synthetic", "scrubbed"] },
-        "periodRange": { "type": "object" },
-        "methods": { "type": "array", "items": { "type": "string" }, "uniqueItems": true }
+        "dataClassification": {
+          "type": "string",
+          "enum": ["synthetic", "scrubbed"]
+        },
+        "periodRange": { "$ref": "#/$defs/periodRange" },
+        "methods": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "configured_pearson_correlation",
+              "exact_period_comparison",
+              "median_recent_drift",
+              "risk_lineage_state_machine",
+              "target_boundary_distance"
+            ]
+          },
+          "minItems": 5,
+          "maxItems": 5,
+          "uniqueItems": true
+        }
       }
     }
   }
