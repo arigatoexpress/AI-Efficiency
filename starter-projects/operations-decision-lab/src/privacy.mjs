@@ -43,13 +43,13 @@ const SENSITIVE_IDENTIFIER_SHAPED =
   /^(?:address|customer|employee|manifest|route|source[_-]?system|tracking)[_-]?[a-z0-9_-]+$/i;
 
 const SYNTHETIC_ID_PATTERNS = Object.freeze({
-  entityId: /^SYNTH-(?:NETWORK|STATION)-[A-Z0-9]+(?:-[A-Z0-9]+)*$/,
-  observationId: /^SYNTH-OBS-[A-Z0-9]+(?:-[A-Z0-9]+)*$/,
-  vehicleId: /^SYNTH-VEHICLE-[A-Z0-9]+(?:-[A-Z0-9]+)*$/,
-  shiftId: /^SYNTH-SHIFT-[A-Z0-9]+(?:-[A-Z0-9]+)*$/,
-  demandGroupId: /^SYNTH-DEMAND-[A-Z0-9]+(?:-[A-Z0-9]+)*$/,
-  planId: /^SYNTH-PLAN-[A-Z0-9]+(?:-[A-Z0-9]+)*$/,
-  routeId: /^SYNTH-ROUTE-[A-Z0-9]+(?:-[A-Z0-9]+)*$/,
+  entityId: /^SYNTH-(?:NETWORK|STATION)-\d{1,6}$/,
+  observationId: /^SYNTH-OBS-\d{1,6}$/,
+  vehicleId: /^SYNTH-VEHICLE-\d{1,6}$/,
+  shiftId: /^SYNTH-SHIFT-\d{1,6}$/,
+  demandGroupId: /^SYNTH-DEMAND-\d{1,6}$/,
+  planId: /^SYNTH-PLAN-\d{1,6}$/,
+  routeId: /^SYNTH-ROUTE-\d{1,6}$/,
 });
 
 function isObject(value) {

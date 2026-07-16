@@ -80,7 +80,7 @@
       "properties": {
         "entityId": {
           "type": "string",
-          "pattern": "^SYNTH-(?:NETWORK|STATION)-[A-Z0-9]+(?:-[A-Z0-9]+)*$"
+          "pattern": "^SYNTH-(?:NETWORK|STATION)-\\d{1,6}$"
         },
         "quantityId": { "const": "packages_tendered" },
         "unit": { "const": "packages" },
@@ -100,7 +100,7 @@
       "properties": {
         "observationId": {
           "type": "string",
-          "pattern": "^SYNTH-OBS-[A-Z0-9]+(?:-[A-Z0-9]+)*$"
+          "pattern": "^SYNTH-OBS-\\d{1,6}$"
         },
         "serviceDate": { "$ref": "#/$defs/date" },
         "availableAt": { "$ref": "#/$defs/timestamp" },
@@ -139,7 +139,7 @@
       "properties": {
         "vehicleId": {
           "type": "string",
-          "pattern": "^SYNTH-VEHICLE-[A-Z0-9]+(?:-[A-Z0-9]+)*$"
+          "pattern": "^SYNTH-VEHICLE-\\d{1,6}$"
         },
         "capacityUnits": {
           "type": "integer",
@@ -162,7 +162,7 @@
       "properties": {
         "shiftId": {
           "type": "string",
-          "pattern": "^SYNTH-SHIFT-[A-Z0-9]+(?:-[A-Z0-9]+)*$"
+          "pattern": "^SYNTH-SHIFT-\\d{1,6}$"
         },
         "startTime": { "$ref": "#/$defs/timestamp" },
         "endTime": { "$ref": "#/$defs/timestamp" },
@@ -188,7 +188,7 @@
       "properties": {
         "demandGroupId": {
           "type": "string",
-          "pattern": "^SYNTH-DEMAND-[A-Z0-9]+(?:-[A-Z0-9]+)*$"
+          "pattern": "^SYNTH-DEMAND-\\d{1,6}$"
         },
         "packages": { "$ref": "#/$defs/nonnegativeInteger" },
         "cubeUnits": { "$ref": "#/$defs/nonnegativeInteger" },
@@ -209,7 +209,7 @@
       "properties": {
         "planId": {
           "type": "string",
-          "pattern": "^SYNTH-PLAN-[A-Z0-9]+(?:-[A-Z0-9]+)*$"
+          "pattern": "^SYNTH-PLAN-\\d{1,6}$"
         },
         "planVersion": { "$ref": "#/$defs/version" },
         "snapshotTime": { "$ref": "#/$defs/timestamp" },
@@ -229,15 +229,15 @@
       "properties": {
         "routeId": {
           "type": "string",
-          "pattern": "^SYNTH-ROUTE-[A-Z0-9]+(?:-[A-Z0-9]+)*$"
+          "pattern": "^SYNTH-ROUTE-\\d{1,6}$"
         },
         "vehicleId": {
           "type": "string",
-          "pattern": "^SYNTH-VEHICLE-[A-Z0-9]+(?:-[A-Z0-9]+)*$"
+          "pattern": "^SYNTH-VEHICLE-\\d{1,6}$"
         },
         "shiftId": {
           "type": "string",
-          "pattern": "^SYNTH-SHIFT-[A-Z0-9]+(?:-[A-Z0-9]+)*$"
+          "pattern": "^SYNTH-SHIFT-\\d{1,6}$"
         },
         "visits": {
           "type": "array",
@@ -255,7 +255,7 @@
         "sequence": { "type": "integer", "minimum": 1, "maximum": 100 },
         "demandGroupId": {
           "type": "string",
-          "pattern": "^SYNTH-DEMAND-[A-Z0-9]+(?:-[A-Z0-9]+)*$"
+          "pattern": "^SYNTH-DEMAND-\\d{1,6}$"
         },
         "arrivalTime": { "$ref": "#/$defs/timestamp" },
         "departureTime": { "$ref": "#/$defs/timestamp" }
