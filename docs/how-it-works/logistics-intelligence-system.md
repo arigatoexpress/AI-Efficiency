@@ -57,7 +57,7 @@ Every screen says so.
    │        yes │                                    │ no / error   │
    │            ▼                                    ▼              │
    │   ┌─────────────────────┐          ┌─────────────────────────┐ │
-   │   │  Gemini 2.0 Flash   │          │ generateFallbackDraft() │ │
+   │   │  Gemini 2.5 Flash   │          │ generateFallbackDraft() │ │
    │   │  (@google/genai,    │          │ deterministic rules:    │ │
    │   │  server-side key)   │          │  snow > 6 in → flag     │ │
    │   └──────────┬──────────┘          │  wind > 35 mph → flag   │ │
@@ -113,11 +113,13 @@ Generated: 7/16/2026, 11:43 AM MT
 ```
 
 **Notice what just happened.** The Gemini call errored on the day we captured
-this, and instead of a broken page a manager still got a usable, correctly
-labeled brief from the deterministic fallback — with `source: "fallback"`
-stated in the response so nobody mistakes it for model output. Graceful
-degradation is not a slide-deck claim here; it fired in production and we're
-showing you the capture.
+this — the deployed build still pointed at the retired `gemini-2.0-flash`
+model id — and instead of a broken page a manager still got a usable,
+correctly labeled brief from the deterministic fallback, with
+`source: "fallback"` stated in the response so nobody mistakes it for model
+output. Graceful degradation is not a slide-deck claim here; it fired in
+production and we're showing you the capture. (The model id has since been
+bumped to `gemini-2.5-flash`, overridable via the `GEMINI_MODEL` env var.)
 
 ## Where the Safety Lives
 
