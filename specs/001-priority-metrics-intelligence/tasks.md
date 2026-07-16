@@ -111,11 +111,11 @@ assert.equal(june.yoy.percentageChange, 23.75);
 **Independent test:** A table-driven target matrix returns exact status and
 signed boundary distance in the metric unit.
 
-- [ ] T015 [US2] Add failing minimum, maximum, range, warning-margin, and no-target cases to `starter-projects/priority-metrics-intelligence/test/compare.test.mjs`.
-- [ ] T016 [US2] Run the focused comparison test and verify the new cases fail because `target.status` is absent or incorrect.
-- [ ] T017 [US2] Add `evaluateTarget(observation)` and integrate it into `compareMetrics` in `starter-projects/priority-metrics-intelligence/src/compare.mjs`.
-- [ ] T018 [US2] Run `node --test starter-projects/priority-metrics-intelligence/test/compare.test.mjs` and verify all comparison and target cases pass.
-- [ ] T019 [US2] Commit target behavior with `git add starter-projects/priority-metrics-intelligence/test/compare.test.mjs starter-projects/priority-metrics-intelligence/src/compare.mjs && git commit -m "feat: evaluate metric target risk"`.
+- [x] T015 [US2] Add failing minimum, maximum, range, warning-margin, and no-target cases to `starter-projects/priority-metrics-intelligence/test/compare.test.mjs`.
+- [x] T016 [US2] Run the focused comparison test and verify the new cases fail because `target.status` is absent or incorrect.
+- [x] T017 [US2] Add `evaluateTarget(observation)` and integrate it into `compareMetrics` in `starter-projects/priority-metrics-intelligence/src/compare.mjs`.
+- [x] T018 [US2] Run `node --test starter-projects/priority-metrics-intelligence/test/compare.test.mjs` and verify all comparison and target cases pass.
+- [x] T019 [US2] Commit target behavior with `git add starter-projects/priority-metrics-intelligence/test/compare.test.mjs starter-projects/priority-metrics-intelligence/src/compare.mjs && git commit -m "feat: evaluate metric target risk"`.
 
 Target matrix:
 
