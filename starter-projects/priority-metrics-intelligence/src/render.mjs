@@ -1,5 +1,5 @@
 function roundFloatingNoise(value) {
-  if (!Number.isFinite(value)) return value;
+  if (!Number.isFinite(value)) throw new RangeError("NON_FINITE_NUMBER");
   const rounded = Number(value.toFixed(12));
   return Object.is(rounded, -0) ? 0 : rounded;
 }

@@ -47,6 +47,33 @@ test("uses the median drift instead of an extreme change", () => {
   assert.equal(result.method, "median_recent_drift");
 });
 
+test("returns numeric overflow when finite inputs produce non-finite differences", () => {
+  const [result] = projectBaselines(
+    monthly("metric_a", [Number.MAX_VALUE, -Number.MAX_VALUE, Number.MAX_VALUE]),
+    { projectionWindow: 3 },
+  );
+
+  assert.deepEqual(result, {
+    metricId: "metric_a",
+    targetPeriod: "2025-10",
+    method: "median_recent_drift",
+    inputPeriods: ["2025-07", "2025-08", "2025-09"],
+    projectedValue: null,
+    limitation: "numeric_overflow",
+  });
+});
+
+test("returns numeric overflow when a finite drift makes the projection overflow", () => {
+  const maximum = Number.MAX_VALUE;
+  const [result] = projectBaselines(
+    monthly("metric_a", [maximum / 2, maximum * 0.75, maximum]),
+    { projectionWindow: 3 },
+  );
+
+  assert.equal(result.projectedValue, null);
+  assert.equal(result.limitation, "numeric_overflow");
+});
+
 test("uses only the exact trailing projection window", () => {
   const [result] = projectBaselines(
     monthly("metric_a", [1000, 10, 11, 12, 13, 14, 15]),

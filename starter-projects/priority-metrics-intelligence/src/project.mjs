@@ -44,7 +44,21 @@ function projectMetric(metricId, records, projectionWindow) {
     const differences = window
       .slice(1)
       .map((record, index) => record.value - window[index].value);
-    projectedValue = lastRecord.value + median(differences);
+    if (differences.some((difference) => !Number.isFinite(difference))) {
+      limitation = "numeric_overflow";
+    } else {
+      const medianDrift = median(differences);
+      if (!Number.isFinite(medianDrift)) {
+        limitation = "numeric_overflow";
+      } else {
+        const candidateValue = lastRecord.value + medianDrift;
+        if (Number.isFinite(candidateValue)) {
+          projectedValue = candidateValue;
+        } else {
+          limitation = "numeric_overflow";
+        }
+      }
+    }
   }
 
   return {

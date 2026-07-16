@@ -146,6 +146,15 @@ test("recursively sorts keys and rounds only floating noise to 12 decimals", () 
   );
 });
 
+test("rejects unexpected non-finite numbers during canonical normalization", () => {
+  for (const value of [Number.NaN, Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY]) {
+    assert.throws(() => stableJson({ value }), {
+      name: "RangeError",
+      message: "NON_FINITE_NUMBER",
+    });
+  }
+});
+
 test("renders only canonical analysis facts in the required Markdown sections", async () => {
   const result = await analyzeFixture();
   const markdown = renderMarkdown(result);
