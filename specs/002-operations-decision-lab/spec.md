@@ -1,7 +1,7 @@
 # Operations Decision Lab — Feature Specification
 
 **Feature branch:** `002-operations-decision-lab`
-**Status:** Draft for user review
+**Status:** Approved for phased evaluator-first implementation
 **Created:** 2026-07-15
 **Parent design:** `specs/000-operations-intelligence-program/design.md`
 **Data posture:** Public repository; synthetic fixtures and explicitly scrubbed
@@ -17,6 +17,20 @@ explains service, capacity, labor, travel, wait, and plan-change tradeoffs.
 The first release does not dispatch, optimize a live network, or recommend
 personnel actions. It makes the decision model, constraints, uncertainty, and
 regret measurable before any automated candidate generator is introduced.
+
+### First implementation milestone (002-A)
+
+The first independently useful milestone is deliberately narrower than the
+complete feature: one additive daily `packages_tendered` forecast contract with
+last-value, seven-day seasonal-naive, and fixed-policy level/trend baselines;
+strictly sequential rolling-origin scoring; and an independent hard-constraint
+checker for supplied synthetic plans. It reports hierarchy coherence as
+`not_applicable_single_series` and does not select a winning forecast model.
+
+Reconciliation, scenario construction, objective/CVaR evaluation, plan
+ranking, send-time value, sensitivities, productivity decomposition, and route
+generation remain out of 002-A. They stay specified below as later milestones
+and cannot be presented as implemented by the first slice.
 
 ## Product Boundaries
 
