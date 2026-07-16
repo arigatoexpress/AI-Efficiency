@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 import { analyzeDecisionLab } from "../src/analyze.mjs";
 import { renderMarkdown, stableJson } from "../src/render.mjs";
+import { parseInputJson } from "../src/schema.mjs";
 
 function isoDay(index) {
   return new Date(Date.UTC(2026, 5, 1 + index)).toISOString().slice(0, 10);
@@ -187,4 +188,54 @@ test("published output schema is closed and fixes the three-model tuple", () => 
     ["last_value", "level_trend", "seasonal_naive_7"],
   );
   assert.equal(schema.$defs.forecastModels.items, false);
+});
+
+test("reviewed synthetic scenario fixtures exercise success, infeasibility, and rejection", () => {
+  const base = JSON.parse(
+    readFileSync(new URL("../fixtures/synthetic-input.json", import.meta.url), "utf8"),
+  );
+  const scenarios = JSON.parse(
+    readFileSync(new URL("../fixtures/scenario-cases.json", import.meta.url), "utf8"),
+  );
+
+  for (const scenario of scenarios.cases) {
+    const value = structuredClone(base);
+    value.forecast.observations.forEach((observation) => {
+      observation.value = Math.round(observation.value * scenario.forecastValueScale);
+    });
+    value.resources.vehicles[0].availableEnd = scenario.vehicleAvailableEnd;
+    value.resources.vehicles[0].capacityUnits = scenario.vehicleCapacityUnits;
+    if (scenario.futureAvailabilityOffsetSeconds > 0) {
+      value.forecast.observations[0].availableAt = "2026-07-15T12:00:01Z";
+      assert.throws(() => parseInputJson(JSON.stringify(value)), {
+        code: "SCHEMA_FUTURE_INFORMATION",
+      });
+      continue;
+    }
+
+    const parsed = parseInputJson(JSON.stringify(value));
+    const result = analyzeDecisionLab(parsed);
+    if (scenario.expectedBoundary === "analysis_success") {
+      assert.equal(result.feasibility[0].status, "feasible", scenario.caseId);
+    } else {
+      assert.equal(result.feasibility[0].status, "infeasible", scenario.caseId);
+    }
+  }
+});
+
+test("normal synthetic fixture matches the reviewed golden analysis byte for byte", () => {
+  const fixtureText = readFileSync(
+    new URL("../fixtures/synthetic-input.json", import.meta.url),
+    "utf8",
+  );
+  const expected = readFileSync(
+    new URL("../fixtures/expected-analysis.json", import.meta.url),
+    "utf8",
+  );
+  const result = analyzeDecisionLab(parseInputJson(fixtureText), {
+    analyzerVersion: "0.1.0",
+    dataClassification: "synthetic",
+  });
+
+  assert.equal(stableJson(result), expected);
 });

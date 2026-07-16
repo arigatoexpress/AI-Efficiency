@@ -1,0 +1,285 @@
+{
+  "schemaVersion": "1.0.0",
+  "provenance": {
+    "snapshotTime": "2026-07-15T12:00:00Z",
+    "targetStart": "2026-07-16T00:00:00Z",
+    "targetEnd": "2026-07-17T00:00:00Z",
+    "serviceDate": "2026-07-16",
+    "policyVersion": "policy-v1",
+    "modelVersion": "baseline-v1"
+  },
+  "forecast": {
+    "entityId": "SYNTH-STATION-01",
+    "quantityId": "packages_tendered",
+    "unit": "packages",
+    "seasonLength": 7,
+    "observations": [
+      {
+        "observationId": "SYNTH-OBS-001",
+        "serviceDate": "2026-06-01",
+        "availableAt": "2026-06-01T23:00:00Z",
+        "value": 100
+      },
+      {
+        "observationId": "SYNTH-OBS-002",
+        "serviceDate": "2026-06-02",
+        "availableAt": "2026-06-02T23:00:00Z",
+        "value": 106
+      },
+      {
+        "observationId": "SYNTH-OBS-003",
+        "serviceDate": "2026-06-03",
+        "availableAt": "2026-06-03T23:00:00Z",
+        "value": 112
+      },
+      {
+        "observationId": "SYNTH-OBS-004",
+        "serviceDate": "2026-06-04",
+        "availableAt": "2026-06-04T23:00:00Z",
+        "value": 118
+      },
+      {
+        "observationId": "SYNTH-OBS-005",
+        "serviceDate": "2026-06-05",
+        "availableAt": "2026-06-05T23:00:00Z",
+        "value": 124
+      },
+      {
+        "observationId": "SYNTH-OBS-006",
+        "serviceDate": "2026-06-06",
+        "availableAt": "2026-06-06T23:00:00Z",
+        "value": 130
+      },
+      {
+        "observationId": "SYNTH-OBS-007",
+        "serviceDate": "2026-06-07",
+        "availableAt": "2026-06-07T23:00:00Z",
+        "value": 136
+      },
+      {
+        "observationId": "SYNTH-OBS-008",
+        "serviceDate": "2026-06-08",
+        "availableAt": "2026-06-08T23:00:00Z",
+        "value": 107
+      },
+      {
+        "observationId": "SYNTH-OBS-009",
+        "serviceDate": "2026-06-09",
+        "availableAt": "2026-06-09T23:00:00Z",
+        "value": 113
+      },
+      {
+        "observationId": "SYNTH-OBS-010",
+        "serviceDate": "2026-06-10",
+        "availableAt": "2026-06-10T23:00:00Z",
+        "value": 119
+      },
+      {
+        "observationId": "SYNTH-OBS-011",
+        "serviceDate": "2026-06-11",
+        "availableAt": "2026-06-11T23:00:00Z",
+        "value": 125
+      },
+      {
+        "observationId": "SYNTH-OBS-012",
+        "serviceDate": "2026-06-12",
+        "availableAt": "2026-06-12T23:00:00Z",
+        "value": 131
+      },
+      {
+        "observationId": "SYNTH-OBS-013",
+        "serviceDate": "2026-06-13",
+        "availableAt": "2026-06-13T23:00:00Z",
+        "value": 137
+      },
+      {
+        "observationId": "SYNTH-OBS-014",
+        "serviceDate": "2026-06-14",
+        "availableAt": "2026-06-14T23:00:00Z",
+        "value": 143
+      },
+      {
+        "observationId": "SYNTH-OBS-015",
+        "serviceDate": "2026-06-15",
+        "availableAt": "2026-06-15T23:00:00Z",
+        "value": 114
+      },
+      {
+        "observationId": "SYNTH-OBS-016",
+        "serviceDate": "2026-06-16",
+        "availableAt": "2026-06-16T23:00:00Z",
+        "value": 120
+      },
+      {
+        "observationId": "SYNTH-OBS-017",
+        "serviceDate": "2026-06-17",
+        "availableAt": "2026-06-17T23:00:00Z",
+        "value": 126
+      },
+      {
+        "observationId": "SYNTH-OBS-018",
+        "serviceDate": "2026-06-18",
+        "availableAt": "2026-06-18T23:00:00Z",
+        "value": 132
+      },
+      {
+        "observationId": "SYNTH-OBS-019",
+        "serviceDate": "2026-06-19",
+        "availableAt": "2026-06-19T23:00:00Z",
+        "value": 138
+      },
+      {
+        "observationId": "SYNTH-OBS-020",
+        "serviceDate": "2026-06-20",
+        "availableAt": "2026-06-20T23:00:00Z",
+        "value": 144
+      },
+      {
+        "observationId": "SYNTH-OBS-021",
+        "serviceDate": "2026-06-21",
+        "availableAt": "2026-06-21T23:00:00Z",
+        "value": 150
+      },
+      {
+        "observationId": "SYNTH-OBS-022",
+        "serviceDate": "2026-06-22",
+        "availableAt": "2026-06-22T23:00:00Z",
+        "value": 121
+      },
+      {
+        "observationId": "SYNTH-OBS-023",
+        "serviceDate": "2026-06-23",
+        "availableAt": "2026-06-23T23:00:00Z",
+        "value": 127
+      },
+      {
+        "observationId": "SYNTH-OBS-024",
+        "serviceDate": "2026-06-24",
+        "availableAt": "2026-06-24T23:00:00Z",
+        "value": 133
+      },
+      {
+        "observationId": "SYNTH-OBS-025",
+        "serviceDate": "2026-06-25",
+        "availableAt": "2026-06-25T23:00:00Z",
+        "value": 139
+      },
+      {
+        "observationId": "SYNTH-OBS-026",
+        "serviceDate": "2026-06-26",
+        "availableAt": "2026-06-26T23:00:00Z",
+        "value": 145
+      },
+      {
+        "observationId": "SYNTH-OBS-027",
+        "serviceDate": "2026-06-27",
+        "availableAt": "2026-06-27T23:00:00Z",
+        "value": 151
+      },
+      {
+        "observationId": "SYNTH-OBS-028",
+        "serviceDate": "2026-06-28",
+        "availableAt": "2026-06-28T23:00:00Z",
+        "value": 157
+      },
+      {
+        "observationId": "SYNTH-OBS-029",
+        "serviceDate": "2026-06-29",
+        "availableAt": "2026-06-29T23:00:00Z",
+        "value": 128
+      },
+      {
+        "observationId": "SYNTH-OBS-030",
+        "serviceDate": "2026-06-30",
+        "availableAt": "2026-06-30T23:00:00Z",
+        "value": 134
+      },
+      {
+        "observationId": "SYNTH-OBS-031",
+        "serviceDate": "2026-07-01",
+        "availableAt": "2026-07-01T23:00:00Z",
+        "value": 140
+      },
+      {
+        "observationId": "SYNTH-OBS-032",
+        "serviceDate": "2026-07-02",
+        "availableAt": "2026-07-02T23:00:00Z",
+        "value": 146
+      },
+      {
+        "observationId": "SYNTH-OBS-033",
+        "serviceDate": "2026-07-03",
+        "availableAt": "2026-07-03T23:00:00Z",
+        "value": 152
+      },
+      {
+        "observationId": "SYNTH-OBS-034",
+        "serviceDate": "2026-07-04",
+        "availableAt": "2026-07-04T23:00:00Z",
+        "value": 158
+      },
+      {
+        "observationId": "SYNTH-OBS-035",
+        "serviceDate": "2026-07-05",
+        "availableAt": "2026-07-05T23:00:00Z",
+        "value": 164
+      }
+    ]
+  },
+  "resources": {
+    "vehicles": [
+      {
+        "vehicleId": "SYNTH-VEHICLE-01",
+        "capacityUnits": 500,
+        "availableStart": "2026-07-16T06:00:00Z",
+        "availableEnd": "2026-07-16T18:00:00Z",
+        "maxRouteMinutes": 600
+      }
+    ],
+    "laborShifts": [
+      {
+        "shiftId": "SYNTH-SHIFT-01",
+        "startTime": "2026-07-16T06:00:00Z",
+        "endTime": "2026-07-16T18:00:00Z",
+        "maxOnRoadMinutes": 600
+      }
+    ]
+  },
+  "demandGroups": [
+    {
+      "demandGroupId": "SYNTH-DEMAND-01",
+      "packages": 120,
+      "cubeUnits": 200,
+      "serviceMinutes": 60,
+      "windowStart": "2026-07-16T08:00:00Z",
+      "windowEnd": "2026-07-16T12:00:00Z",
+      "required": true
+    }
+  ],
+  "plans": [
+    {
+      "planId": "SYNTH-PLAN-01",
+      "planVersion": "plan-v1",
+      "snapshotTime": "2026-07-15T12:00:00Z",
+      "releaseTime": "2026-07-16T07:00:00Z",
+      "routes": [
+        {
+          "routeId": "SYNTH-ROUTE-01",
+          "vehicleId": "SYNTH-VEHICLE-01",
+          "shiftId": "SYNTH-SHIFT-01",
+          "visits": [
+            {
+              "sequence": 1,
+              "demandGroupId": "SYNTH-DEMAND-01",
+              "arrivalTime": "2026-07-16T08:30:00Z",
+              "departureTime": "2026-07-16T09:30:00Z"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "policy": {
+    "earliestReleaseTime": "2026-07-16T06:30:00Z"
+  }
+}

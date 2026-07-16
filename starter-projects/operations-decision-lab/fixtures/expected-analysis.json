@@ -1,0 +1,171 @@
+{
+  "analyzerVersion": "0.1.0",
+  "feasibility": [
+    {
+      "planId": "SYNTH-PLAN-01",
+      "planVersion": "plan-v1",
+      "snapshotTime": "2026-07-15T12:00:00Z",
+      "status": "feasible",
+      "violations": []
+    }
+  ],
+  "forecasts": {
+    "entityId": "SYNTH-STATION-01",
+    "models": [
+      {
+        "evaluation": {
+          "bias": 1.75757575757576,
+          "coherence": "not_applicable_single_series",
+          "coverage50": 0.875,
+          "coverage80": 0.9375,
+          "foldCount": 33,
+          "limitations": [],
+          "mae": 8.78787878787879,
+          "mase": 1.25541125541126,
+          "maseLimitation": null,
+          "meanWidth50": 0,
+          "meanWidth80": 27.34375,
+          "observationCount": 35,
+          "pinball": {
+            "p10": 4.484375,
+            "p25": 3.28125,
+            "p50": 2.1875,
+            "p75": 1.09375,
+            "p90": 0.4375
+          }
+        },
+        "forecast": {
+          "clamped": false,
+          "limitation": null,
+          "p10": 135,
+          "p25": 170,
+          "p50": 170,
+          "p75": 170,
+          "p90": 170,
+          "point": 164,
+          "quantileRepaired": false,
+          "trainingEnd": "2026-07-05",
+          "trainingObservationCount": 35,
+          "trainingStart": "2026-06-01"
+        },
+        "model": "last_value"
+      },
+      {
+        "evaluation": {
+          "bias": -0.552735428158739,
+          "coherence": "not_applicable_single_series",
+          "coverage50": 0.40625,
+          "coverage80": 0.6875,
+          "foldCount": 33,
+          "limitations": [],
+          "mae": 9.18193868637237,
+          "mase": 1.31170552662462,
+          "maseLimitation": null,
+          "meanWidth50": 9.77770429666991,
+          "meanWidth80": 30.7266978785186,
+          "observationCount": 35,
+          "pinball": {
+            "p10": 3.9620890173161,
+            "p25": 5.43813642489894,
+            "p50": 4.60820517132879,
+            "p75": 2.59202947112993,
+            "p90": 1.15821577320929
+          }
+        },
+        "forecast": {
+          "clamped": false,
+          "limitation": null,
+          "p10": 135.050897047326,
+          "p25": 163.239315644154,
+          "p50": 166.53911501939,
+          "p75": 171.828811479048,
+          "p90": 173.077824734704,
+          "point": 163.786190644154,
+          "quantileRepaired": false,
+          "trainingEnd": "2026-07-05",
+          "trainingObservationCount": 35,
+          "trainingStart": "2026-06-01"
+        },
+        "model": "level_trend"
+      },
+      {
+        "evaluation": {
+          "bias": 7,
+          "coherence": "not_applicable_single_series",
+          "coverage50": 1,
+          "coverage80": 1,
+          "foldCount": 28,
+          "limitations": [],
+          "mae": 7,
+          "mase": 1,
+          "maseLimitation": null,
+          "meanWidth50": 0,
+          "meanWidth80": 0,
+          "observationCount": 35,
+          "pinball": {
+            "p10": 0,
+            "p25": 0,
+            "p50": 0,
+            "p75": 0,
+            "p90": 0
+          }
+        },
+        "forecast": {
+          "clamped": false,
+          "limitation": null,
+          "p10": 135,
+          "p25": 135,
+          "p50": 135,
+          "p75": 135,
+          "p90": 135,
+          "point": 128,
+          "quantileRepaired": false,
+          "trainingEnd": "2026-07-05",
+          "trainingObservationCount": 35,
+          "trainingStart": "2026-06-01"
+        },
+        "model": "seasonal_naive_7"
+      }
+    ],
+    "parameters": {
+      "levelTrendAlpha": 0.5,
+      "levelTrendBeta": 0.25,
+      "seasonLength": 7
+    },
+    "quantityId": "packages_tendered",
+    "unit": "packages",
+    "winner": null
+  },
+  "limitations": [
+    "baseline_models_only",
+    "single_series_no_model_selection",
+    "supplied_plans_only"
+  ],
+  "methods": [
+    "availability_filtered_expanding_rolling_origin",
+    "fixed_policy_level_trend",
+    "independent_hard_constraint_oracle",
+    "nonnegative_ordered_quantile_repair",
+    "sequential_empirical_residual_quantiles"
+  ],
+  "provenance": {
+    "dataClassification": "synthetic",
+    "modelVersion": "baseline-v1",
+    "policyVersion": "policy-v1",
+    "serviceDate": "2026-07-16",
+    "snapshotTime": "2026-07-15T12:00:00Z",
+    "targetEnd": "2026-07-17T00:00:00Z",
+    "targetStart": "2026-07-16T00:00:00Z"
+  },
+  "schemaVersion": "1.0.0",
+  "validation": {
+    "demandGroupCount": 1,
+    "laborShiftCount": 1,
+    "observationCount": 35,
+    "planCount": 1,
+    "result": "passed",
+    "routeCount": 1,
+    "vehicleCount": 1,
+    "visitCount": 1
+  }
+}
