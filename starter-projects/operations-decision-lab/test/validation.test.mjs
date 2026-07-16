@@ -151,6 +151,18 @@ test("timestamps and target intervals are exact and ordered", () => {
   const backwards = validInput();
   backwards.provenance.targetEnd = backwards.provenance.targetStart;
   assert.throws(() => parse(backwards), { code: "SCHEMA_INVALID_TIME_ORDER" });
+
+  const gap = validInput();
+  for (let index = 11; index < gap.forecast.observations.length; index += 1) {
+    gap.forecast.observations[index].serviceDate = isoDay(index + 1);
+  }
+  assert.throws(() => parse(gap), { code: "SCHEMA_NONCONSECUTIVE_DATES" });
+
+  const mismatchedPlan = validInput();
+  mismatchedPlan.plans[0].snapshotTime = "2026-07-15T11:59:59Z";
+  assert.throws(() => parse(mismatchedPlan), {
+    code: "SCHEMA_PLAN_SNAPSHOT_MISMATCH",
+  });
 });
 
 test("record counts and numeric magnitudes are bounded", () => {

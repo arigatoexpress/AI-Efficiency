@@ -9,6 +9,7 @@ import {
 
 const MAX_INPUT_BYTES = 4 * 1024 * 1024;
 const MAX_NUMBER = 1_000_000_000;
+const DAY_MS = 24 * 60 * 60 * 1000;
 const VERSION = /^[a-z][a-z0-9]*(?:[-_][a-z0-9]+)*$/;
 
 function isRecord(value) {
@@ -135,6 +136,13 @@ function validateForecast(value, snapshotTime) {
     if (dates[index - 1] >= dates[index]) {
       failInput("SCHEMA_INVALID_TIME_ORDER", "forecast.observations");
     }
+    if (
+      Date.parse(`${dates[index]}T00:00:00Z`) -
+        Date.parse(`${dates[index - 1]}T00:00:00Z`) !==
+      DAY_MS
+    ) {
+      failInput("SCHEMA_NONCONSECUTIVE_DATES", "forecast.observations");
+    }
   }
 }
 
@@ -203,7 +211,7 @@ function validateDemandGroups(value) {
   unique(value.map(({ demandGroupId }) => demandGroupId), path);
 }
 
-function validatePlans(value) {
+function validatePlans(value, snapshotTime) {
   const path = "plans";
   boundedArray(value, 1, 25, path);
   let routeCount = 0;
@@ -218,6 +226,9 @@ function validatePlans(value) {
     syntheticId(plan.planId, "planId", path);
     safeVersion(plan.planVersion, path);
     utcMillis(plan.snapshotTime, path);
+    if (plan.snapshotTime !== snapshotTime) {
+      failInput("SCHEMA_PLAN_SNAPSHOT_MISMATCH", path);
+    }
     utcMillis(plan.releaseTime, path);
     boundedArray(plan.routes, 1, 100, "plans.routes");
     routeCount += plan.routes.length;
@@ -295,7 +306,7 @@ export function parseInputJson(text) {
   validateForecast(raw.forecast, raw.provenance.snapshotTime);
   validateResources(raw.resources);
   validateDemandGroups(raw.demandGroups);
-  validatePlans(raw.plans);
+  validatePlans(raw.plans, raw.provenance.snapshotTime);
   validatePolicy(raw.policy);
   return raw;
 }
