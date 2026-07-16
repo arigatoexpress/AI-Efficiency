@@ -253,11 +253,41 @@ export function rollingOriginBacktest(input) {
     }
   }
 
-  const models = [...modelEvidence.values()].map(({ model, folds }) => ({
-    model,
-    folds,
-    evaluation: evaluateFolds(folds, eligible, seasonLength),
-  }));
+  const forwardPoints = new Map(
+    forecastBaselines({ observations: eligible, seasonLength, alpha, beta }).map(
+      (forecast) => [forecast.model, forecast],
+    ),
+  );
+  const models = [...modelEvidence.values()].map(
+    ({ model, folds, residuals }) => {
+      const point = forwardPoints.get(model);
+      const calibration = residuals
+        .filter(({ availableAt }) => Date.parse(availableAt) <= snapshotTimestamp)
+        .map(({ value }) => value);
+      const quantiles =
+        point.point === null
+          ? calibratedQuantiles(0, [])
+          : calibratedQuantiles(point.point, calibration);
+      return {
+        model,
+        forecast: {
+          trainingStart: eligible[0].serviceDate,
+          trainingEnd: eligible.at(-1).serviceDate,
+          trainingObservationCount: eligible.length,
+          point: point.point,
+          ...quantiles,
+          clamped: point.clamped,
+          limitation:
+            point.limitation ??
+            (point.point !== null && calibration.length === 0
+              ? "insufficient_calibration"
+              : null),
+        },
+        folds,
+        evaluation: evaluateFolds(folds, eligible, seasonLength),
+      };
+    },
+  );
 
   return {
     snapshotTime,
