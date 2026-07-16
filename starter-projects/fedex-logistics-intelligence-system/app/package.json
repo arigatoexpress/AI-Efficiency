@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "tsx server.ts",
+    "test": "node --import tsx --test test/*.test.ts",
     "build": "vite build && esbuild server.ts --bundle --platform=node --target=node22 --outfile=dist/server.cjs --format=cjs --external:express",
     "start": "node dist/server.cjs",
     "preview": "vite preview"
