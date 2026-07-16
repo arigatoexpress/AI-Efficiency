@@ -175,11 +175,11 @@ exact observations and limitations.
 **Independent test:** Qualifying/non-qualifying recurrence, known positive lag,
 zero variance, missing period, and insufficient observations all pass.
 
-- [ ] T025 [US4] Add failing recurrence and configured association cases to `starter-projects/priority-metrics-intelligence/test/lineage-patterns.test.mjs`.
-- [ ] T026 [US4] Run the focused test and verify it fails with `ERR_MODULE_NOT_FOUND` for `src/patterns.mjs`.
-- [ ] T027 [US4] Implement exact-period recurrence and configured Pearson lag analysis in `starter-projects/priority-metrics-intelligence/src/patterns.mjs`.
-- [ ] T028 [US4] Run the focused test and verify candidate outputs use `candidate_association` and contain no `cause`, `driver`, or `prediction` label.
-- [ ] T029 [US4] Commit patterns with `git add starter-projects/priority-metrics-intelligence/test/lineage-patterns.test.mjs starter-projects/priority-metrics-intelligence/src/patterns.mjs && git commit -m "feat: surface configured metric patterns"`.
+- [x] T025 [US4] Add failing recurrence and configured association cases to `starter-projects/priority-metrics-intelligence/test/lineage-patterns.test.mjs`.
+- [x] T026 [US4] Run the focused test and verify it fails with `ERR_MODULE_NOT_FOUND` for `src/patterns.mjs`.
+- [x] T027 [US4] Implement exact-period recurrence and configured Pearson lag analysis in `starter-projects/priority-metrics-intelligence/src/patterns.mjs`.
+- [x] T028 [US4] Run the focused test and verify candidate outputs use `candidate_association` and contain no `cause`, `driver`, or `prediction` label.
+- [x] T029 [US4] Commit patterns with `git add starter-projects/priority-metrics-intelligence/test/lineage-patterns.test.mjs starter-projects/priority-metrics-intelligence/src/patterns.mjs && git commit -m "feat: surface configured metric patterns"`.
 
 Association contract:
 
