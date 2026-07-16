@@ -7,10 +7,10 @@ One synthetic/public-safe metric value for one monthly period.
 | Field | Type | Rules |
 | --- | --- | --- |
 | `period` | string | Exact `YYYY-MM`; valid calendar month |
-| `pillarId` | string | Lowercase slug, 1-48 characters |
-| `metricId` | string | Lowercase slug, 1-64 characters; stable definition |
-| `metricLabel` | string | Controlled label, 1-80 characters; letters, spaces, digits, `()/%+-`; no 4+ digit run |
-| `value` | number | Finite |
+| `pillarId` | string | Exact value from the source-controlled catalog |
+| `metricId` | string | Exact lowercase `synth_` catalog alias |
+| `metricLabel` | string | Exact controlled catalog label |
+| `value` | number | Zero or finite absolute magnitude `1e-12` through `1e12`; source token has at most 15 significant digits |
 | `unit` | enum | `count`, `percent`, `minutes`, `hours`, `index`, `ratio` |
 | `targetType` | enum/null | `minimum`, `maximum`, `range`, or null |
 | `targetMin` | number/null | Required for `minimum` and `range` |
@@ -21,6 +21,13 @@ The `(period, metricId)` key is unique. For a given `metricId`, `pillarId`,
 `metricLabel`, `unit`, and target definition remain stable across periods.
 `range` requires `targetMin <= targetMax`.
 
+The six-entry catalog defines damage percent, late inbound count, on-time
+percent, stops per on-road hour, packages per paid hour, and packages per stop.
+Every rate entry stores numerator, denominator, and `monthly_aggregate` time
+basis. Every measure entry stores measure and time basis. Unsigned 12-22 digit
+integer tokens are privacy-rejected before numeric conversion. A scrubbed local
+source must be mapped to these aliases before it reaches `MetricObservation`.
+
 ## AnalysisPolicy
 
 Closed, optional JSON configuration.
@@ -28,7 +35,7 @@ Closed, optional JSON configuration.
 | Field | Type | Default | Rules |
 | --- | --- | --- | --- |
 | `projectionWindow` | integer | `6` | 3-24 periods |
-| `minimumRecurrences` | integer | `3` | 2-12 events |
+| `minimumRecurrences` | integer | `3` | 3-12 events |
 | `candidateAssociations` | array | `[]` | Maximum 50 unique definitions |
 
 ### CandidateAssociationDefinition
@@ -39,6 +46,9 @@ Closed, optional JSON configuration.
 | `outcomeMetricId` | slug | Must exist and differ from source |
 | `lagMonths` | integer | 1-12 |
 | `minimumObservations` | integer | 6-60 |
+
+Both metric IDs must occur in observations, and
+`lagMonths + minimumObservations <= 60`.
 
 ## MetricComparison
 
@@ -82,7 +92,10 @@ Event classifications are `persisted`, `worsened`, `improved_at_risk`,
 `recurrences` contain metric ID, event count, and exact periods.
 `candidateAssociations` contain configured pair, lag, observation count,
 aligned period pairs, coefficient or null, and limitation code. No field uses
-causal language.
+causal language. The exact latest 13 periods enforce continuity; the evidence
+window retains up to `max(13, minimumObservations + lagMonths)` trailing
+periods. Pearson is scaled before centering. Unexpected non-finite arithmetic
+returns a null coefficient with `numeric_overflow`.
 
 ## BaselineProjection
 
@@ -113,6 +126,8 @@ Canonical output object with keys in this semantic order:
 the synthetic/scrubbed declaration. It contains no wall-clock time or host path.
 
 The result's `inputSummary.analysisPeriod` is the dataset-wide latest period.
+`inputSummary.metricDefinitions` contains the exact catalog identity and
+structured semantic definition for every observed metric.
 Canonical serialization sorts comparisons by metric ID then period, other
 metric-keyed arrays by metric ID, and rounds floating noise beyond 12 decimal
 places. A missing numeric value is `null` paired with a stable reason code.

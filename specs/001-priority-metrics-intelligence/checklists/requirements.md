@@ -1,6 +1,6 @@
 # Specification Quality Checklist
 
-**Feature:** Priority Metrics Intelligence  
+**Feature:** Priority Metrics Intelligence
 **Reviewed:** 2026-07-15
 
 - [x] Purpose and primary user are explicit.

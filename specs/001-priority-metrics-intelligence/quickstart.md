@@ -9,6 +9,12 @@ responsibility and must stay under the ignored `local-input/` directory.
 Runtime output under `output/` is also ignored. Only reviewed synthetic golden
 fixtures under `fixtures/` are tracked.
 
+The parser accepts only the source-controlled synthetic metric catalog. Before
+using an approved scrubbed aggregate file, map each source metric to an exact
+catalog `pillar_id`, `metric_id`, `metric_label`, and `unit`; do not place raw
+names, facilities, labels, or identifiers in the CSV. Classification as
+`scrubbed` does not relax this boundary.
+
 ## Run the focused evals
 
 ```bash
@@ -64,7 +70,8 @@ Expected: exit code `0` and no output.
 
 ## Confirm privacy rejection
 
-The validation eval supplies an unknown identifier field and confirms:
+The validation evals supply unknown identities, names, facilities, email-shaped
+labels, and tracking-shaped numeric tokens and confirm:
 
 - exit code `4`;
 - no final or temporary output directory;
@@ -72,6 +79,11 @@ The validation eval supplies an unknown identifier field and confirms:
 
 Do not perform this check with a real identifier. The eval's unsafe-looking
 value is synthetic and intentionally non-operational.
+
+The same eval group confirms the conservative numeric domain (zero or absolute
+magnitude `1e-12` through `1e12`, at most 15 significant digits), the minimum
+three-recurrence policy, observed-metric policy references, and feasible
+60-period lag/evidence windows.
 
 ## Run repository verification
 

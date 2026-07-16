@@ -245,7 +245,7 @@ and no partial artifacts.
 **Independent test:** Valid input writes both artifacts; malformed and privacy
 inputs write neither and never echo rejected values.
 
-- [x] T040 [US6] Add failing argv, exit-code, privacy non-echo, atomic-directory-publication, existing-output rejection, 10,000-row smoke, and offline-source-scan assertions to `starter-projects/priority-metrics-intelligence/test/workflow.test.mjs`.
+- [x] T040 [US6] Add failing argv, exit-code, privacy non-echo, atomic-directory-publication, existing-output rejection, supported-catalog-history, and offline-source-scan assertions to `starter-projects/priority-metrics-intelligence/test/workflow.test.mjs`.
 - [x] T041 [US6] Run the workflow test and verify it fails with `ERR_MODULE_NOT_FOUND` for `src/cli.mjs`.
 - [x] T042 [US6] Implement closed arguments, safe stderr, file reads, orchestration, temporary output-directory writes, cleanup, and one final directory rename in `starter-projects/priority-metrics-intelligence/src/cli.mjs`.
 - [x] T043 [US6] Run all priority-metrics tests and verify valid workflow, every exit code, no rejected-value echo, no partial artifacts, and offline scan pass.
@@ -314,3 +314,20 @@ a checkpoint, not a reason to omit lineage, patterns, projection, or governance.
 
 All 53 task lines use checkbox, sequential ID, optional parallel marker, story
 label where applicable, and exact file path or exact verification command.
+
+## Post-implementation review-fix evidence
+
+The completed task set remains closed. Final review added adversarial evals and
+the smallest corresponding fixes without reopening a task:
+
+- closed the public definition boundary to six source-controlled `synth_`
+  catalog aliases and preserved structured semantics in canonical evidence;
+- privacy-rejected names, facilities, email-shaped labels, and unsigned 12-22
+  digit tracking-shaped tokens before analytics or writes;
+- constrained decimal magnitude and significant digits and made Pearson scaled
+  and fail-safe with `numeric_overflow`;
+- raised recurrence policy minimum to three, rejected absent metric references
+  and infeasible evidence windows, and retained sufficient history for lags 8
+  and 12 while keeping the exact latest 13-period continuity gate; and
+- verified the focused suite, deterministic golden workflow, documentation,
+  and whitespace checks after the review fixes.

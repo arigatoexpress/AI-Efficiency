@@ -22,8 +22,12 @@ The tool is offline, advisory, and takes no operational action.” Open
 ## 1. Start With The Boundary
 
 - Show the successful validation result and `synthetic` classification.
+- Open `inputSummary.metricDefinitions` and show that the metric identity,
+  numerator/denominator or measure, and monthly time basis are canonical facts.
 - Explain that the CSV schema rejects unknown columns and direct identifiers
   before analytics or output writes.
+- Explain that even locally scrubbed inputs must be mapped to exact catalog
+  aliases; `scrubbed` is a classification, not a bypass.
 - Point out that only synthetic golden fixtures are tracked. Local scrubbed
   input and disposable runtime output stay in ignored directories.
 

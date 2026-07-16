@@ -28,6 +28,20 @@ Errors go to stderr as `ERROR <safe-code>: <safe-field-list>`. Error output may
 name allowlisted field names and stable error codes but never rejected values,
 raw rows, local file contents, or stack traces.
 
+Exit `4` also covers a CSV definition that does not exactly match the
+source-controlled `synth_` metric catalog and an unsigned 12-22 digit integer
+token that is tracking-shaped. These checks occur before numeric conversion and
+before analytics. Exit `3` covers numeric tokens outside the safe domain (more
+than 15 significant digits, nonzero absolute magnitude below `1e-12` or above
+`1e12`, or non-finite), a recurrence threshold below 3, an infeasible
+`minimumObservations + lagMonths > 60`, and configured metric references absent
+from the observations.
+
+`--data-classification scrubbed` does not widen the input contract. A local
+preparer must map approved aggregate source columns to exact catalog aliases
+before invocation; arbitrary names, facilities, labels, and metric IDs remain
+rejected.
+
 The output directory contains exactly `analysis.json` and `brief.md`.
 
 ## Coordinated atomic output

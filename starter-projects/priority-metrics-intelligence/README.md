@@ -47,7 +47,9 @@ The tracked files in `fixtures/` are reviewed synthetic golden fixtures. The
 repository does not track runtime output or local input:
 
 - Put a locally prepared, approved scrubbed CSV in the ignored `local-input/`
-  directory. The tool never copies it into a tracked location.
+  directory. Map every approved aggregate source metric to an exact catalog
+  alias before invoking the tool. The tool never copies it into a tracked
+  location.
 - Put disposable run directories under the ignored `output/` directory.
 - Never commit real input, runtime output, screenshots of real values, or
   temporary publication artifacts.
@@ -59,6 +61,11 @@ Validation fails closed on unknown columns, unsafe identifiers, unstructured
 free-text fields or notes, malformed values, inconsistent metric definitions,
 and unknown policy fields. Errors contain safe field names and codes rather
 than rejected values.
+
+The `scrubbed` classification does not allow arbitrary local identifiers.
+Pillars, metric IDs, labels, and units must exactly match the source-controlled
+synthetic catalog; generic productivity keys, names, facilities, and local
+labels fail closed.
 
 ## Input Contract
 
@@ -72,6 +79,22 @@ Each row is one aggregate metric for one `YYYY-MM` period. See
 [`fixtures/synthetic-monthly-metrics.csv`](fixtures/synthetic-monthly-metrics.csv)
 for the synthetic example. The closed schema and metric-definition rules are
 documented in the approved [feature specification](../../specs/001-priority-metrics-intelligence/spec.md).
+
+### Closed metric catalog
+
+| Metric ID | Required pillar and label | Unit | Semantic definition |
+| --- | --- | --- | --- |
+| `synth_damage_percent` | `synth_quality` · `SYNTH Damage percent` | `percent` | damaged packages / packages handled, monthly aggregate |
+| `synth_late_inbound_count` | `synth_flow` · `SYNTH Late inbound count` | `count` | late inbound packages, monthly aggregate |
+| `synth_on_time_percent` | `synth_service` · `SYNTH On-time percent` | `percent` | packages delivered on time / eligible packages, monthly aggregate |
+| `synth_stops_per_on_road_hour` | `synth_route` · `SYNTH Stops per on-road hour` | `ratio` | stops completed / on-road hours, monthly aggregate |
+| `synth_packages_per_paid_hour` | `synth_flow` · `SYNTH Packages per paid hour` | `ratio` | packages delivered / paid hours, monthly aggregate |
+| `synth_packages_per_stop` | `synth_route` · `SYNTH Packages per stop` | `ratio` | packages delivered / stops completed, monthly aggregate |
+
+Numeric tokens have at most 15 significant digits. Zero is accepted; nonzero
+values must have absolute magnitude from `1e-12` through `1e12`. Unsigned
+12-22 digit integer tokens are treated as tracking-shaped and privacy-rejected
+before conversion.
 
 An optional UTF-8 JSON policy uses camelCase keys. Unknown keys are rejected.
 Without a policy, the deterministic defaults are a six-period projection
@@ -91,6 +114,11 @@ window, three recurrences, and no candidate-association search.
   ]
 }
 ```
+
+`minimumRecurrences` is 3-12. Association metric IDs must occur in the CSV,
+lags are 1-12 months, and `minimumObservations + lagMonths` cannot exceed the
+60-period scope. The latest 13 periods enforce continuity; a longer trailing
+window is retained when a valid lag and observation requirement needs it.
 
 ## How To Start
 
@@ -139,6 +167,7 @@ rendering.
 
 | Section | Meaning | Review caution |
 | --- | --- | --- |
+| `inputSummary.metricDefinitions` | Exact catalog identity and structured numerator/denominator/time-basis or measure/time-basis evidence | Verify the upstream scrubbed mapping matches this definition before interpreting values. |
 | `comparisons` | Latest-period values, month-over-month and year-over-year changes, and supplied target status | A missing or zero baseline is disclosed instead of invented. Percent-metric absolute changes are percentage points. |
 | `riskLineages` | At-risk metrics followed through persisted, worsened, improved-at-risk, recovered, or untraceable states | A lineage describes target status, not cause. |
 | `patterns.recurrences` | Repeated configured target-breach events | Repetition alone does not explain why the event occurred. |
@@ -171,6 +200,8 @@ before using a brief in a wider review.
 - Monthly aggregate evidence only; no intraday, route, staffing, or individual
   analysis.
 - Candidate associations run only for explicitly configured metric pairs.
+- The six-entry public catalog requires a human mapping step for locally
+  scrubbed aggregates; arbitrary local definitions are intentionally rejected.
 - The recent-drift baseline does not quantify forecast uncertainty.
 - The first release has no user interface, database, or live integration.
 - Local scrubbed use depends on the human preparer's approval and data hygiene.

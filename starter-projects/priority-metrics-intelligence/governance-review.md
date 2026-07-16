@@ -11,7 +11,7 @@ operational decision.
 | What data is tracked? | Only reviewed synthetic golden CSV, policy, and expected JSON fixtures under `fixtures/`. |
 | What is ignored? | Runtime `output/`, locally prepared `local-input/`, and temporary `*.tmp` paths. |
 | Can raw reports be used? | No. Raw reports and customer, employee, package, tracking, route, address, manifest, security, or source-system data are prohibited. |
-| Can scrubbed data be used locally? | Only aggregate data that a responsible owner has prepared and approved, kept in the ignored `local-input/` path, and classified with `--data-classification scrubbed`. |
+| Can scrubbed data be used locally? | Only aggregate data that a responsible owner has prepared, approved, and mapped to the exact source-controlled catalog aliases, kept in the ignored `local-input/` path, and classified with `--data-classification scrubbed`. |
 | Does data leave the machine? | No network or model interface is part of the source. The default workflow reads local files and writes local artifacts. |
 | What does an error disclose? | A stable safe code and allowlisted field names, not rejected values, raw rows, local contents, or stack traces. |
 
@@ -34,6 +34,11 @@ after verification against approved systems.
 
 - The CSV and optional policy schemas are closed; validation and privacy checks
   complete before analytics or writes.
+- The six-entry metric catalog fixes pillar, `synth_` metric ID, display label,
+  unit, and semantic definition. Classification as scrubbed never widens it.
+- Rate definitions preserve numerator, denominator, and monthly time basis in
+  `inputSummary.metricDefinitions`; the measure definition does the same for
+  counts.
 - CSV interchange fields remain snake_case. Policy JSON uses the implemented
   camelCase keys: `projectionWindow`, `minimumRecurrences`,
   `candidateAssociations`, `sourceMetricId`, `outcomeMetricId`, `lagMonths`,
@@ -42,7 +47,13 @@ after verification against approved systems.
 - Missing or non-computable evidence is disclosed with limitations rather than
   replaced with zero or an invented value.
 - Candidate associations include configured pairs, lag, observation count,
-  coefficient, and exact period pairs.
+  coefficient, and exact period pairs. The latest 13 periods enforce
+  continuity, while valid longer lag/evidence windows retain enough history up
+  to the 60-period scope.
+- Unsafe numeric magnitudes and significant digits fail schema validation;
+  tracking-shaped 12-22 digit integers fail privacy validation before numeric
+  conversion. Scaled Pearson arithmetic degrades unexpected non-finite results
+  to `numeric_overflow` rather than aborting canonical output.
 - Projections identify their deterministic method and exact input periods.
 
 ## Publication And Recovery
@@ -65,7 +76,7 @@ choose a new output directory instead of overwriting evidence.
 
 | Risk | Required mitigation |
 | --- | --- |
-| Sensitive or proprietary input | Use synthetic demonstrations; require owner-approved aggregate scrubbing; keep local input ignored; stop on any uncertain field. |
+| Sensitive or proprietary input | Use synthetic demonstrations; require owner-approved aggregate scrubbing and exact catalog mapping; keep local input ignored; stop on any uncertain field. |
 | Correlation presented as causation | Use “candidate association”; review the exact periods and seek independent evidence. |
 | Baseline presented as a commitment | Label it “median recent drift baseline”; preserve input periods and limitations; require human forecast review. |
 | Stale or incomplete evidence | Check analysis period, period range, limitations, validation result, and provenance before interpretation. |
@@ -78,6 +89,8 @@ choose a new output directory instead of overwriting evidence.
 - [ ] Input is synthetic or owner-approved scrubbed aggregate data.
 - [ ] No raw report, direct identifier, free-text note, or prohibited source
   field is present.
+- [ ] Every scrubbed source metric was mapped to the exact catalog definition,
+  including numerator, denominator, and monthly time basis for rates.
 - [ ] Classification, analysis period, period range, and provenance are correct.
 - [ ] Limitations and non-computable results are visible in the review.
 - [ ] Candidate associations are described as hypotheses, not causes or

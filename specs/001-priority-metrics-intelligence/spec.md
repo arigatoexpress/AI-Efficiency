@@ -1,7 +1,7 @@
 # Priority Metrics Intelligence — Feature Specification
 
 **Feature branch:** `spec/operations-intelligence-program`
-**Status:** Approved for implementation
+**Status:** Implemented; review fixes verified
 **Created:** 2026-07-15
 **Source request:** AI Meeting Notes received 2026-07-15
 **Parent design:** `specs/000-operations-intelligence-program/design.md`
@@ -156,7 +156,7 @@ allowlist, the workflow stops before analysis.
 Acceptance criteria:
 
 1. The parser accepts only the documented schema.
-2. Unknown columns fail closed with their column names and remediation guidance.
+2. Unknown columns fail closed with safe allowlisted field guidance.
 3. Direct-identifier-like values in metric identifiers or labels trigger the
    privacy gate.
 4. Invalid dates, duplicate metric-period keys, non-finite values, incompatible
@@ -173,10 +173,10 @@ Allowed fields:
 | Field | Type | Required | Meaning |
 | --- | --- | --- | --- |
 | `period` | `YYYY-MM` | Yes | Monthly reporting period |
-| `pillar_id` | slug | Yes | Synthetic/public-safe performance pillar |
-| `metric_id` | slug | Yes | Stable synthetic/public-safe metric key |
-| `metric_label` | text | Yes | Human-readable scrubbed label |
-| `value` | finite number | Yes | Observed value |
+| `pillar_id` | catalog value | Yes | Source-controlled synthetic performance pillar |
+| `metric_id` | catalog value | Yes | Source-controlled `synth_` metric alias |
+| `metric_label` | catalog value | Yes | Exact controlled synthetic display label |
+| `value` | safe decimal | Yes | Observed aggregate value in the documented numeric domain |
 | `unit` | enum | Yes | `count`, `percent`, `minutes`, `hours`, `index`, or `ratio` |
 | `target_type` | enum | No | `minimum`, `maximum`, or `range` |
 | `target_min` | finite number | Conditional | Minimum acceptable value |
@@ -187,7 +187,10 @@ An optional UTF-8 JSON configuration file supplies analysis policy rather than
 observations. Its closed schema permits `projectionWindow`,
 `minimumRecurrences`, and `candidateAssociations`, an array containing only
 `sourceMetricId`, `outcomeMetricId`, `lagMonths`, and
-`minimumObservations`. Unknown configuration fields fail closed. If no
+`minimumObservations`. `minimumRecurrences` is 3-12. Association lags are 1-12,
+minimum observations are 6-60, and `lagMonths + minimumObservations` cannot
+exceed the supported 60-period input scope. Every configured metric reference
+must occur in the observations. Unknown configuration fields fail closed. If no
 configuration file is supplied, deterministic documented defaults apply and no
 candidate association search runs.
 
@@ -195,14 +198,25 @@ No names, email addresses, tracking numbers, addresses, employee identifiers,
 customer identifiers, route identifiers, free-text notes, or raw source-system
 fields are permitted.
 
-Metric identifiers must encode an unambiguous business definition. A rate
-definition names its numerator, denominator, and time basis; a generic `sph`,
-`productivity`, or `efficiency` metric is rejected. In particular,
-`stops_completed / on_road_hours`, `packages_delivered / paid_hours`, and
-`packages_delivered / stops_completed` are different metrics and cannot share
-a label or unit. When additive components are available, the analyzer sums the
-components before deriving an aggregate rate; it never averages row-level
-ratios across facilities or periods.
+The public boundary accepts only the source-controlled synthetic catalog below.
+Locally scrubbed source columns must be mapped to one of these exact aliases
+before invocation; arbitrary identifiers, labels, pillars, and generic `sph`,
+`productivity`, or `efficiency` keys fail closed. This mapping is a human data-
+preparation step and does not authorize the tool to ingest a raw source export.
+
+| Metric alias | Pillar | Label | Unit | Closed semantic definition |
+| --- | --- | --- | --- | --- |
+| `synth_damage_percent` | `synth_quality` | `SYNTH Damage percent` | `percent` | `damaged_packages / packages_handled`, monthly aggregate |
+| `synth_late_inbound_count` | `synth_flow` | `SYNTH Late inbound count` | `count` | `late_inbound_packages`, monthly aggregate |
+| `synth_on_time_percent` | `synth_service` | `SYNTH On-time percent` | `percent` | `packages_delivered_on_time / eligible_packages`, monthly aggregate |
+| `synth_stops_per_on_road_hour` | `synth_route` | `SYNTH Stops per on-road hour` | `ratio` | `stops_completed / on_road_hours`, monthly aggregate |
+| `synth_packages_per_paid_hour` | `synth_flow` | `SYNTH Packages per paid hour` | `ratio` | `packages_delivered / paid_hours`, monthly aggregate |
+| `synth_packages_per_stop` | `synth_route` | `SYNTH Packages per stop` | `ratio` | `packages_delivered / stops_completed`, monthly aggregate |
+
+The rate definitions name numerator, denominator, and time basis and remain
+distinct. Upstream preparers aggregate additive components before calculating a
+catalog rate; the analyzer does not average row-level ratios across facilities
+or periods.
 
 `metric_label` is a controlled display label, not a notes field. It permits
 letters, spaces, digits, and the limited punctuation `()/%+-`; email-like
@@ -211,13 +225,22 @@ fail the privacy gate. All other string fields are enums, dates, or slugs.
 
 The repository includes only synthetic fixtures. A gitignored `local-input/`
 directory may be documented for locally prepared scrubbed files, but the tool
-must not automatically copy those inputs into tracked locations.
+must not automatically copy those inputs into tracked locations. A scrubbed
+file that has not been mapped to exact catalog aliases is rejected.
+
+Decimal tokens use at most 15 significant digits. Accepted numeric values are
+zero or have absolute magnitude from `1e-12` through `1e12`; all values must be
+finite. Unsigned 12-22 digit integer tokens are treated as tracking-shaped and
+privacy-rejected before numeric conversion. These conservative limits prevent
+unsafe-integer ambiguity, precision collapse, and derived overflow at the
+public boundary.
 
 ## Derived Output Contract
 
 The JSON output contains:
 
-- input metadata and validation result;
+- input metadata, validation result, and the exact closed semantic definitions
+  for every observed catalog metric;
 - per-metric MoM, YoY, and target comparisons;
 - risk lineages with originating and follow-up periods;
 - recurring events;
@@ -233,6 +256,15 @@ absolute and target distances are percentage points while `percentage_change`
 is the relative percent change from the prior value. Non-computable numeric
 values are JSON `null` with a reason code. Calculations use full precision and
 canonical serialization rounds only floating noise beyond 12 decimal places.
+Pearson calculation scales each aligned series before centering. An unexpected
+non-finite correlation result is suppressed as `null` with
+`numeric_overflow`; it never aborts canonical publication.
+
+The exact latest 13 periods for each configured metric must be consecutive and
+end at the dataset-wide latest period. Association evidence may retain a longer
+trailing window, up to the 60-period input scope, when needed to satisfy
+`minimumObservations + lagMonths`; gaps older than the latest 13-period gate do
+not masquerade as failures of the current continuity gate.
 
 The Markdown brief renders the same facts without adding new calculations.
 Runtime-generated artifacts are disposable outputs and are not committed. The
@@ -243,7 +275,8 @@ under `fixtures/` so deterministic behavior can be evaluated.
 
 Create `starter-projects/priority-metrics-intelligence/` with focused modules:
 
-- `src/schema.mjs`: schema constants and validation rules.
+- `src/schema.mjs`: schema constants, source-controlled metric catalog, numeric
+  domain, and validation rules.
 - `src/parse.mjs`: CSV parsing into canonical metric records.
 - `src/privacy.mjs`: allowlist and identifier-pattern rejection.
 - `src/compare.mjs`: MoM, YoY, and target calculations.
@@ -291,12 +324,14 @@ Golden evals are the specification for implementation.
 Required eval groups:
 
 1. Schema and privacy rejection: unknown columns, identifier fields, malformed
-   dates, duplicates, incompatible units, and non-finite numbers.
+   dates, duplicates, unapproved catalog definitions, tracking-shaped numeric
+   tokens, unsafe magnitudes/significant digits, and non-finite numbers.
 2. Comparison math: positive, negative, zero-baseline, missing-history, and
    direction-aware target cases.
 3. Risk lineage: persistence, worsening, recovery, and discontinuous periods.
 4. Pattern analysis: qualifying recurrence, non-qualifying recurrence,
-   configured lag association, insufficient observations, and gaps.
+   configured lag association through lag 12, retained evidence windows,
+   scaled numeric stability, insufficient observations, and gaps.
 5. Projection: fixed synthetic series with exact expected baseline output.
 6. Golden workflow: synthetic CSV to stable JSON and Markdown outputs.
 7. Repository integration: prompt-index check, documentation check, and root

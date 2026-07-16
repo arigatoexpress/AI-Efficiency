@@ -1,6 +1,6 @@
 # Operations Decision Intelligence Research
 
-**Date:** 2026-07-15  
+**Date:** 2026-07-15
 **Scope:** Recent `AI-Efficiency` additions, stops-per-hour measurement,
 Dynamic Route Optimization (DRO), send-time decisions, network-volume
 forecasting, prediction-market concepts, and derivatives-inspired sensitivity
@@ -29,6 +29,26 @@ Use this delivery sequence:
 The active product should be an operations decision engine with independently
 testable modules, not another dashboard. Existing UIs may consume its derived
 outputs later.
+
+## Applied Boundary For 001
+
+The implemented monthly evidence layer deliberately does not accept arbitrary
+business labels from this broader research. Its public CSV boundary uses six
+source-controlled `synth_` definitions: the three golden-fixture metrics plus
+separate stops-per-on-road-hour, packages-per-paid-hour, and packages-per-stop
+rate aliases. Rate semantics retain numerator, denominator, and monthly time
+basis in canonical evidence. Owner-approved local aggregates must be mapped to
+those aliases before invocation.
+
+The input numeric domain is intentionally conservative (zero or absolute
+magnitude `1e-12` through `1e12`, at most 15 significant digits), with unsigned
+12-22 digit integers privacy-rejected as tracking-shaped before conversion.
+Configured associations require observed catalog metrics, at least three
+recurrences, and a feasible `minimumObservations + lagMonths <= 60` window. The
+latest 13 periods remain the continuity gate, while scaled Pearson may retain
+additional aligned history and reports unexpected arithmetic as
+`numeric_overflow`. Broader metric catalogs and forecasting inputs belong to a
+separately reviewed expansion or to `002`, not an implicit relaxation of 001.
 
 ## What the Recent Repository Additions Actually Provide
 
@@ -405,4 +425,3 @@ seed, generator version, baseline plan, and solver time/status.
   [Bertsimas and Kallus](https://pubsonline.informs.org/doi/10.1287/mnsc.2018.3253).
 - FedEx operations-research history:
   [Mason et al.](https://doi.org/10.1287/inte.27.2.17).
-
