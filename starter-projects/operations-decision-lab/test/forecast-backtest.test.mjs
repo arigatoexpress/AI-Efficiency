@@ -82,6 +82,17 @@ test("baseline input order and chronology are explicit invariants", () => {
       }),
     { code: "FORECAST_INVALID_HISTORY" },
   );
+  assert.throws(
+    () =>
+      rollingOriginBacktest({
+        observations: daily([10, 11, 12, 13]).reverse(),
+        snapshotTime: "2026-07-10T00:00:00Z",
+        seasonLength: 7,
+        alpha: 0.5,
+        beta: 0.25,
+      }),
+    { code: "BACKTEST_INVALID_INPUT" },
+  );
 });
 
 test("future and late-available records cannot change or appear in backtest evidence", () => {

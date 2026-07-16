@@ -172,19 +172,22 @@ function assertInput(input) {
   ) {
     throw invalidInput();
   }
+  for (const observation of input.observations) {
+    dateTimestamp(observation?.serviceDate);
+    if (!Number.isFinite(Date.parse(observation.availableAt))) throw invalidInput();
+  }
 }
 
 export function rollingOriginBacktest(input) {
   assertInput(input);
   const { observations, snapshotTime, seasonLength, alpha, beta } = input;
   const snapshotTimestamp = Date.parse(snapshotTime);
-  const eligible = observations
-    .filter(({ availableAt }) => Date.parse(availableAt) <= snapshotTimestamp)
-    .sort(
-      (left, right) =>
-        dateTimestamp(left.serviceDate) - dateTimestamp(right.serviceDate) ||
-        left.observationId.localeCompare(right.observationId),
-    );
+  const eligible = observations.filter(
+    ({ availableAt }) => Date.parse(availableAt) <= snapshotTimestamp,
+  );
+  if (eligible.length === 0 || !isConsecutiveHistory(eligible)) {
+    throw invalidInput();
+  }
 
   const modelEvidence = new Map(
     ["last_value", "level_trend", "seasonal_naive_7"].map((model) => [
