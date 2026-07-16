@@ -1,0 +1,40 @@
+period,pillar_id,metric_id,metric_label,value,unit,target_type,target_min,target_max,warning_margin
+2025-06,synth_service,synth_on_time_percent,SYNTH On-time percent,97,percent,minimum,95,,1
+2025-07,synth_service,synth_on_time_percent,SYNTH On-time percent,96,percent,minimum,95,,1
+2025-08,synth_service,synth_on_time_percent,SYNTH On-time percent,96,percent,minimum,95,,1
+2025-09,synth_service,synth_on_time_percent,SYNTH On-time percent,95,percent,minimum,95,,1
+2025-10,synth_service,synth_on_time_percent,SYNTH On-time percent,94.5,percent,minimum,95,,1
+2025-11,synth_service,synth_on_time_percent,SYNTH On-time percent,93,percent,minimum,95,,1
+2025-12,synth_service,synth_on_time_percent,SYNTH On-time percent,94,percent,minimum,95,,1
+2026-01,synth_service,synth_on_time_percent,SYNTH On-time percent,95,percent,minimum,95,,1
+2026-02,synth_service,synth_on_time_percent,SYNTH On-time percent,96,percent,minimum,95,,1
+2026-03,synth_service,synth_on_time_percent,SYNTH On-time percent,94,percent,minimum,95,,1
+2026-04,synth_service,synth_on_time_percent,SYNTH On-time percent,93,percent,minimum,95,,1
+2026-05,synth_service,synth_on_time_percent,SYNTH On-time percent,92,percent,minimum,95,,1
+2026-06,synth_service,synth_on_time_percent,SYNTH On-time percent,91,percent,minimum,95,,1
+2025-06,synth_flow,synth_late_inbound_count,SYNTH Late inbound count,12,count,maximum,,20,2
+2025-07,synth_flow,synth_late_inbound_count,SYNTH Late inbound count,14,count,maximum,,20,2
+2025-08,synth_flow,synth_late_inbound_count,SYNTH Late inbound count,16,count,maximum,,20,2
+2025-09,synth_flow,synth_late_inbound_count,SYNTH Late inbound count,18,count,maximum,,20,2
+2025-10,synth_flow,synth_late_inbound_count,SYNTH Late inbound count,21,count,maximum,,20,2
+2025-11,synth_flow,synth_late_inbound_count,SYNTH Late inbound count,23,count,maximum,,20,2
+2025-12,synth_flow,synth_late_inbound_count,SYNTH Late inbound count,19,count,maximum,,20,2
+2026-01,synth_flow,synth_late_inbound_count,SYNTH Late inbound count,17,count,maximum,,20,2
+2026-02,synth_flow,synth_late_inbound_count,SYNTH Late inbound count,24,count,maximum,,20,2
+2026-03,synth_flow,synth_late_inbound_count,SYNTH Late inbound count,22,count,maximum,,20,2
+2026-04,synth_flow,synth_late_inbound_count,SYNTH Late inbound count,20,count,maximum,,20,2
+2026-05,synth_flow,synth_late_inbound_count,SYNTH Late inbound count,25,count,maximum,,20,2
+2026-06,synth_flow,synth_late_inbound_count,SYNTH Late inbound count,26,count,maximum,,20,2
+2025-06,synth_quality,synth_damage_percent,SYNTH Damage percent,1.5,percent,maximum,,2,0.5
+2025-07,synth_quality,synth_damage_percent,SYNTH Damage percent,1.6,percent,maximum,,2,0.5
+2025-08,synth_quality,synth_damage_percent,SYNTH Damage percent,1.4,percent,maximum,,2,0.5
+2025-09,synth_quality,synth_damage_percent,SYNTH Damage percent,1.8,percent,maximum,,2,0.5
+2025-10,synth_quality,synth_damage_percent,SYNTH Damage percent,2.1,percent,maximum,,2,0.5
+2025-11,synth_quality,synth_damage_percent,SYNTH Damage percent,2.6,percent,maximum,,2,0.5
+2025-12,synth_quality,synth_damage_percent,SYNTH Damage percent,2.4,percent,maximum,,2,0.5
+2026-01,synth_quality,synth_damage_percent,SYNTH Damage percent,2,percent,maximum,,2,0.5
+2026-02,synth_quality,synth_damage_percent,SYNTH Damage percent,1.9,percent,maximum,,2,0.5
+2026-03,synth_quality,synth_damage_percent,SYNTH Damage percent,2.7,percent,maximum,,2,0.5
+2026-04,synth_quality,synth_damage_percent,SYNTH Damage percent,2.8,percent,maximum,,2,0.5
+2026-05,synth_quality,synth_damage_percent,SYNTH Damage percent,2.2,percent,maximum,,2,0.5
+2026-06,synth_quality,synth_damage_percent,SYNTH Damage percent,1.8,percent,maximum,,2,0.5
