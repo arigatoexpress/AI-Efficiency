@@ -43,7 +43,7 @@ The whole platform on one diagram (each layer has a full walkthrough):
                           the numbers)
  52 prompts +            Signal Lab ── "is the KPI        Logistics Intelligence
  Prompt Explorer           move real?" (SPC rules)          Gemini drafts briefs on
- + prompts.json          TLH/SPH Explorer ── "which         Cloud Run — LIVE today
+ + prompts.json          TLH/SPH Explorer ── "which         local demo; hosting held
    for agents              lever moved it?" (exact        ADK Shift-Brief Agent
  any model works           split)                           read-only tools,
                          Priority Metrics CLI               CI-tested guardrails
@@ -64,7 +64,7 @@ The whole platform on one diagram (each layer has a full walkthrough):
 | Walkthrough | What it shows working |
 | --- | --- |
 | [A prompt, start to finish](docs/how-it-works/a-prompt-in-action.md) | Template → filled scenario → unedited AI output → the human step |
-| [The deployed dashboard](docs/how-it-works/logistics-intelligence-system.md) | A captured request to the live Cloud Run service — and its safety fallback firing in production |
+| [The dashboard walkthrough](docs/how-it-works/logistics-intelligence-system.md) | Historical Cloud Run request evidence, including its safety fallback; use the local demo below today |
 | [The offline analytics duo](docs/how-it-works/signal-lab-and-efficiency-explorer.md) | The actual SPC rules and exact decomposition math, plus a passing verification run |
 | [The metrics CLI](docs/how-it-works/priority-metrics-intelligence.md) | An end-to-end run: CSV in, risk lineage and manager brief out |
 | [The AI agent](docs/how-it-works/adk-shift-brief-agent.md) | The agent loop, five read-only tools, and the CI-enforced guardrail test run |
@@ -82,21 +82,27 @@ Three entry points, none of which require installing anything:
 2. **Read the user guide.** The [AI workplace user guide](docs/ai-workplace-user-guide.md)
    explains in plain English what AI can and cannot safely do in daily
    operations — written for the least technical teammate.
-3. **Open the live dashboard.** The [Logistics Intelligence demo](https://fedex-logistics-intelligence-system-267358751314.us-east1.run.app)
-   shows labeled demo risk signals for four stations and drafts shift briefs
-   you can edit. Every output states "Needs manager verification."
+3. **Try an offline analysis tool.** Open the [TLH/SPH Explorer](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/starter-projects/tlh-sph-efficiency-explorer/app/index.html)
+   with its built-in synthetic examples to see which efficiency lever moved.
+   Download the page before loading any locally approved data.
 
 For a visual overview of how the pieces connect, open the
 [interactive hub page](https://raw.githack.com/arigatoexpress/AI-Efficiency/main/index.html)
 (this repo's `index.html`; it also opens directly from a downloaded copy and
 works fully offline).
 
-Cloned the repo? Two commands (Node 22+):
+Cloned the repo? Two commands (Node 22.12+):
 
 ```bash
 npm run demo     # builds and serves the dashboard locally, prints every entry point
 npm run verify   # runs every check CI runs: docs/links, prompt index, all test suites
 ```
+
+**Dashboard hosting:** both previously published Cloud Run URLs returned HTTP 404
+when checked on 2026-09-09 UTC. Use the local demo at `http://localhost:3900`;
+it needs no API key and serves labeled synthetic signals and deterministic draft
+briefs. Restoring public hosting requires a separately approved deployment and
+a fresh live check.
 
 New team members: [getting started](docs/getting-started.md) ·
 running a shift with AI support: [daily operations playbook](docs/daily-ops-playbook.md) ·
@@ -109,7 +115,7 @@ full document index: [docs/](docs/README.md).
 
 | Project | Status | What it does |
 | --- | --- | --- |
-| [Logistics Intelligence System](starter-projects/fedex-logistics-intelligence-system/README.md) | **Deployed on Cloud Run** | Station-ops dashboard: risk-signal panels plus Gemini-drafted shift briefs (pre-shift, handoff, after-action) with a deterministic fallback when the model is unavailable. Dashboard signals are labeled synthetic demo values; live adapters for the real public feeds (Open-Meteo, NWS, USGS) are built, tested, and off by default behind a `LIVE_SIGNALS` flag. |
+| [Logistics Intelligence System](starter-projects/fedex-logistics-intelligence-system/README.md) | **Runnable locally; hosted demo unavailable** | Station-ops dashboard: risk-signal panels plus Gemini-drafted shift briefs (pre-shift, handoff, after-action) with a deterministic fallback when the model is unavailable. Dashboard signals are labeled synthetic demo values; live adapters for the real public feeds (Open-Meteo, NWS, USGS) are built, tested, and off by default behind a `LIVE_SIGNALS` flag. |
 | [Dock Efficiency Signal Lab](starter-projects/dock-efficiency-signal-lab/README.md) | **Offline single-file app** | Answers "is this weekly KPI move real or noise?" with statistical process control (I-MR limits, Nelson rules, EWMA, CUSUM), trend indicators, and a benchmarked forecast ensemble. Runs entirely in the browser; loaded data never leaves the machine. |
 | [TLH/SPH Efficiency Explorer](starter-projects/tlh-sph-efficiency-explorer/README.md) | **Offline single-file app** | Splits each week-over-week efficiency change exactly into its two levers — throughput (SPH) and labor hours (TLH) — so an hours-cut gain is never mistaken for a productivity win. Companion to the Signal Lab. |
 | [Priority Metrics Intelligence](starter-projects/priority-metrics-intelligence/README.md) | **Offline deterministic CLI** | Validates monthly metrics, compares exact periods against targets, traces how each risk developed month by month, and publishes canonical JSON plus a manager brief. No network access; 95 automated tests. |
@@ -173,8 +179,8 @@ regional, operations-led contribution to that effort. The working principles:
 - Evidence before adoption — a fancier model must beat the simple baseline in
   a benchmark before it earns a pilot.
 
-**Where this goes next:** the Logistics Intelligence app runs on **Cloud Run**
-with direct **Gemini** drafts today. The
+**Where this goes next:** the Logistics Intelligence app runs locally with
+deterministic drafts; optional **Gemini** drafts require configured credentials. The
 [Google Cloud + ADK integration guide](docs/technology/google-cloud-adk-integration.md)
 lays out the engineering path — Gemini via **Vertex AI**, agents built with the
 **Agent Development Kit** on **Vertex AI Agent Engine** — while internal data
@@ -280,8 +286,8 @@ Current focus:
 
 - Validating the Signal Lab and TLH/SPH Explorer against a real, locally-loaded
   weekly export during a pilot.
-- Redeploying the live dashboard so it serves Gemini drafts again (the code
-  fix for the retired model id is merged; the Cloud Run rollout is pending).
+- Keeping the local dashboard usable while public hosting is unavailable;
+  restore hosting only after an approved deployment and live acceptance.
 - Swapping the dashboard's labeled demo signals for the real public feeds they
   stand in for, as a reviewed change.
 - Preparing Foundry-ready export paths for when internal data access is
