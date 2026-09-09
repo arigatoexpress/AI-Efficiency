@@ -31,7 +31,14 @@ This is **not** a production FedEx system. It is **not** connected to internal p
   <img src="../../assets/architecture-diagram.svg" alt="System architecture diagram showing Browser, Express Server, Gemini API, and Public Data Sources" width="100%">
 </p>
 
-## Verified Live App
+## Hosting Status
+
+The hosted demo is unavailable: both previously published Cloud Run URLs
+returned HTTP 404 on 2026-09-09 UTC. Use the [local quick start](#quick-start)
+below. Public hosting must pass fresh acceptance after a separately approved
+deployment before it is advertised as live again.
+
+### Historical deployment record
 
 | Property | Value |
 | --- | --- |
@@ -41,7 +48,8 @@ This is **not** a production FedEx system. It is **not** connected to internal p
 | Live revision | `fedex-logistics-intelligence-system-00005-4vs` |
 | Verified | 2026-05-23 |
 
-> ⚠️ The live service is a visual prototype. This repository now contains the **source-owned** rebuild that closes the 2026-05-23 live readiness audit.
+The record above describes the May deployment, not current availability. This
+repository contains the **source-owned** rebuild for local use.
 
 ## Source-Owned Rebuild (v2)
 
@@ -56,9 +64,18 @@ This repository now includes a complete, reviewable source tree in the [`app/`](
 
 ### Quick Start
 
+From the repository root, with Node.js 22.12 or newer:
+
+```bash
+npm run demo
+# Open http://localhost:3900 — full UI, synthetic data, no API key required.
+```
+
+For application development:
+
 ```bash
 cd app/
-npm install
+npm ci
 cp .env.example .env
 # Add GEMINI_API_KEY to .env (optional — app works without it)
 npm run dev
