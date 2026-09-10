@@ -9,6 +9,8 @@ export interface WeatherContext {
 }
 
 export interface RoadContext {
+  primaryName?: string
+  secondaryName?: string
   i70Status?: string
   us50Status?: string
   cotripUrl?: string
@@ -55,8 +57,8 @@ Public weather context (synthetic demo values):
 - Weather alert: ${weather?.alert || 'None'}
 
 Public road context:
-- I-70 Vail Pass: ${roadConditions?.i70Status || 'Unknown'}
-- US-50 Monarch Summit: ${roadConditions?.us50Status || 'Unknown'}
+- ${roadConditions?.primaryName || 'I-70 Vail Pass'}: ${roadConditions?.i70Status || 'Unknown'}
+- ${roadConditions?.secondaryName || 'US-50 Monarch Summit'}: ${roadConditions?.us50Status || 'Unknown'}
 - Source: ${roadConditions?.cotripUrl || 'https://www.cotrip.org/'}
 
 Public seismic context:
@@ -81,6 +83,7 @@ export function generateFallbackDraft(
   now: Date = new Date()
 ): string {
   const lines: string[] = []
+  const roadSource = roadConditions?.cotripUrl || 'https://www.cotrip.org/'
   lines.push(`# ${topicLabel}`)
   lines.push(`Station: ${station}`)
   lines.push(`Generated: ${now.toLocaleString('en-US', { timeZone: 'America/Denver' })} MT`)
@@ -97,10 +100,10 @@ export function generateFallbackDraft(
     lines.push(`- Wind at ${weather?.windMph} mph could delay linehaul. (Synthetic demo value; verify with carrier updates.)`)
   }
   if (roadConditions?.i70Status && roadConditions.i70Status.toLowerCase().includes('closed')) {
-    lines.push('- I-70 Vail Pass: reported closure may impact eastbound linehaul. (Verify with cotrip.org and carrier dispatch.)')
+    lines.push(`- ${roadConditions.primaryName || 'I-70 Vail Pass'}: reported closure may impact linehaul. (Verify with ${roadSource} and carrier dispatch.)`)
   }
   if (roadConditions?.us50Status && roadConditions.us50Status.toLowerCase().includes('closed')) {
-    lines.push('- US-50 Monarch Summit: reported closure may impact alternate routing. (Verify with cotrip.org and carrier dispatch.)')
+    lines.push(`- ${roadConditions.secondaryName || 'US-50 Monarch Summit'}: reported closure may impact alternate routing. (Verify with ${roadSource} and carrier dispatch.)`)
   }
   if ((seismic?.magnitude ?? 0) > 2.5) {
     lines.push(`- Seismic event M${seismic?.magnitude} near ${seismic?.location}. Monitor USGS for aftershocks. (Public data only.)`)
@@ -112,13 +115,13 @@ export function generateFallbackDraft(
 
   lines.push('')
   lines.push('## Recommended Manager Actions')
-  lines.push('- Check live road conditions at https://www.cotrip.org/')
+  lines.push(`- Check live road conditions at ${roadSource}`)
   lines.push('- Confirm feeder pickup times with local carriers.')
   lines.push('- Review sort staffing against possible delay windows.')
   lines.push('')
   lines.push('## Data Notes')
   lines.push('- Weather values are synthetic demo data for prototyping.')
-  lines.push('- Road status is illustrative; always verify with cotrip.org.')
+  lines.push(`- Road status is illustrative; always verify with ${roadSource}.`)
   lines.push('- This brief is a draft only. A manager must verify all facts before acting.')
 
   return lines.join('\n')
