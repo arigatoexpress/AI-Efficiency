@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // One-command demo: `npm run demo` from the repo root.
-// Installs/builds the logistics app if needed, starts it locally, and prints
+// Installs dependencies if needed, builds current source, starts it locally, and prints
 // every entry point in the hub. No flags touched: the dashboard serves labeled
 // synthetic demo data (set LIVE_SIGNALS=on to exercise the live adapters).
 import { execSync, spawn } from "node:child_process";
@@ -22,10 +22,10 @@ if (!fs.existsSync(path.join(appDir, "node_modules"))) {
   execSync("npm ci", { cwd: appDir, stdio: "inherit" });
 }
 
-if (!fs.existsSync(path.join(appDir, "dist", "server.cjs"))) {
-  step("Building the logistics app…");
-  execSync("npm run build", { cwd: appDir, stdio: "inherit" });
-}
+// An existing artifact may predate a pull or local edit. Build before every
+// start; a failed build must stop here instead of serving stale output.
+step("Building the logistics app from current source…");
+execSync("npm run build", { cwd: appDir, stdio: "inherit" });
 
 step(`Starting the Station Ops Intelligence dashboard on http://localhost:${PORT} …`);
 const env = { ...process.env, PORT };
