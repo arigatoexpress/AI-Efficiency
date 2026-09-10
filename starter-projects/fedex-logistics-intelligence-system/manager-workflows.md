@@ -6,6 +6,24 @@ FEC supervisors and managers.
 Each workflow should end with a human-reviewed draft, checklist, or summary. The
 app should not make operational decisions by itself.
 
+## Try the current prototype from start to finish
+
+Start the [local demo](README.md), choose a station scenario, then choose a
+brief type in **Manager Drafts** and select **Generate**. Review the draft
+against the displayed synthetic station scenario. The current draft request
+does not include the separate live-signals panel or private manager notes;
+the workflows below describe intended use cases, not completed integrations.
+
+Select **Copy draft** and paste into your own review document. The copied text
+includes the station, brief type, generation source, synthetic-scenario limit
+and manager verification reminder. If browser clipboard access fails, a
+selected text box appears for manual copying. Changing station or brief type
+clears the previous draft and its copy feedback.
+
+Complete the exercise by confirming the pasted context and source against the
+app. This is a prototype exercise, not evidence of an approved operational
+pilot. Nothing is sent automatically.
+
 ## 1. Morning Readiness Brief
 
 Use when a manager wants a quick public-risk summary before the shift.

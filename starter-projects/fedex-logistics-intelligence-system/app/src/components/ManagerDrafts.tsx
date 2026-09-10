@@ -44,9 +44,18 @@ function DraftPanel({ station, topic }: Props & { topic: DraftTopic }) {
   const [draft, setDraft] = useState<string>('')
   const [source, setSource] = useState<string>('')
   const [copied, setCopied] = useState(false)
+  const [copyFailed, setCopyFailed] = useState(false)
+  const manualCopy = useRef<HTMLTextAreaElement | null>(null)
   const request = useRef<AbortController | null>(null)
 
   useEffect(() => () => request.current?.abort(), [])
+
+  useEffect(() => {
+    if (copyFailed) {
+      manualCopy.current?.focus()
+      manualCopy.current?.select()
+    }
+  }, [copyFailed])
 
   const generateDraft = async () => {
     request.current?.abort()
@@ -56,6 +65,7 @@ function DraftPanel({ station, topic }: Props & { topic: DraftTopic }) {
     setDraft('')
     setSource('')
     setCopied(false)
+    setCopyFailed(false)
     try {
       const res = await fetch('/api/compile-advice-draft', {
         method: 'POST',
@@ -87,22 +97,36 @@ function DraftPanel({ station, topic }: Props & { topic: DraftTopic }) {
     }
   }
 
-  const copyDraft = async () => {
-    if (!draft) return
-    try {
-      await navigator.clipboard.writeText(draft)
-      setCopied(true)
-      window.setTimeout(() => setCopied(false), 1800)
-    } catch {
-      setCopied(false)
-    }
-  }
-
   const sourceLabel =
     source === 'gemini' ? 'Gemini AI draft' :
     source === 'fallback' ? 'Deterministic fallback' :
     source === 'error' ? 'Draft service unavailable' :
     source
+
+  const portableDraft = [
+    topicLabel(topic),
+    `Station: ${station.name}`,
+    `Source: ${sourceLabel}`,
+    'Synthetic station scenario; current live signals are not included in this draft.',
+    'Needs manager verification. Verify facts and internal context before sharing or acting.',
+    '',
+    draft,
+  ].join('\n')
+
+  const copyDraft = async () => {
+    if (!draft || source === 'error') return
+    const currentRequest = request.current
+    try {
+      await navigator.clipboard.writeText(portableDraft)
+      if (currentRequest !== request.current || currentRequest?.signal.aborted) return
+      setCopyFailed(false)
+      setCopied(true)
+    } catch {
+      if (currentRequest !== request.current || currentRequest?.signal.aborted) return
+      setCopied(false)
+      setCopyFailed(true)
+    }
+  }
 
   return (
     <>
@@ -116,6 +140,12 @@ function DraftPanel({ station, topic }: Props & { topic: DraftTopic }) {
             <div><strong>{topicLabel(topic)}</strong><small>{station.name}</small></div>
             <button className="btn btn-secondary" onClick={copyDraft} disabled={source === 'error'}>{copied ? '✓ Copied' : 'Copy draft'}</button>
           </div>
+          {copyFailed && (
+            <div>
+              <p role="status">Clipboard unavailable. Copy the selected text below manually.</p>
+              <textarea ref={manualCopy} aria-label="Draft for manual copy" readOnly value={portableDraft} rows={8} style={{ width: '100%' }} />
+            </div>
+          )}
           <div className="draft-output" role="region" aria-label="Generated draft">{draft}</div>
           <div className={`recon-draft-source ${source}`}>
             <strong>{sourceLabel}</strong>

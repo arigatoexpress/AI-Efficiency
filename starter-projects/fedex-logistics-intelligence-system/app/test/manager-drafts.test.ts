@@ -100,7 +100,10 @@ test('late station response cannot replace the new station draft or loading stat
   assert.equal(container.querySelector('[aria-label="Generated draft"]')?.textContent, 'CURRENT STATION GOLDEN')
   assert.equal(container.querySelector('.recon-draft-toolbar small')?.textContent, STATIONS[1].name)
   await click('Copy draft')
-  assert.deepEqual(copied, ['CURRENT STATION GOLDEN'])
+  assert.equal(copied.length, 1)
+  assert.ok(copied[0].endsWith('CURRENT STATION GOLDEN'))
+  assert.ok(copied[0].includes(STATIONS[1].name))
+  assert.ok(!copied[0].includes('STALE STATION GOLDEN'))
 })
 
 test('late failure after a topic change does not overwrite the new request', async () => {
@@ -130,4 +133,58 @@ test('changing context cancels the old transport; current errors remain visible 
   await click('Generate After-Action Summary')
   await complete(2, 'RETRY GOLDEN')
   assert.equal(button('Copy draft').disabled, false)
+})
+
+test('copied AI brief retains its context and review limits outside the application', async () => {
+  await render()
+  await click('Shift Handoff Brief')
+  await click('Generate Shift Handoff Brief')
+  await act(async () => requests[0].resolve(new Response(JSON.stringify({ draft: 'MODEL MEMO', source: 'gemini' }))))
+  await click('Copy draft')
+  assert.equal(copied[0], [
+    'Shift Handoff Brief',
+    `Station: ${STATIONS[0].name}`,
+    'Source: Gemini AI draft',
+    'Synthetic station scenario; current live signals are not included in this draft.',
+    'Needs manager verification. Verify facts and internal context before sharing or acting.',
+    '',
+    'MODEL MEMO',
+  ].join('\n'))
+  assert.ok(button('✓ Copied'))
+})
+
+test('clipboard denial provides complete manual-copy text and clears on context change', async () => {
+  navigator.clipboard.writeText = async () => { throw new Error('Permission denied') }
+  await render()
+  await click('Generate Pre-Shift Readiness Brief')
+  await complete(0, 'FALLBACK MEMO')
+  await click('Copy draft')
+  const manual = container.querySelector<HTMLTextAreaElement>('textarea[aria-label="Draft for manual copy"]')
+  assert.ok(manual, 'clipboard failure must leave a usable manual-copy path')
+  assert.equal(manual.readOnly, true)
+  assert.ok(manual.value.includes('Source: Deterministic fallback'))
+  assert.ok(manual.value.endsWith('FALLBACK MEMO'))
+  assert.equal(window.document.activeElement, manual)
+  assert.equal(manual.selectionStart, 0)
+  assert.equal(manual.selectionEnd, manual.value.length)
+  assert.match(container.querySelector('[role="status"]')?.textContent ?? '', /Clipboard unavailable/)
+  await click('Shift Handoff Brief')
+  assert.equal(container.querySelector('textarea'), null)
+  assert.equal(container.querySelector('[role="status"]'), null)
+})
+
+
+test('late clipboard failure cannot attach old copy feedback to a regenerated brief', async () => {
+  let rejectCopy!: (reason: Error) => void
+  navigator.clipboard.writeText = () => new Promise<void>((_resolve, reject) => { rejectCopy = reject })
+  await render()
+  await click('Generate Pre-Shift Readiness Brief')
+  await complete(0, 'OLD MEMO')
+  await click('Copy draft')
+  await click('Generate Pre-Shift Readiness Brief')
+  await complete(1, 'NEW MEMO')
+  await act(async () => rejectCopy(new Error('Delayed denial')))
+  assert.equal(container.querySelector('textarea'), null)
+  assert.equal(container.querySelector('[aria-label="Generated draft"]')?.textContent, 'NEW MEMO')
+  assert.ok(button('Copy draft'))
 })
