@@ -23,7 +23,7 @@ export default function RouteWatch({ station }: Props) {
   return (
     <div className="panel col-6">
       <h2><span className="icon" aria-hidden="true">🛣️</span> Route Watch</h2>
-      <p>Public road conditions near {station.name}. Always verify with official sources before routing decisions.</p>
+      <p>Illustrative road conditions near {station.name}. These synthetic scenario values are not current observations.</p>
       <div className="card-list">
         {station.routes.map((r, idx) => (
           <div className="card" key={idx}>
@@ -33,7 +33,7 @@ export default function RouteWatch({ station }: Props) {
               </div>
               <div className="card-desc">{r.note}</div>
               <div className="card-source">
-                Source: <a href={r.sourceUrl} target="_blank" rel="noopener noreferrer">{r.sourceLabel}</a>
+                Verify current conditions: <a href={r.sourceUrl} target="_blank" rel="noopener noreferrer">{r.sourceLabel}</a>
               </div>
             </div>
           </div>

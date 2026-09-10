@@ -19,7 +19,7 @@ export default function ShiftReadiness({ station }: Props) {
   return (
     <div className="panel col-8">
       <h2><span className="icon" aria-hidden="true">📋</span> Shift Readiness</h2>
-      <p>Top public risk signals for {station.name}. Verify every item with your local sources before acting.</p>
+      <p>Synthetic scenario risks for {station.name}. Verify current conditions with your local sources before acting.</p>
       <div className="card-list">
         {station.risks.map((r) => (
           <div className="card" key={r.id}>
@@ -27,7 +27,7 @@ export default function ShiftReadiness({ station }: Props) {
             <div className="card-body">
               <div className="card-title">{r.title}</div>
               <div className="card-desc">{r.description}</div>
-              <div className="card-source">Source: {r.source} • {r.sourceType === 'synthetic' ? 'Synthetic demo' : r.sourceType === 'manager-note' ? 'Manager note' : 'Public data'}</div>
+              <div className="card-source">Scenario reference: {r.source} • {r.sourceType === 'manager-note' ? 'Illustrative manager note' : 'Synthetic demo'}</div>
             </div>
           </div>
         ))}
