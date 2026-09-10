@@ -76,6 +76,8 @@ function DraftPanel({ station, topic }: Props & { topic: DraftTopic }) {
           topic,
           weather: station.weather,
           roadConditions: {
+            primaryName: station.routes[0]?.route,
+            secondaryName: station.routes[1]?.route,
             i70Status: station.roadConditions.primaryStatus,
             us50Status: station.roadConditions.secondaryStatus,
             cotripUrl: station.roadConditions.cotripUrl,

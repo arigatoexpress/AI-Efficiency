@@ -1,5 +1,6 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
+import { STATIONS } from '../src/data/stations'
 import {
   buildUserPrompt,
   generateFallbackDraft,
@@ -8,6 +9,26 @@ import {
 } from '../lib/drafts'
 
 const NOW = new Date('2026-07-16T12:00:00-06:00')
+
+test('station road labels and authority survive prompt and fallback rendering', () => {
+  for (const station of STATIONS) {
+    const road = {
+      primaryName: station.routes[0].route,
+      secondaryName: station.routes[1].route,
+      i70Status: 'Closed for scenario test',
+      us50Status: 'Closed for scenario test',
+      cotripUrl: station.roadConditions.cotripUrl,
+    }
+    const prompt = buildUserPrompt(station.name, 'Shift Handoff Brief', station.weather, road)
+    const draft = generateFallbackDraft(station.name, 'Shift Handoff Brief', station.weather, road, undefined, NOW)
+    for (const text of [prompt, draft]) {
+      assert.ok(text.includes(road.primaryName), station.id)
+      assert.ok(text.includes(road.secondaryName), station.id)
+      assert.ok(text.includes(road.cotripUrl), station.id)
+      if (station.id !== 'gunnison') assert.doesNotMatch(text, /cotrip\.org|Vail Pass|Monarch Summit/, station.id)
+    }
+  }
+})
 
 test('topic labels map every brief type, defaulting to pre-shift', () => {
   assert.equal(topicLabelFor('pre-shift'), 'Pre-Shift Readiness Brief')

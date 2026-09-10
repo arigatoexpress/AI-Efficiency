@@ -7,7 +7,7 @@ import ManagerDrafts from '../src/components/ManagerDrafts'
 import { STATIONS } from '../src/data/stations'
 
 type PendingRequest = {
-  body: { station: string; topic: string }
+  body: { station: string; topic: string; roadConditions: { primaryName?: string; secondaryName?: string; cotripUrl: string } }
   signal: AbortSignal | undefined
   resolve: (response: Response) => void
   reject: (error: Error) => void
@@ -69,6 +69,17 @@ async function click(label: string) {
 async function complete(index: number, draft: string) {
   await act(async () => requests[index].resolve(new Response(JSON.stringify({ draft, source: 'fallback' }))))
 }
+
+test('draft requests carry each station road names and verification authority', async () => {
+  for (const [index, station] of STATIONS.entries()) {
+    await render(station)
+    await click('Generate Pre-Shift Readiness Brief')
+    const road = requests[index].body.roadConditions
+    assert.equal(road.primaryName, station.routes[0].route)
+    assert.equal(road.secondaryName, station.routes[1].route)
+    assert.equal(road.cotripUrl, station.roadConditions.cotripUrl)
+  }
+})
 
 test('switching brief type clears a completed draft instead of relabeling it', async () => {
   await render()
