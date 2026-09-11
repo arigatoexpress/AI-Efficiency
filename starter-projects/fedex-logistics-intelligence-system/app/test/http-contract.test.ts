@@ -243,3 +243,47 @@ test('draft POST with no Gemini client returns 200, source "fallback", and the m
   assert.match(body.draft, /Station: Gunnison, CO/)
   assert.match(body.draft, /synthetic demo data/)
 })
+
+for (const [label, text] of [
+  ['missing', undefined],
+  ['empty', ''],
+  ['whitespace-only', ' \n\t'],
+] as const) {
+  test(`draft POST with ${label} Gemini text returns a useful labeled fallback`, async (t) => {
+    const srv = await startApp({
+      genAI: { models: { generateContent: async () => ({ text }) } },
+      now: () => NOW,
+    })
+    t.after(srv.close)
+
+    const res = await fetch(`${srv.base}/api/compile-advice-draft`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ station: 'SYNTH-Test Station', topic: 'handoff' }),
+    })
+    const body = (await res.json()) as { source: string; topic: string; draft: string }
+    assert.equal(res.status, 200)
+    assert.equal(body.source, 'fallback')
+    assert.equal(body.topic, 'Shift Handoff Brief')
+    assert.match(body.draft, /Station: SYNTH-Test Station/)
+    assert.match(body.draft, /A manager must verify all facts before acting\./)
+  })
+}
+
+test('draft POST preserves a nonempty Gemini draft and its source label', async (t) => {
+  const draft = '  SYNTH-Test manager brief.\nVerify current conditions.  '
+  const srv = await startApp({
+    genAI: { models: { generateContent: async () => ({ text: draft }) } },
+  })
+  t.after(srv.close)
+
+  const res = await fetch(`${srv.base}/api/compile-advice-draft`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ station: 'SYNTH-Test Station', topic: 'handoff' }),
+  })
+  const body = (await res.json()) as { source: string; draft: string }
+  assert.equal(res.status, 200)
+  assert.equal(body.source, 'gemini')
+  assert.equal(body.draft, draft)
+})
