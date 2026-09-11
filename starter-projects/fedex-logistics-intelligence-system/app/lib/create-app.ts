@@ -139,7 +139,8 @@ export function createApp(options: CreateAppOptions = {}): Express {
         config: { systemInstruction: SYSTEM_INSTRUCTION },
       })
 
-      const draft = response.text || 'No response generated.'
+      const draft = response.text
+      if (!draft?.trim()) throw new Error('Gemini returned no draft text.')
       res.json({ draft, source: 'gemini', topic: topicLabel })
     } catch (err) {
       console.error('Gemini error:', err)
