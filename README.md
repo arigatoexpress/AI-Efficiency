@@ -261,6 +261,7 @@ starter-projects/
   dock-efficiency-signal-lab/           ← Offline SPC + forecasting app
   tlh-sph-efficiency-explorer/          ← Offline TLH/SPH decomposition app
   priority-metrics-intelligence/        ← Offline deterministic metrics CLI
+  operations-decision-lab/              ← Offline baseline + plan-feasibility evaluator
   adk-shift-brief-agent/                ← First ADK agent starter kit
   ai-idea-intake-agent/  fedex-delivery-markets/
   forecast-foundation-model-spike/  fhe-private-scoring-spike/
@@ -270,8 +271,9 @@ scripts/                           ← CI checks (docs/links/claims) + prompt-in
 ```
 
 CI runs on every pull request: repo-wide link and claim checks
-(`scripts/check-docs.mjs`), the priority-metrics test suite, and the full
-logistics-app build.
+(`scripts/check-docs.mjs`), the prompt-index sync check, the local-demo,
+Priority Metrics, Operations Decision Lab, TLH/SPH, and ADK agent test suites,
+and the logistics app's install, typecheck, tests, and build.
 
 ---
 
