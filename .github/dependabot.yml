@@ -11,3 +11,10 @@ updates:
     directory: "/starter-projects/fedex-logistics-intelligence-system/app"
     schedule:
       interval: "weekly"
+    groups:
+      react:
+        patterns:
+          - "react"
+          - "react-dom"
+          - "@types/react"
+          - "@types/react-dom"
